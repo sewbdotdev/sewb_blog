@@ -3,5 +3,5 @@
 }
 
 .title {
-  @apply font-light px-3 py-0.5 text-slate-900 truncate cursor-pointer dark:text-slate-50;
+  @apply font-light px-3 py-0.5 text-slate-900 truncate cursor-pointer dark:text-slate-50 text-center;
 }
