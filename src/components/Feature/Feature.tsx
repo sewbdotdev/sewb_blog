@@ -2,14 +2,11 @@ import React, { FunctionComponent } from "react";
 import styles from "./Feature.module.css";
 import Image from "next/image";
 
-type FeatureProps = {
-  imgURL: string;
-};
-const Feature: FunctionComponent<FeatureProps> = (props) => {
+const Feature: FunctionComponent = (props) => {
   return (
     <section className={styles.container}>
       <Image
-        src={props.imgURL}
+        src="/img/dark-feature.png"
         alt="Featured image saying software engineering without borders with some tags like design patterns."
         layout="fill"
         objectFit="fill"

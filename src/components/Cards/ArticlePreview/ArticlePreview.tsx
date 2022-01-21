@@ -15,6 +15,7 @@ const ArticlePreview: FunctionComponent = (props) => {
               height={10}
               alt="Picture of the author"
               sizes="50vw"
+              priority={true}
             />
           </div>
           <h6 className={styles.articlePreviewName}>

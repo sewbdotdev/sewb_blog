@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import Category from "@/components/Category";
 import ArticlePreview from "@/components/Cards/ArticlePreview";
 import Content from "@/components/Content";
+import Feature from "@/components/Feature";
 const Home: NextPage = (props) => {
   return (
     <Content>
+      <Feature />
       <section className={styles.container}>
         <aside className={styles.asideSection}>
           <Category />

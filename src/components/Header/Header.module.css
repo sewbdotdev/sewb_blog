@@ -1,9 +1,9 @@
 .container {
-  @apply flex flex-row h-16 items-center px-5 md:px-28 border-b-2 border-gray-400;
+  @apply flex flex-col md:flex-row h-36 md:h-16 items-center px-5 md:px-28 border-b-2 border-gray-400;
 }
 
 .logoContainer {
-  @apply w-2/6 md:w-1/2;
+  @apply w-full text-center md:text-left md:w-1/2;
 }
 
 .linkContainer {
@@ -11,5 +11,5 @@
 }
 
 .linkInnerContainer {
-  @apply flex justify-end gap-4;
+  @apply flex justify-end gap-4 text-xs md:text-base;
 }
