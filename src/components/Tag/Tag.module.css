@@ -1,0 +1,7 @@
+.container {
+  @apply bg-gray-300 rounded-2xl border w-24;
+}
+
+.title {
+  @apply font-light px-3 py-0.5 text-slate-900 truncate cursor-pointer;
+}

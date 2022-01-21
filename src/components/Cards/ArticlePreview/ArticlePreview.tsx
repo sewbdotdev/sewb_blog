@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from "react";
 import styles from "../Cards.module.css";
 import Image from "next/image";
+import Tag from "@/components/Tag";
 const ArticlePreview: FunctionComponent = (props) => {
   return (
     <div className={styles.articlePreviewContainer}>
@@ -26,8 +27,11 @@ const ArticlePreview: FunctionComponent = (props) => {
         </h2>
         <div className={styles.articlePreviewMeta}>
           <p>Date here</p>
-          <p>· 5 min read</p>
-          <p>Tag Here</p>
+          <p>
+            · 5 min read
+            <span> ·</span>
+          </p>
+          <Tag />
         </div>
       </div>
       <div className={styles.articlePreviewChildTwoContainer}>
