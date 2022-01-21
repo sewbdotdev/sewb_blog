@@ -1,5 +1,5 @@
 .container {
-  @apply px-8 md:px-24 flex flex-col md:flex-row-reverse gap-5;
+  @apply px-8 my-10 md:px-24 flex flex-col md:flex-row-reverse gap-5;
 }
 
 .asideSection {

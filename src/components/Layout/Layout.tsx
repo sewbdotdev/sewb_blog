@@ -1,17 +1,9 @@
 import React, { FunctionComponent } from "react";
-import Head from 'next/head'
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import Head from "next/head";
 import Header from "../Header";
 import Feature from "../Feature";
 import styles from "./Layout.module.css";
 const Layout: FunctionComponent = (props): JSX.Element => {
-  const { theme, setTheme } = useTheme();
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
   return (
     <main>
       <Head>
@@ -20,7 +12,6 @@ const Layout: FunctionComponent = (props): JSX.Element => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <Feature />
       <section className={styles.childrenContainer}>{props.children}</section>
     </main>
   );

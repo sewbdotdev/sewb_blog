@@ -35,6 +35,7 @@ const ArticlePreview: FunctionComponent = (props) => {
           src="/img/test-2.jpeg"
           layout="fill"
           objectFit="cover"
+          priority={true}
           alt="Picture of the author"
         />
       </div>
