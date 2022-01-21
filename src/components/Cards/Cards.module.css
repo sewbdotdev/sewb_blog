@@ -1,0 +1,7 @@
+.categoryCardContainer {
+  @apply border border-gray-400 rounded self-center;
+}
+
+.categoryCardItem {
+  @apply text-sm  text-center py-3 cursor-pointer h-full font-light;
+}

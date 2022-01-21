@@ -2,7 +2,7 @@
 }
 
 .innerContainer {
-  @apply grid grid-cols-3 grid-rows-3 gap-4 border-b-2 border-gray-400 pb-3;
+  @apply grid grid-cols-3 grid-rows-3 gap-4 border-b-2 border-gray-400 pb-5;
 }
 
 .title {
