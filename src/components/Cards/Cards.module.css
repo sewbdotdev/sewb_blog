@@ -5,3 +5,29 @@
 .categoryCardItem {
   @apply text-sm  text-center py-3 cursor-pointer h-full font-light;
 }
+
+.articlePreviewContainer {
+  @apply mt-2 mb-10 ml-2 flex justify-between gap-2;
+}
+
+.articlePreviewChildOneContainer {
+  @apply w-4/6 flex flex-col gap-2;
+}
+.articlePreviewChildOneContainerInnerContainer {
+  @apply flex gap-2 relative;
+}
+.articlePreviewName {
+  @apply text-xs self-center  font-bold;
+}
+.articlePreviewNameImageContainer {
+  @apply rounded h-7 w-7;
+}
+.articlePreviewTitle {
+  @apply font-extrabold text-lg truncate md:whitespace-normal;
+}
+.articlePreviewMeta {
+  @apply flex gap-4  mb-2 text-sm font-light;
+}
+.articlePreviewChildTwoContainer {
+  @apply bg-purple-400 w-2/6 h-20 md:h-32 relative;
+}
