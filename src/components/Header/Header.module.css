@@ -1,0 +1,15 @@
+.container {
+  @apply flex flex-row h-16 items-center px-5 md:px-28 border-b-2 border-gray-400;
+}
+
+.logoContainer {
+  @apply w-2/6 md:w-1/2;
+}
+
+.linkContainer {
+  @apply w-4/6 md:w-1/2;
+}
+
+.linkInnerContainer {
+  @apply flex justify-end gap-4;
+}
