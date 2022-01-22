@@ -1,0 +1,22 @@
+.container {
+  @apply px-10 md:px-10 flex flex-col md:flex-row md:h-screen overflow-y-hidden;
+}
+
+.contentContainer {
+  @apply md:w-4/6 py-10 md:px-10 overflow-y-auto;
+}
+
+.asideContainer {
+  @apply md:w-1/6 md:border-l md:border-gray-500 py-10 md:px-10 md:sticky md:top-0;
+}
+.contentTitle {
+  @apply font-extrabold text-3xl pb-10;
+}
+.contentDescription {
+  @apply pb-10;
+}
+.contentCoverImage {
+  @apply pb-10 relative;
+}
+.contentMain {
+}

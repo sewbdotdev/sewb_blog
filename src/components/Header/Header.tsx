@@ -2,6 +2,8 @@ import { FunctionComponent, useEffect, useState } from "react";
 import styles from "./Header.module.css";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+
+// TODO: Improve image/logo using import
 const Header: FunctionComponent = (props) => {
   const { theme, setTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);

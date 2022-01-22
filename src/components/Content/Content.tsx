@@ -1,7 +1,10 @@
 import React, { FunctionComponent } from "react";
 
-const Content: FunctionComponent = (props) => {
-  return <section>{props.children}</section>;
+type ContentProps = {
+  classNames?: string;
+};
+const Content: FunctionComponent<ContentProps> = (props) => {
+  return <section className={props.classNames}>{props.children}</section>;
 };
 
 export default Content;
