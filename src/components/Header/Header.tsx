@@ -5,9 +5,13 @@ import Image from "next/image";
 const Header: FunctionComponent = (props) => {
   const { theme, setTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
-  const [isDark, setIsDark] = useState(theme === "dark");
+  const [isDark, setIsDark] = useState(false);
+  const [logo, setLogo] = useState("");
   useEffect(() => {
     setIsMounted(true);
+    setLogo(() =>
+      theme === "dark" ? "/img/logo-light.png" : "/img/logo-dark.png"
+    );
   }, []);
 
   const switchTheme = () => {
@@ -17,20 +21,24 @@ const Header: FunctionComponent = (props) => {
   };
 
   useEffect(() => {
-    setIsDark(theme === "dark");
+    setLogo(() =>
+      theme === "dark" ? "/img/logo-light.png" : "/img/logo-dark.png"
+    );
   }, [theme]);
 
   return (
     <header className={styles.container}>
       <div className={styles.logoContainer}>
-        <Image
-          src={`/img/logo-${isDark ? "light" : "dark"}.png`}
-          alt="SEWB BLOG Logo."
-          width={200}
-          height={100}
-          layout="fixed"
-          priority={true}
-        />
+        {logo && logo.length > 0 && (
+          <Image
+            src={logo}
+            alt="SEWB BLOG Logo."
+            width={200}
+            height={100}
+            layout="fixed"
+            priority={true}
+          />
+        )}
       </div>
       <div className={styles.linkContainer}>
         <ul className={styles.linkInnerContainer}>
