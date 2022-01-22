@@ -2,18 +2,16 @@ import { FunctionComponent, useEffect, useState } from "react";
 import styles from "./Header.module.css";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-
+import DarkLogo from "/public/img/logo-dark.png";
+import LightLogo from "/public/img/logo-light.png";
 // TODO: Improve image/logo using import
 const Header: FunctionComponent = (props) => {
   const { theme, setTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const [isDark, setIsDark] = useState(false);
-  const [logo, setLogo] = useState("");
   useEffect(() => {
     setIsMounted(true);
-    setLogo(() =>
-      theme === "dark" ? "/img/logo-light.png" : "/img/logo-dark.png"
-    );
+    setIsDark(() => theme === "dark");
   }, []);
 
   const switchTheme = () => {
@@ -23,24 +21,20 @@ const Header: FunctionComponent = (props) => {
   };
 
   useEffect(() => {
-    setLogo(() =>
-      theme === "dark" ? "/img/logo-light.png" : "/img/logo-dark.png"
-    );
+    setIsDark(() => theme === "dark");
   }, [theme]);
 
   return (
     <header className={styles.container}>
       <div className={styles.logoContainer}>
-        {logo && logo.length > 0 && (
-          <Image
-            src={logo}
-            alt="SEWB BLOG Logo."
-            width={200}
-            height={100}
-            layout="fixed"
-            priority={true}
-          />
-        )}
+        <Image
+          src={isDark ? LightLogo : DarkLogo}
+          alt="SEWB BLOG Logo."
+          width={200}
+          height={100}
+          // layout="fixed"
+          // priority={true}
+        />
       </div>
       <div className={styles.linkContainer}>
         <ul className={styles.linkInnerContainer}>
