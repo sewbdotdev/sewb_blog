@@ -1,0 +1,18 @@
+.container {
+  @apply flex flex-col;
+}
+
+.name {
+  @apply font-bold my-3 text-gray-800 dark:text-gray-300;
+}
+
+.bio {
+  @apply font-light dark:text-gray-300 text-gray-500 text-justify mb-3;
+}
+.linkContainer {
+  @apply mb-2;
+}
+
+.linkText {
+  @apply px-3 text-blue-600 dark:text-blue-400;
+}

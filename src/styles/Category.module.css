@@ -7,7 +7,7 @@
 }
 
 .asideContainer {
-  @apply md:w-1/6 md:border-l md:border-gray-500 py-10 md:px-10 md:sticky md:top-0;
+  @apply md:w-2/6 flex flex-col md:border-l md:border-gray-500 py-10 md:px-10 md:sticky md:top-0;
 }
 .contentTitle {
   @apply font-extrabold text-3xl pb-10;
