@@ -6,6 +6,7 @@ import TestImage1 from "/public/img/test-1.jpg";
 import TestImage2 from "/public/img/test-2.jpeg";
 import Author from "@/components/Author";
 import { ChatIcon, HeartIcon, EyeIcon } from "@heroicons/react/solid";
+import Related from "@/components/Related";
 const CategoryPage: NextPage = () => {
   return (
     <Content classNames="overflow-y-hidden">
@@ -349,6 +350,7 @@ const CategoryPage: NextPage = () => {
         </section>
         <aside className={styles.asideContainer}>
           <Author />
+          <Related />
         </aside>
       </div>
     </Content>

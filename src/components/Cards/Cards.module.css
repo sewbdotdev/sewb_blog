@@ -31,3 +31,11 @@
 .articlePreviewChildTwoContainer {
   @apply bg-purple-400 w-2/6 h-20 md:h-32 relative;
 }
+
+.relatedContentContainer {
+  @apply flex flex-row gap-3 my-3;
+}
+
+.relatedContentTitle {
+  @apply self-center text-sm;
+}

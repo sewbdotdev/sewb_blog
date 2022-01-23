@@ -1,0 +1,7 @@
+.container {
+  @apply my-5;
+}
+
+.title {
+  @apply font-bold mb-2;
+}
