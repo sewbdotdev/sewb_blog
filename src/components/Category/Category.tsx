@@ -1,19 +1,32 @@
 import React, { FunctionComponent } from "react";
 import CategoryCard from "@/components/Cards/CategoryCard/CategoryCard";
 import styles from "./Category.module.css";
-const Category: FunctionComponent = () => {
+import Tag from "../Tag";
+
+type CategoryOrTagProps = {
+  isTag?: boolean;
+  heading?: string;
+};
+const Category: FunctionComponent<CategoryOrTagProps> = (props) => {
+  const { isTag = false, heading = "Discover More Of What You Love" } = props;
+  const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+  console.log(isTag);
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>Discover More Of What You Love</h3>
+      <h3 className={styles.title}>{heading}</h3>
+
       <div className={styles.innerContainer}>
-        <CategoryCard title="Software Architecture" />
-        <CategoryCard title="Software Architecture" />
-        <CategoryCard title="Software Architecture" />
-        <CategoryCard title="Software Architecture" />
-        <CategoryCard title="Machine Learning" />
-        <CategoryCard title="Machine Learning" />
-        <CategoryCard title="Machine Learning" />
-        <CategoryCard title="Machine Learning" />
+        {data.map((d) =>
+          isTag ? (
+            <Tag
+              key={d}
+              title="Software Architecture"
+              containerClassName="min-w-min"
+            />
+          ) : (
+            <CategoryCard key={d} title="Software Architecture" />
+          )
+        )}
       </div>
     </div>
   );

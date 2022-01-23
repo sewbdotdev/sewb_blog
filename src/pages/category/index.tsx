@@ -1,6 +1,6 @@
 import Content from "@/components/Content";
 import type { NextPage } from "next";
-import styles from "../../styles/Category.module.css";
+import styles from "../../styles/Content.module.css";
 import Image from "next/image";
 import TestImage1 from "/public/img/test-1.jpg";
 import TestImage2 from "/public/img/test-2.jpeg";

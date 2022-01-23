@@ -2,9 +2,13 @@ import React, { FunctionComponent } from "react";
 import styles from "../Cards.module.css";
 import Image from "next/image";
 import Tag from "@/components/Tag";
-const ArticlePreview: FunctionComponent = (props) => {
+
+type ArticlePreviewProps = {
+  className?: string;
+};
+const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
   return (
-    <div className={styles.articlePreviewContainer}>
+    <div className={`${styles.articlePreviewContainer} ${props.className}`}>
       <div className={styles.articlePreviewChildOneContainer}>
         <div className={styles.articlePreviewChildOneContainerInnerContainer}>
           <div className={styles.articlePreviewNameImageContainer}>
@@ -32,7 +36,11 @@ const ArticlePreview: FunctionComponent = (props) => {
             · 5 min read
             <span> ·</span>
           </p>
-          <Tag />
+          <Tag
+            title="Software architecture"
+            className="truncate"
+            containerClassName="w-24"
+          />
         </div>
       </div>
       <div className={styles.articlePreviewChildTwoContainer}>
