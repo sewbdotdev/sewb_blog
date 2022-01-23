@@ -25,7 +25,7 @@ const CategoryOrTagPage: NextPage = () => {
             ) : (
               <TagIcon className="h-5 w-5 self-center" />
             )}
-            <h2 className={contentStyles.contentTitle}>Name goes here</h2>
+            <h2 className={contentStyles.contentTitle}>{slug}</h2>
           </div>
 
           <section className={styles.contentPreviewContainer}>
