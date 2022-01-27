@@ -17,7 +17,8 @@
     "baseUrl": "./src",
     "paths": {
       "@/components/*": ["components/*"]
-    }
+    },
+    "typeRoots": ["src/@customTypes", "./node_modules/@types"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
