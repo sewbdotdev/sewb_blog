@@ -7,6 +7,7 @@ import TestImage2 from "/public/img/test-2.jpeg";
 import Author from "@/components/Author";
 import { ChatIcon, HeartIcon, EyeIcon } from "@heroicons/react/solid";
 import Related from "@/components/Related";
+import { getCategories } from "hooks/useCategoryAndTag";
 const CategoryPage: NextPage = () => {
   return (
     <Content classNames="overflow-y-hidden">
@@ -356,5 +357,12 @@ const CategoryPage: NextPage = () => {
     </Content>
   );
 };
+
+export async function getStaticProps() {
+  const postData = await getCategories();
+  return {
+    props: {},
+  };
+}
 
 export default CategoryPage;
