@@ -28,12 +28,16 @@ const Category: FunctionComponent<CategoryOrTagProps> = (props) => {
           isTag ? (
             <Tag
               key={d.id}
-              title={d.title}
+              title={d.attributes.title}
               containerClassName="min-w-min"
-              slug={d.slug}
+              slug={d.attributes.slug}
             />
           ) : (
-            <CategoryCard key={d.id} title={d.title} slug={d.slug} />
+            <CategoryCard
+              key={d.id}
+              title={d.attributes.title}
+              slug={d.attributes.slug}
+            />
           )
         )}
       </div>

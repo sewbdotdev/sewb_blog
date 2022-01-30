@@ -2,9 +2,18 @@ import React, { FunctionComponent } from "react";
 import styles from "../Cards.module.css";
 import Image from "next/image";
 import Tag from "@/components/Tag";
+import { CategoryOrTag } from "@customTypes/categoryandtag";
 
 type ArticlePreviewProps = {
   className?: string;
+  authorName: string;
+  title: string;
+  tag: CategoryOrTag;
+  category: CategoryOrTag;
+  description: string;
+  readTime: number;
+  publishedAt: string;
+  hasMultiAuthor?: boolean;
 };
 const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
   return (
@@ -23,23 +32,22 @@ const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
             />
           </div>
           <h6 className={styles.articlePreviewName}>
-            Temiloluwa Ojo et al <span className="font-normal">in</span>{" "}
-            Software Architecture
+            {props.authorName} {props.hasMultiAuthor ? "et al" : ""}{" "}
+            <span className="font-normal">in</span> {props.category.attributes.title}
           </h6>
         </div>
-        <h2 className={styles.articlePreviewTitle}>
-          Why Do We Sleep? Science May Have Finally Figured It Out
-        </h2>
+        <h2 className={styles.articlePreviewTitle}>{props.title}</h2>
         <div className={styles.articlePreviewMeta}>
           <p>Date here</p>
           <p>
-            · 5 min read
+            · {props.readTime || 5} min read
             <span> ·</span>
           </p>
           <Tag
-            title="Software architecture"
+            title={props.tag.attributes.title}
             className="truncate"
             containerClassName="w-24"
+            slug={props.tag.attributes.slug}
           />
         </div>
       </div>

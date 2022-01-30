@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
 import { dehydrate, QueryClient, useQuery } from "react-query";
@@ -30,8 +30,9 @@ const Home: NextPage = (props) => {
 
   const categoryData = categories?.data.map((cat) => ({
     id: cat.id,
-    title: cat.attributes.title,
-    slug: cat.attributes.slug,
+    attributes: {
+      ...cat.attributes,
+    },
   }));
   return (
     <Content>
@@ -41,17 +42,17 @@ const Home: NextPage = (props) => {
           {categoryData && <Category data={categoryData} />}
         </aside>
         <section className={styles.contentSection}>
+          {/* <ArticlePreview />
           <ArticlePreview />
           <ArticlePreview />
-          <ArticlePreview />
-          <ArticlePreview />
+          <ArticlePreview /> */}
         </section>
       </section>
     </Content>
   );
 };
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async (ctx) => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["categories", 1], () => getCategories());
   return {
@@ -59,6 +60,6 @@ export async function getStaticProps() {
       dehydratedState: dehydrate(queryClient),
     },
   };
-}
+};
 
 export default Home;

@@ -9,10 +9,18 @@ export type Post = {
     slug: string;
     description: string;
     readTime: number;
-    tags?: CategoryOrTag[];
-    category?: CategoryOrTag;
-    authors: Author[];
-    featuredImage?: Image[];
+    tags: {
+      data: CategoryOrTag[];
+    };
+    category: {
+      data: CategoryOrTag;
+    };
+    authors: {
+      data: Author[];
+    };
+    featuredImage?: {
+      data: Image[];
+    };
   };
 };
 
