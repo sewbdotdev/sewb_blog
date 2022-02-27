@@ -135,6 +135,80 @@ class PostQuery {
       }
     `;
   }
+  static getAllPosts() {
+    return `
+    query getAllPosts($page: Int!, $pageSize: Int!) {
+      posts(
+        pagination: { page: $page, pageSize: $pageSize }
+      ) {
+        data {
+          id
+          attributes {
+            title
+            publishedAt
+            slug
+            description
+            readTime
+            tags {
+              data {
+                id
+                attributes {
+                  title
+                  slug
+                }
+              }
+            }
+            category {
+              data {
+                id
+                attributes {
+                  title
+                  slug
+                }
+              }
+            }
+            authors {
+              data {
+                id
+                attributes {
+                  username
+                  avatar {
+                    data{
+                      attributes{
+                        url
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            featuredImage {
+              data {
+                id
+                attributes {
+                  width
+                  height
+                  alternativeText
+                  caption
+                  url
+                }
+              }
+            }
+          }
+        }
+        meta {
+          pagination {
+            total
+            page
+            pageSize
+            pageCount
+          }
+        }
+      }
+    }
+    
+    `;
+  }
 }
 
 export default PostQuery;

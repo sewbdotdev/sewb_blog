@@ -7,26 +7,14 @@ import ArticlePreview from "@/components/Cards/ArticlePreview";
 import Content from "@/components/Content";
 import Feature from "@/components/Feature";
 import { getCategories } from "hooks/useCategoryAndTag";
+import { useInfinitePosts } from "hooks/usePost";
+import React from "react";
 const Home: NextPage = (props) => {
   const { data: categories, status } = useQuery(["categories", 1], () =>
     getCategories()
   );
-  console.log(categories);
-
-  if (status === "loading") {
-    return (
-      <Content>
-        <p>Loading...</p>
-      </Content>
-    );
-  }
-  if (status === "error") {
-    return (
-      <Content>
-        <p>An Error has occured...</p>
-      </Content>
-    );
-  }
+  const postsData = useInfinitePosts();
+  console.log(postsData);
 
   const categoryData = categories?.data.map((cat) => ({
     id: cat.id,
@@ -39,13 +27,33 @@ const Home: NextPage = (props) => {
       <Feature />
       <section className={styles.container}>
         <aside className={styles.asideSection}>
+          {status === "loading" && <p>Loading</p>}
+          {status === "error" && <p>Error</p>}
           {categoryData && <Category data={categoryData} />}
         </aside>
         <section className={styles.contentSection}>
-          {/* <ArticlePreview />
-          <ArticlePreview />
-          <ArticlePreview />
-          <ArticlePreview /> */}
+          {postsData.status === "loading" && <p>Loading...</p>}
+          {postsData.status === "error" && <p>Error...</p>}
+          {postsData.status === "success" &&
+            postsData.data.pages.map((page) => (
+              <React.Fragment key={page.meta.pagination.page}>
+                {page.data.map((project) => {
+                  const previewProps = {
+                    authorName:
+                      project.attributes.authors.data[0].attributes.username,
+                    title: project.attributes.title,
+                    tag: project.attributes.tags.data[0],
+                    category: project.attributes.category.data,
+                    description: project.attributes.description,
+                    readTime: project.attributes.readTime,
+                    publishedAt: project.attributes.publishedAt,
+                    hasMultiAuthor: project.attributes.authors.data.length > 1,
+                  };
+
+                  return <ArticlePreview {...previewProps} />;
+                })}
+              </React.Fragment>
+            ))}
         </section>
       </section>
     </Content>
