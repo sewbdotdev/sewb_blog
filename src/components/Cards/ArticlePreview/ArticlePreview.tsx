@@ -3,6 +3,7 @@ import styles from "../Cards.module.css";
 import Image from "next/image";
 import Tag from "@/components/Tag";
 import { CategoryOrTag } from "@customTypes/categoryandtag";
+import dateFormatter from "utils/dateFormatter";
 
 type ArticlePreviewProps = {
   className?: string;
@@ -38,7 +39,7 @@ const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
         </div>
         <h2 className={styles.articlePreviewTitle}>{props.title}</h2>
         <div className={styles.articlePreviewMeta}>
-          <p>Date here</p>
+          <p>{dateFormatter(props.publishedAt)}</p>
           <p>
             · {props.readTime || 5} min read
             <span> ·</span>
