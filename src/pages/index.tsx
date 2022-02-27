@@ -46,6 +46,7 @@ const Home: NextPage = (props) => {
                     readTime: project.attributes.readTime,
                     publishedAt: project.attributes.publishedAt,
                     hasMultiAuthor: project.attributes.authors.data.length > 1,
+                    slug: project.attributes.slug,
                   };
 
                   return <ArticlePreview {...previewProps} key={project.id} />;

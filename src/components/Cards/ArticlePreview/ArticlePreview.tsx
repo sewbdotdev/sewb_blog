@@ -4,6 +4,7 @@ import Image from "next/image";
 import Tag from "@/components/Tag";
 import { CategoryOrTag } from "@customTypes/categoryandtag";
 import dateFormatter from "utils/dateFormatter";
+import Link from "next/link";
 
 type ArticlePreviewProps = {
   className?: string;
@@ -15,6 +16,7 @@ type ArticlePreviewProps = {
   readTime: number;
   publishedAt: string;
   hasMultiAuthor?: boolean;
+  slug: string;
 };
 const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
   return (
@@ -34,10 +36,15 @@ const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
           </div>
           <h6 className={styles.articlePreviewName}>
             {props.authorName} {props.hasMultiAuthor ? "et al" : ""}{" "}
-            <span className="font-normal">in</span> {props.category.attributes.title}
+            <a className="font-normal">in</a>{" "}
+            <a className="hover:underline">{props.category.attributes.title}</a>
           </h6>
         </div>
-        <h2 className={styles.articlePreviewTitle}>{props.title}</h2>
+        <h2 className={styles.articlePreviewTitle}>
+          <Link href={`/category/${props.slug}`}>
+            <a>{props.title}</a>
+          </Link>
+        </h2>
         <div className={styles.articlePreviewMeta}>
           <p>{dateFormatter(props.publishedAt)}</p>
           <p>
