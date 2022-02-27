@@ -9,12 +9,12 @@ import Feature from "@/components/Feature";
 import { getCategories } from "hooks/useCategoryAndTag";
 import { useInfinitePosts } from "hooks/usePost";
 import React from "react";
+import DataWrapper from "@/components/DataWrapper";
 const Home: NextPage = (props) => {
   const { data: categories, status } = useQuery(["categories", 1], () =>
     getCategories()
   );
   const postsData = useInfinitePosts();
-  console.log(postsData);
 
   const categoryData = categories?.data.map((cat) => ({
     id: cat.id,
@@ -27,15 +27,13 @@ const Home: NextPage = (props) => {
       <Feature />
       <section className={styles.container}>
         <aside className={styles.asideSection}>
-          {status === "loading" && <p>Loading</p>}
-          {status === "error" && <p>Error</p>}
-          {categoryData && <Category data={categoryData} />}
+          <DataWrapper status={status}>
+            {categoryData && <Category data={categoryData} />}
+          </DataWrapper>
         </aside>
         <section className={styles.contentSection}>
-          {postsData.status === "loading" && <p>Loading...</p>}
-          {postsData.status === "error" && <p>Error...</p>}
-          {postsData.status === "success" &&
-            postsData.data.pages.map((page) => (
+          <DataWrapper status={postsData.status}>
+            {postsData.data?.pages.map((page) => (
               <React.Fragment key={page.meta.pagination.page}>
                 {page.data.map((project) => {
                   const previewProps = {
@@ -50,10 +48,11 @@ const Home: NextPage = (props) => {
                     hasMultiAuthor: project.attributes.authors.data.length > 1,
                   };
 
-                  return <ArticlePreview {...previewProps} />;
+                  return <ArticlePreview {...previewProps} key={project.id} />;
                 })}
               </React.Fragment>
             ))}
+          </DataWrapper>
         </section>
       </section>
     </Content>
