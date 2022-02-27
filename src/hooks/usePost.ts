@@ -60,7 +60,7 @@ const getAllPosts = async (
   }
 };
 
-// sets up the hook to infinitely fetch new pages 
+// sets up the hook to infinitely fetch new pages
 const useInfinitePosts = () =>
   useInfiniteQuery(
     ["posts"],
