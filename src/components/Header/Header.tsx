@@ -4,6 +4,7 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import DarkLogo from "/public/img/logo-dark.png";
 import LightLogo from "/public/img/logo-light.png";
+import Link from "next/link"
 // TODO: Improve image/logo using import
 const Header: FunctionComponent = (props) => {
   const { theme, setTheme } = useTheme();
@@ -37,6 +38,7 @@ const Header: FunctionComponent = (props) => {
         />
       </div>
       <div className={styles.linkContainer}>
+      <Link href="/connect-with-google"><a>Connect with Google</a></Link>
         <ul className={styles.linkInnerContainer}>
           <li>Our story</li>
           <li>Contact</li>
