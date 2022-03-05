@@ -8,7 +8,7 @@ import Link from "next/link";
 
 type ArticlePreviewProps = {
   className?: string;
-  authorName: string;
+  authorName?: string;
   title: string;
   tag: CategoryOrTag;
   category: CategoryOrTag;

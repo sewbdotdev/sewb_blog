@@ -1,0 +1,16 @@
+overwrite: true
+watch: true
+schema: "http://0.0.0.0:1337/graphql"
+documents: "src/**/*.graphql"
+generates:
+  src/@customTypes/generated/graphql.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      # - "typescript-graphql-files-modules"
+      - "typescript-react-query"
+    config:
+      fetcher: graphql-request
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"

@@ -1,6 +1,6 @@
 import client from "utils/client";
 import { useQuery } from "react-query";
-import CategoryAndTagQuery from "gql/queries/categoryandtag";
+import CategoryAndTagQuery from "gql/queries/categoryandtag/categoryandtag";
 import {
   CategoryOrTag,
   CategoryOrTagResponse,

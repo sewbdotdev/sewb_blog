@@ -83,6 +83,7 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
                 key={post.id}
                 title={post.attributes.title}
                 hasMultiAuthor={post.attributes.authors.data.length > 1}
+                slug={post.attributes.slug}
               />
             ))}
           </section>

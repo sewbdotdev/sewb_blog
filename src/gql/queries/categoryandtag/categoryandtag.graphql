@@ -1,0 +1,63 @@
+query getAllCategories($page: Int!, $pageSize: Int!) {
+  categories(pagination: { page: $page, pageSize: $pageSize }) {
+    data {
+      id
+      attributes {
+        title
+        slug
+      }
+    }
+    meta {
+      pagination {
+        pageCount
+        total
+        pageSize
+        page
+      }
+    }
+  }
+}
+
+query getAllTags($page: Int!, $pageSize: Int!) {
+  tags(pagination: { page: $page, pageSize: $pageSize }) {
+    data {
+      id
+      attributes {
+        title
+        slug
+      }
+    }
+    meta {
+      pagination {
+        pageCount
+        total
+        pageSize
+        page
+      }
+    }
+  }
+}
+
+query getOneCategory($id: ID!) {
+  category(id: $id) {
+    data {
+      id
+      attributes {
+        title
+        slug
+      }
+    }
+  }
+}
+
+query getOneTag($id: ID!) {
+  tag(id: $id) {
+    data {
+      id
+      attributes {
+        title
+        slug
+      }
+    }
+  }
+}

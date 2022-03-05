@@ -1,11 +1,11 @@
 import client from "utils/client";
 import { useInfiniteQuery, useQuery } from "react-query";
-import CategoryAndTagQuery from "gql/queries/categoryandtag";
+import CategoryAndTagQuery from "gql/queries/categoryandtag/categoryandtag";
 import {
   CategoryOrTag,
   CategoryOrTagResponse,
 } from "@customTypes/categoryandtag";
-import PostQuery from "gql/queries/posts";
+import PostQuery from "gql/queries/posts/posts";
 import { PostAPIResponse } from "@customTypes/post";
 
 const getPostsByCategory = async (

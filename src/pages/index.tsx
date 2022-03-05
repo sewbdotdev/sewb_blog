@@ -1,6 +1,6 @@
 import type { GetStaticProps, NextPage } from "next";
 import styles from "../styles/Home.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { dehydrate, QueryClient, useQuery } from "react-query";
 import Category from "@/components/Category";
 import ArticlePreview from "@/components/Cards/ArticlePreview";
@@ -8,20 +8,28 @@ import Content from "@/components/Content";
 import Feature from "@/components/Feature";
 import { getCategories } from "hooks/useCategoryAndTag";
 import { useInfinitePosts } from "hooks/usePost";
-import React from "react";
 import DataWrapper from "@/components/DataWrapper";
+import {
+  useGetAllCategoriesQuery,
+  useGetPostBySlugQuery,
+} from "@customTypes/generated/graphql";
+import { getClient } from "utils/client";
 const Home: NextPage = (props) => {
-  const { data: categories, status } = useQuery(["categories", 1], () =>
-    getCategories()
-  );
   const postsData = useInfinitePosts();
+  const { data, status } = useGetAllCategoriesQuery(getClient(), {
+    page: 1,
+    pageSize: 10,
+  });
 
-  const categoryData = categories?.data.map((cat) => ({
-    id: cat.id,
+  const categoryData = data?.categories?.data.map((cat) => ({
+    id: String(cat.id),
     attributes: {
-      ...cat.attributes,
+      title: String(cat.attributes?.title),
+      slug: String(cat.attributes?.slug),
     },
   }));
+
+  console.log(categoryData);
   return (
     <Content>
       <Feature />
@@ -34,7 +42,7 @@ const Home: NextPage = (props) => {
         <section className={styles.contentSection}>
           <DataWrapper status={postsData.status}>
             {postsData.data?.pages.map((page) => (
-              <React.Fragment key={page.meta.pagination.page}>
+              <Fragment key={page.meta.pagination.page}>
                 {page.data.map((project) => {
                   const previewProps = {
                     authorName:
@@ -51,7 +59,7 @@ const Home: NextPage = (props) => {
 
                   return <ArticlePreview {...previewProps} key={project.id} />;
                 })}
-              </React.Fragment>
+              </Fragment>
             ))}
           </DataWrapper>
         </section>
