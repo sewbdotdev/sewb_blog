@@ -83,4 +83,8 @@ const useInfinitePosts = () =>
     }
   );
 
+
+  // const getPostBySlug = (): Promise<Post> => {
+
+  // }
 export { getPostsByCategory, getPostsByTag, getAllPosts, useInfinitePosts };

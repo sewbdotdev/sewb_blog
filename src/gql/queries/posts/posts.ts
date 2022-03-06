@@ -7,8 +7,8 @@ class PostQuery {
         posts(
           filters: { category: { slug: { eq: $slug } } }
           pagination: { page: $page, pageSize: $pageSize }
-        ) {
           data {
+            ) {
             id
             attributes {
               title
@@ -208,6 +208,39 @@ class PostQuery {
     }
     
     `;
+  }
+  static getPostBySlug() {
+    return `
+    query getPostBySlug($slug: String!) {
+      posts(filters:{
+        slug: {
+          eq: $slug
+        }
+      }) {
+        data {
+          id
+          attributes {
+            title
+            publishedAt
+            slug
+            description
+            readTime
+            postClaps {
+              data {
+                id
+              }
+            }
+            comments {
+              data {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  
+    `
   }
 }
 

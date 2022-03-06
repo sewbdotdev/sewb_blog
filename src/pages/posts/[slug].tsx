@@ -1,14 +1,28 @@
 import Content from "@/components/Content";
-import type { NextPage } from "next";
+import type {
+  NextPage,
+  GetStaticProps,
+  GetStaticPaths,
+  GetServerSideProps,
+} from "next";
 import styles from "../../styles/Content.module.css";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import TestImage1 from "/public/img/test-1.jpg";
 import TestImage2 from "/public/img/test-2.jpeg";
 import Author from "@/components/Author";
 import { ChatIcon, HeartIcon, EyeIcon } from "@heroicons/react/solid";
 import Related from "@/components/Related";
-import { getCategories } from "hooks/useCategoryAndTag";
-const CategoryPage: NextPage = () => {
+import { getAllPosts, getPostsByCategory } from "hooks/usePost";
+import { dehydrate, QueryClient } from "react-query";
+import { useGetPostBySlugQuery } from "@customTypes/generated/graphql";
+import { getClient } from "utils/client";
+const PostPage: NextPage = (props) => {
+  const router = useRouter();
+  const {data, status, error} = useGetPostBySlugQuery(getClient(), {
+    slug: String(router.query.slug),
+  });
+console.log({data, status, error})
   return (
     <Content classNames="overflow-y-hidden">
       <div className={styles.container}>
@@ -358,11 +372,34 @@ const CategoryPage: NextPage = () => {
   );
 };
 
-export async function getStaticProps() {
-  const postData = await getCategories();
-  return {
-    props: {},
-  };
-}
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getAllPosts(1, 100);
+  const categoryPaths = posts.data.map((cat) => ({
+    params: {
+      slug: cat.attributes.slug,
+    },
+  }));
 
-export default CategoryPage;
+  return {
+    paths: [...categoryPaths],
+    fallback: "blocking",
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const queryClient = new QueryClient();
+  const { params } = ctx;
+  await queryClient.prefetchQuery(
+    ["getPostBySlug", { slug: params?.slug }],
+    () => getPostsByCategory(String(params?.slug))
+  );
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+      params,
+    },
+    revalidate: 10,
+  };
+};
+
+export default PostPage;

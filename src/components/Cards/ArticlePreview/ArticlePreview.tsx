@@ -41,7 +41,7 @@ const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
           </h6>
         </div>
         <h2 className={styles.articlePreviewTitle}>
-          <Link href={`/category/${props.slug}`}>
+          <Link href={`/posts/${props.slug}`}>
             <a>{props.title}</a>
           </Link>
         </h2>

@@ -22,7 +22,6 @@ query getPostBySlug($slug: String!) {
     }
   }
 }
-
 query getPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
   posts(
     filters: { category: { slug: { eq: $slug } } }
