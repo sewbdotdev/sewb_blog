@@ -8,6 +8,7 @@ query getPostBySlug($slug: String!) {
         slug
         description
         readTime
+         content
         postClaps {
           data {
             id

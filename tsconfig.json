@@ -20,6 +20,6 @@
     },
     "typeRoots": ["src/@customTypes", "./node_modules/@types"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/hooks/useMDProcessor.js"],
   "exclude": ["node_modules"]
 }

@@ -1373,7 +1373,7 @@ export type GetPostBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GetPostBySlugQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description?: string | null, readTime?: number | null, postClaps?: { __typename?: 'PostClapRelationResponseCollection', data: Array<{ __typename?: 'PostClapEntity', id?: string | null }> } | null, comments?: { __typename?: 'CommentRelationResponseCollection', data: Array<{ __typename?: 'CommentEntity', id?: string | null }> } | null } | null }> } | null };
+export type GetPostBySlugQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description?: string | null, readTime?: number | null, content: string, postClaps?: { __typename?: 'PostClapRelationResponseCollection', data: Array<{ __typename?: 'PostClapEntity', id?: string | null }> } | null, comments?: { __typename?: 'CommentRelationResponseCollection', data: Array<{ __typename?: 'CommentEntity', id?: string | null }> } | null } | null }> } | null };
 
 export type GetPostsByCategoryQueryVariables = Exact<{
   slug: Scalars['String'];
@@ -1528,6 +1528,7 @@ export const GetPostBySlugDocument = `
         slug
         description
         readTime
+        content
         postClaps {
           data {
             id

@@ -225,6 +225,7 @@ class PostQuery {
             slug
             description
             readTime
+            content
             postClaps {
               data {
                 id
