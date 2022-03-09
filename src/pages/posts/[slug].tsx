@@ -13,10 +13,7 @@ import { dehydrate, QueryClient } from "react-query";
 import { useGetPostBySlugQuery } from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
 import DataWrapper from "@/components/DataWrapper";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from 'remark-gfm'
-import rehypeSanitize from "rehype-sanitize";
-import rehypeHighlight from 'rehype-highlight'
+import Markdown from "@/components/Markdown";
 
 const PostPage: NextPage = (props) => {
   const router = useRouter();
@@ -35,6 +32,10 @@ const PostPage: NextPage = (props) => {
 
   const post = data?.posts?.data;
 
+  console.log(post![0].id);
+
+  {}
+
   return (
     <Content classNames="overflow-y-hidden">
       <DataWrapper status={status}>
@@ -45,10 +46,10 @@ const PostPage: NextPage = (props) => {
                 <h2 className={styles.contentTitle}>
                   {post[0].attributes?.title}
                 </h2>
-                <p className="flex mt-2 text-gray-400">
+                {/* <p className="flex mt-2 text-gray-400">
                   <EyeIcon className="h-5 w-5 self-center" />
                   <span className="pl-2">100</span>
-                </p>
+                </p> */}
               </div>
 
               <p className={styles.contentDescription}>
@@ -63,19 +64,7 @@ const PostPage: NextPage = (props) => {
                 />
               </div>
               <article className={styles.contentMain}>
-                {<ReactMarkdown
-                 children={post[0].attributes?.content ?? ``} 
-                 remarkPlugins={[remarkGfm]} 
-                 rehypePlugins={[rehypeSanitize,rehypeHighlight]}
-                 components={
-                   {
-                    p: ({node, ...props}) => <p className="py-2" {...props} />,
-                    ul: ({node, ...props}) => <ul style={{listStyle:"outside"}} {...props} />
-                   }
-                 }
-                 />
-                 
-                 }
+                <Markdown content={post[0].attributes?.content ?? ``} />
               </article>
               <div className={styles.iconContainer}>
                 <p className={styles.icon}>
