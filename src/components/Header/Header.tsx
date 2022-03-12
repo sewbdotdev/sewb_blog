@@ -4,12 +4,17 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import DarkLogo from "/public/img/logo-dark.png";
 import LightLogo from "/public/img/logo-light.png";
-import Link from "next/link"
+import Link from "next/link";
+
+import { SunIcon, MoonIcon, LogoutIcon } from "@heroicons/react/solid";
+// import { useSession, signIn, signOut } from "next-auth/client";
 // TODO: Improve image/logo using import
 const Header: FunctionComponent = (props) => {
   const { theme, setTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  // const [data, loading] = useSession();
+  // console.log(data, loading);
   useEffect(() => {
     setIsMounted(true);
     setIsDark(() => theme === "dark");
@@ -38,13 +43,37 @@ const Header: FunctionComponent = (props) => {
         />
       </div>
       <div className={styles.linkContainer}>
-      <Link href="/connect-with-google"><a>Connect with Google</a></Link>
         <ul className={styles.linkInnerContainer}>
           <li>Our story</li>
           <li>Contact</li>
           <li>FAQ</li>
+          {/* {loading ? (
+            <li>
+              <Link href="/profile">
+                <a>Profile</a>
+              </Link>
+            </li>
+          ) : (
+            <a onClick={() => signIn("google")}>Login</a>
+          )}
+          {loading && <li onClick={() => signOut()}>Logout</li>} */}
+          <Link href="/api/auth/google">
+            <a>Profile</a>
+          </Link>
           <li onClick={switchTheme} className="cursor-pointer">
-            {theme === "light" ? "Dark" : "Light"}
+            {theme === "light" ? (
+              <MoonIcon
+                className="text-gray-900 hover:animate-bounce"
+                height="25"
+                width="25"
+              />
+            ) : (
+              <SunIcon
+                className="text-yellow-300 hover:animate-bounce"
+                height="25"
+                width="25"
+              />
+            )}
           </li>
         </ul>
       </div>
