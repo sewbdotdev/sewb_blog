@@ -9,5 +9,5 @@ type Data = {
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const PROVIDER = "google";
-  return res.redirect(`${STRAPI_BACKEND_URL}/api/connect/${PROVIDER}`);
+  return res.redirect(`${STRAPI_BACKEND_URL}/api/connect/${PROVIDER}`).end();
 }

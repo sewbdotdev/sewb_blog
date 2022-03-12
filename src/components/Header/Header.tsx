@@ -6,15 +6,15 @@ import DarkLogo from "/public/img/logo-dark.png";
 import LightLogo from "/public/img/logo-light.png";
 import Link from "next/link";
 
-import { SunIcon, MoonIcon, LogoutIcon } from "@heroicons/react/solid";
-// import { useSession, signIn, signOut } from "next-auth/client";
+import { SunIcon, MoonIcon } from "@heroicons/react/solid";
+import { useSession, signIn, signOut } from "utils/session";
 // TODO: Improve image/logo using import
 const Header: FunctionComponent = (props) => {
   const { theme, setTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const [isDark, setIsDark] = useState(false);
-  // const [data, loading] = useSession();
-  // console.log(data, loading);
+  const { data, loading } = useSession();
+
   useEffect(() => {
     setIsMounted(true);
     setIsDark(() => theme === "dark");
@@ -47,19 +47,17 @@ const Header: FunctionComponent = (props) => {
           <li>Our story</li>
           <li>Contact</li>
           <li>FAQ</li>
-          {/* {loading ? (
+          {data && !loading ? (
             <li>
               <Link href="/profile">
                 <a>Profile</a>
               </Link>
             </li>
           ) : (
-            <a onClick={() => signIn("google")}>Login</a>
+            <a onClick={() => signIn()}>Login</a>
           )}
-          {loading && <li onClick={() => signOut()}>Logout</li>} */}
-          <Link href="/api/auth/google">
-            <a>Profile</a>
-          </Link>
+          {data && !loading && <li onClick={() => signOut()}>Logout</li>}
+
           <li onClick={switchTheme} className="cursor-pointer">
             {theme === "light" ? (
               <MoonIcon
