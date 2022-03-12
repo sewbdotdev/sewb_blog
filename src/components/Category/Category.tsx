@@ -15,7 +15,6 @@ const Category: FunctionComponent<CategoryOrTagProps> = (props) => {
     heading = "Discover More Of What You Love",
     data,
   } = props;
-  console.log(isTag);
   if (data.length === 0) {
     return null;
   }
