@@ -11,5 +11,9 @@
 }
 
 .linkInnerContainer {
-  @apply flex justify-center md:justify-end gap-4 text-xs md:text-base;
+  @apply flex justify-center md:justify-end gap-4 text-xs md:text-base cursor-pointer;
+}
+
+.linkInnerContainer > li {
+  @apply hover:underline
 }
