@@ -15,7 +15,6 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
   const { content } = props;
   return (
     <ReactMarkdown
-      children={content}
       remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeSanitize, rehypeHighlight]}
       components={{
@@ -47,7 +46,9 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
           <img {...props} src={Helpers.getImageURL(props.src ?? "")} />
         ),
       }}
-    />
+    >
+      {content}
+    </ReactMarkdown>
   );
 };
 

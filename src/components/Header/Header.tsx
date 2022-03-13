@@ -14,7 +14,6 @@ const Header: FunctionComponent = (props) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const { data, loading } = useSession();
-
   useEffect(() => {
     setIsMounted(true);
     setIsDark(() => theme === "dark");
@@ -33,14 +32,17 @@ const Header: FunctionComponent = (props) => {
   return (
     <header className={styles.container}>
       <div className={styles.logoContainer}>
-        <Image
-          src={isDark ? LightLogo : DarkLogo}
-          alt="SEWB BLOG Logo."
-          width={200}
-          height={100}
-          // layout="fixed"
-          // priority={true}
-        />
+        <Link href="/">
+          <Image
+            src={isDark ? LightLogo : DarkLogo}
+            className="cursor-pointer"
+            alt="SEWB BLOG Logo."
+            width={200}
+            height={100}
+            // layout="fixed"
+            // priority={true}
+          />
+        </Link>
       </div>
       <div className={styles.linkContainer}>
         <ul className={styles.linkInnerContainer}>

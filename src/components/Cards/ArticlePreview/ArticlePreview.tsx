@@ -37,7 +37,11 @@ const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
           <h6 className={styles.articlePreviewName}>
             {props.authorName} {props.hasMultiAuthor ? "et al" : ""}{" "}
             <a className="font-normal">in</a>{" "}
-            <a className="hover:underline">{props.category.attributes.title}</a>
+            <Link href={`/category/${props.category.attributes.slug}`}>
+              <a className="hover:underline">
+                {props.category.attributes.title}
+              </a>
+            </Link>
           </h6>
         </div>
         <h2 className={styles.articlePreviewTitle}>

@@ -32,11 +32,6 @@ const PostPage: NextPage = (props) => {
 
   const post = data?.posts?.data;
 
-  console.log(post![0].id);
-
-  {
-  }
-
   return (
     <Content classNames="overflow-y-hidden">
       <DataWrapper status={status}>
@@ -97,14 +92,14 @@ const PostPage: NextPage = (props) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getAllPosts(1, 100);
-  const categoryPaths = posts.data.map((cat) => ({
+  const postPaths = posts.data.map((post) => ({
     params: {
-      slug: cat.attributes.slug,
+      slug: post.attributes.slug,
     },
   }));
 
   return {
-    paths: [...categoryPaths],
+    paths: [...postPaths],
     fallback: true,
   };
 };

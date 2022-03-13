@@ -33,14 +33,13 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
   const router = useRouter();
   const { ptype, slug } = router.query;
   const [page, setPageNo] = useState(1);
-  const { data: postData, status } =
-    ptype === "tag"
-      ? useQuery(["posts", { tagSlug: String(slug), page }], () =>
-          getPostsByTag(String(slug))
-        )
-      : useQuery(["posts", { categorySlug: String(slug), page }], () =>
-          getPostsByCategory(String(slug))
-        );
+  const { data: postData, status } = useQuery(
+    ["posts", { slug: String(slug), page }],
+    () =>
+      ptype === "tag"
+        ? getPostsByTag(String(slug))
+        : getPostsByCategory(String(slug))
+  );
 
   if (status === "loading") {
     return (

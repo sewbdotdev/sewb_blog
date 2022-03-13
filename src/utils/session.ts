@@ -45,19 +45,26 @@ const useSession = ({
 
 const signIn = () => {
   const { origin } = absoluteUrl();
-  const pathname = Router.pathname;
+  // TODO test that this always produces the path you expect it to produce i.e. the current
+  // TODO path of the page you're visiting
+  const pathname = Router.asPath;
   const redirectTo = `${origin}${pathname}`;
   // TODO Consider changing the redirectTo name to something like loginCallbackURL because
   // TODO it represents what it's used for and you may want to use redirectTo for handling
   // TODO global redirects in the app.
   setCookie(null, "redirectTo", redirectTo, {
     sameSite: "lax",
+    path: "/",
   });
   Router.push("/api/auth/google");
 };
 const signOut = () => {
-  destroyCookie(null, "userJWT");
-  destroyCookie(null, "userData");
+  destroyCookie({}, "userJWT", {
+    path: "/",
+  });
+  destroyCookie({}, "userData", {
+    path: "/",
+  });
   Router.reload();
 };
 
