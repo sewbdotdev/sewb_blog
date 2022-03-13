@@ -8,7 +8,7 @@ import TestImage2 from "/public/img/test-2.jpeg";
 import Author from "@/components/Author";
 import { ChatIcon, HeartIcon, EyeIcon } from "@heroicons/react/solid";
 import Related from "@/components/Related";
-import { getAllPosts, getPostsByCategory } from "hooks/usePost";
+import { getAllPosts, getPostsBSlug, getPostsByCategory } from "hooks/usePost";
 import { dehydrate, QueryClient } from "react-query";
 import { useGetPostBySlugQuery } from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
@@ -34,7 +34,8 @@ const PostPage: NextPage = (props) => {
 
   console.log(post![0].id);
 
-  {}
+  {
+  }
 
   return (
     <Content classNames="overflow-y-hidden">
@@ -113,7 +114,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   const { params } = ctx;
   await queryClient.prefetchQuery(
     ["getPostBySlug", { slug: params?.slug }],
-    () => getPostsByCategory(String(params?.slug))
+    () => getPostsBSlug(String(params?.slug))
   );
   return {
     props: {

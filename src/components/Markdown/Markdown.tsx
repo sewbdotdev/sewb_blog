@@ -6,6 +6,7 @@ import rehypeSanitize from "rehype-sanitize";
 import rehypeHighlight from "rehype-highlight";
 import styles from "./Markdown.module.css";
 import Link from "next/link";
+import Helpers from "utils/helpers";
 type MarkdownProps = {
   content: string;
 };
@@ -25,7 +26,9 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
         a: ({ node, ...props }) =>
           props.href?.startsWith("/") ? (
             <Link href={props.href}>
-              <a {...props} className={styles.a}>{props.children}</a>
+              <a {...props} className={styles.a}>
+                {props.children}
+              </a>
             </Link>
           ) : (
             <a
@@ -39,15 +42,10 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
             </a>
           ),
         //   FIXME: nextjs not pulling image from API. Giving connection refused error.
-        // img: ({ node, ...props }) => (
-        //   <Image
-        //     layout="responsive"
-        //     loading="lazy"
-        //     height={props.height ?? 200}
-        //     width={props.width ?? 200}
-        //     src={props.src ?? ""}
-        //   />
-        // ),
+        //   TODO consider using nextjs image component
+        img: ({ node, ...props }) => (
+          <img {...props} src={Helpers.getImageURL(props.src ?? "")} />
+        ),
       }}
     />
   );

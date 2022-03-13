@@ -18,7 +18,7 @@
     "paths": {
       "@/components/*": ["components/*"]
     },
-    "typeRoots": ["src/@customTypes", "./node_modules/@types"]
+    "typeRoots": ["src/@customTypes/*", "./node_modules/@types"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/utils/session/index.js", "src/utils/session.ts"],
   "exclude": ["node_modules"]

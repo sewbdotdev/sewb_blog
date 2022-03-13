@@ -83,8 +83,27 @@ const useInfinitePosts = () =>
     }
   );
 
-
-  // const getPostBySlug = (): Promise<Post> => {
-
-  // }
-export { getPostsByCategory, getPostsByTag, getAllPosts, useInfinitePosts };
+const getPostsBSlug = async (
+  slug: string,
+  page = 1,
+  pageSize = 10
+): Promise<PostAPIResponse> => {
+  try {
+    const response = await client.request(PostQuery.getPostBySlug(), {
+      slug,
+      page,
+      pageSize,
+    });
+    return response;
+  } catch (error: any) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+};
+export {
+  getPostsByCategory,
+  getPostsByTag,
+  getAllPosts,
+  useInfinitePosts,
+  getPostsBSlug,
+};
