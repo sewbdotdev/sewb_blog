@@ -29,7 +29,6 @@ const Home: NextPage = (props) => {
     },
   }));
 
-  console.log(categoryData);
   return (
     <Content>
       <Feature />

@@ -178,6 +178,51 @@ export type CommentRelationResponseCollection = {
   data: Array<CommentEntity>;
 };
 
+export type ComponentFaqFaQs = {
+  __typename?: 'ComponentFaqFaQs';
+  Answer?: Maybe<Scalars['String']>;
+  Question?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+};
+
+export type ComponentFaqFaQsFiltersInput = {
+  Answer?: InputMaybe<StringFilterInput>;
+  Question?: InputMaybe<StringFilterInput>;
+  and?: InputMaybe<Array<InputMaybe<ComponentFaqFaQsFiltersInput>>>;
+  not?: InputMaybe<ComponentFaqFaQsFiltersInput>;
+  or?: InputMaybe<Array<InputMaybe<ComponentFaqFaQsFiltersInput>>>;
+};
+
+export type ComponentFaqFaQsInput = {
+  Answer?: InputMaybe<Scalars['String']>;
+  Question?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+};
+
+export type Contact = {
+  __typename?: 'Contact';
+  content?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type ContactEntity = {
+  __typename?: 'ContactEntity';
+  attributes?: Maybe<Contact>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type ContactEntityResponse = {
+  __typename?: 'ContactEntityResponse';
+  data?: Maybe<ContactEntity>;
+};
+
+export type ContactInput = {
+  content?: InputMaybe<Scalars['String']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
 export type DateTimeFilterInput = {
   and?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   between?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
@@ -199,6 +244,39 @@ export type DateTimeFilterInput = {
   null?: InputMaybe<Scalars['Boolean']>;
   or?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   startsWith?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type Faq = {
+  __typename?: 'Faq';
+  content?: Maybe<Array<Maybe<ComponentFaqFaQs>>>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  heading?: Maybe<Scalars['String']>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+
+export type FaqContentArgs = {
+  filters?: InputMaybe<ComponentFaqFaQsFiltersInput>;
+  pagination?: InputMaybe<PaginationArg>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type FaqEntity = {
+  __typename?: 'FaqEntity';
+  attributes?: Maybe<Faq>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type FaqEntityResponse = {
+  __typename?: 'FaqEntityResponse';
+  data?: Maybe<FaqEntity>;
+};
+
+export type FaqInput = {
+  content?: InputMaybe<Array<InputMaybe<ComponentFaqFaQsInput>>>;
+  heading?: InputMaybe<Scalars['String']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
 export type FileInfoInput = {
@@ -230,7 +308,7 @@ export type FloatFilterInput = {
   startsWith?: InputMaybe<Scalars['Float']>;
 };
 
-export type GenericMorph = Category | Comment | I18NLocale | Post | PostClap | Tag | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser;
+export type GenericMorph = Category | Comment | ComponentFaqFaQs | Contact | Faq | I18NLocale | OurStory | Post | PostClap | Tag | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | UsersPermissionsUser;
 
 export type I18NLocale = {
   __typename?: 'I18NLocale';
@@ -343,6 +421,7 @@ export type Mutation = {
   createCategoryLocalization?: Maybe<CategoryEntityResponse>;
   createComment?: Maybe<CommentEntityResponse>;
   createCommentLocalization?: Maybe<CommentEntityResponse>;
+  createOurStoryLocalization?: Maybe<OurStoryEntityResponse>;
   createPost?: Maybe<PostEntityResponse>;
   createPostClap?: Maybe<PostClapEntityResponse>;
   createPostLocalization?: Maybe<PostEntityResponse>;
@@ -354,6 +433,9 @@ export type Mutation = {
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse;
   deleteCategory?: Maybe<CategoryEntityResponse>;
   deleteComment?: Maybe<CommentEntityResponse>;
+  deleteContact?: Maybe<ContactEntityResponse>;
+  deleteFaq?: Maybe<FaqEntityResponse>;
+  deleteOurStory?: Maybe<OurStoryEntityResponse>;
   deletePost?: Maybe<PostEntityResponse>;
   deletePostClap?: Maybe<PostClapEntityResponse>;
   deleteTag?: Maybe<TagEntityResponse>;
@@ -375,7 +457,10 @@ export type Mutation = {
   resetPassword?: Maybe<UsersPermissionsLoginPayload>;
   updateCategory?: Maybe<CategoryEntityResponse>;
   updateComment?: Maybe<CommentEntityResponse>;
+  updateContact?: Maybe<ContactEntityResponse>;
+  updateFaq?: Maybe<FaqEntityResponse>;
   updateFileInfo: UploadFileEntityResponse;
+  updateOurStory?: Maybe<OurStoryEntityResponse>;
   updatePost?: Maybe<PostEntityResponse>;
   updatePostClap?: Maybe<PostClapEntityResponse>;
   updateTag?: Maybe<TagEntityResponse>;
@@ -409,6 +494,13 @@ export type MutationCreateCommentArgs = {
 
 export type MutationCreateCommentLocalizationArgs = {
   data?: InputMaybe<CommentInput>;
+  id?: InputMaybe<Scalars['ID']>;
+  locale?: InputMaybe<Scalars['I18NLocaleCode']>;
+};
+
+
+export type MutationCreateOurStoryLocalizationArgs = {
+  data?: InputMaybe<OurStoryInput>;
   id?: InputMaybe<Scalars['ID']>;
   locale?: InputMaybe<Scalars['I18NLocaleCode']>;
 };
@@ -460,6 +552,11 @@ export type MutationDeleteCategoryArgs = {
 
 export type MutationDeleteCommentArgs = {
   id: Scalars['ID'];
+  locale?: InputMaybe<Scalars['I18NLocaleCode']>;
+};
+
+
+export type MutationDeleteOurStoryArgs = {
   locale?: InputMaybe<Scalars['I18NLocaleCode']>;
 };
 
@@ -549,9 +646,25 @@ export type MutationUpdateCommentArgs = {
 };
 
 
+export type MutationUpdateContactArgs = {
+  data: ContactInput;
+};
+
+
+export type MutationUpdateFaqArgs = {
+  data: FaqInput;
+};
+
+
 export type MutationUpdateFileInfoArgs = {
   id: Scalars['ID'];
   info?: InputMaybe<FileInfoInput>;
+};
+
+
+export type MutationUpdateOurStoryArgs = {
+  data: OurStoryInput;
+  locale?: InputMaybe<Scalars['I18NLocaleCode']>;
 };
 
 
@@ -598,6 +711,42 @@ export type MutationUploadArgs = {
   info?: InputMaybe<FileInfoInput>;
   ref?: InputMaybe<Scalars['String']>;
   refId?: InputMaybe<Scalars['ID']>;
+};
+
+export type OurStory = {
+  __typename?: 'OurStory';
+  content?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  locale?: Maybe<Scalars['String']>;
+  localizations?: Maybe<OurStoryRelationResponseCollection>;
+  publishedAt?: Maybe<Scalars['DateTime']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+
+export type OurStoryLocalizationsArgs = {
+  publicationState?: InputMaybe<PublicationState>;
+};
+
+export type OurStoryEntity = {
+  __typename?: 'OurStoryEntity';
+  attributes?: Maybe<OurStory>;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type OurStoryEntityResponse = {
+  __typename?: 'OurStoryEntityResponse';
+  data?: Maybe<OurStoryEntity>;
+};
+
+export type OurStoryInput = {
+  content?: InputMaybe<Scalars['String']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type OurStoryRelationResponseCollection = {
+  __typename?: 'OurStoryRelationResponseCollection';
+  data: Array<OurStoryEntity>;
 };
 
 export type Pagination = {
@@ -787,9 +936,12 @@ export type Query = {
   category?: Maybe<CategoryEntityResponse>;
   comment?: Maybe<CommentEntityResponse>;
   comments?: Maybe<CommentEntityResponseCollection>;
+  contact?: Maybe<ContactEntityResponse>;
+  faq?: Maybe<FaqEntityResponse>;
   i18NLocale?: Maybe<I18NLocaleEntityResponse>;
   i18NLocales?: Maybe<I18NLocaleEntityResponseCollection>;
   me?: Maybe<UsersPermissionsMe>;
+  ourStory?: Maybe<OurStoryEntityResponse>;
   post?: Maybe<PostEntityResponse>;
   postClap?: Maybe<PostClapEntityResponse>;
   postClaps?: Maybe<PostClapEntityResponseCollection>;
@@ -833,6 +985,16 @@ export type QueryCommentsArgs = {
 };
 
 
+export type QueryContactArgs = {
+  publicationState?: InputMaybe<PublicationState>;
+};
+
+
+export type QueryFaqArgs = {
+  publicationState?: InputMaybe<PublicationState>;
+};
+
+
 export type QueryI18NLocaleArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
@@ -842,6 +1004,12 @@ export type QueryI18NLocalesArgs = {
   filters?: InputMaybe<I18NLocaleFiltersInput>;
   pagination?: InputMaybe<PaginationArg>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+
+export type QueryOurStoryArgs = {
+  locale?: InputMaybe<Scalars['I18NLocaleCode']>;
+  publicationState?: InputMaybe<PublicationState>;
 };
 
 
@@ -1368,6 +1536,16 @@ export type GetOneTagQueryVariables = Exact<{
 
 export type GetOneTagQuery = { __typename?: 'Query', tag?: { __typename?: 'TagEntityResponse', data?: { __typename?: 'TagEntity', id?: string | null, attributes?: { __typename?: 'Tag', title: string, slug?: string | null } | null } | null } | null };
 
+export type GetFaqQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetFaqQuery = { __typename?: 'Query', faq?: { __typename?: 'FaqEntityResponse', data?: { __typename?: 'FaqEntity', id?: string | null, attributes?: { __typename?: 'Faq', content?: Array<{ __typename?: 'ComponentFaqFaQs', Question?: string | null, Answer?: string | null } | null> | null } | null } | null } | null };
+
+export type GetStoryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetStoryQuery = { __typename?: 'Query', ourStory?: { __typename?: 'OurStoryEntityResponse', data?: { __typename?: 'OurStoryEntity', id?: string | null, attributes?: { __typename?: 'OurStory', content?: string | null } | null } | null } | null };
+
 export type GetPostBySlugQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
@@ -1515,6 +1693,61 @@ export const useGetOneTagQuery = <
     useQuery<GetOneTagQuery, TError, TData>(
       ['getOneTag', variables],
       fetcher<GetOneTagQuery, GetOneTagQueryVariables>(client, GetOneTagDocument, variables, headers),
+      options
+    );
+export const GetFaqDocument = `
+    query getFAQ {
+  faq {
+    data {
+      id
+      attributes {
+        content {
+          Question
+          Answer
+        }
+      }
+    }
+  }
+}
+    `;
+export const useGetFaqQuery = <
+      TData = GetFaqQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: GetFaqQueryVariables,
+      options?: UseQueryOptions<GetFaqQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<GetFaqQuery, TError, TData>(
+      variables === undefined ? ['getFAQ'] : ['getFAQ', variables],
+      fetcher<GetFaqQuery, GetFaqQueryVariables>(client, GetFaqDocument, variables, headers),
+      options
+    );
+export const GetStoryDocument = `
+    query getStory {
+  ourStory {
+    data {
+      id
+      attributes {
+        content
+      }
+    }
+  }
+}
+    `;
+export const useGetStoryQuery = <
+      TData = GetStoryQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: GetStoryQueryVariables,
+      options?: UseQueryOptions<GetStoryQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<GetStoryQuery, TError, TData>(
+      variables === undefined ? ['getStory'] : ['getStory', variables],
+      fetcher<GetStoryQuery, GetStoryQueryVariables>(client, GetStoryDocument, variables, headers),
       options
     );
 export const GetPostBySlugDocument = `

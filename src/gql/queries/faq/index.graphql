@@ -1,0 +1,13 @@
+query getFAQ {
+  faq {
+    data{
+      id
+      attributes{
+        content {
+          Question
+          Answer
+        }
+      }
+    }
+  }
+}
