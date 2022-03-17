@@ -3,7 +3,7 @@ import React, { FunctionComponent, useState } from "react";
 const TextBox: FunctionComponent = (props) => {
   const [text, setText] = useState("");
   return (
-    <div className="flex flex-col mb-10 md:w-full">
+    <div className="flex flex-col mb-5 md:w-full sticky top-0 z-50">
       <textarea
         className={`rounded-sm max-w-full h-${
           text.length > 0 ? "36" : "10"

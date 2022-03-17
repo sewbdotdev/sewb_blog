@@ -17,6 +17,7 @@ import DataWrapper from "@/components/DataWrapper";
 import Markdown from "@/components/Markdown";
 import Sidebar from "@/components/Comment/Sidebar";
 import TextBox from "@/components/Comment/TextBox";
+import Response from "@/components/Comment/Response";
 
 const PostPage: NextPage = (props) => {
   const router = useRouter();
@@ -50,7 +51,25 @@ const PostPage: NextPage = (props) => {
             </div>
             <TextBox />
           </section>
-          <hr className="border-gray-500"/>
+          <hr className="border-gray-500" />
+          <section className="py-8 px-4">
+            <Response />
+            <Response hideLastBorder={true} />
+            <Response />
+            <Response hideLastBorder={true} />
+            <Response />
+            <Response hideLastBorder={true} />
+            <Response />
+            <Response hideLastBorder={true} />
+            <Response />
+            <Response hideLastBorder={true} />
+            <Response />
+            <Response hideLastBorder={true} />
+            <Response />
+            <Response hideLastBorder={true} />
+            <Response />
+            <Response hideLastBorder={true} />
+          </section>
         </section>
       </Sidebar>
       <DataWrapper status={status}>

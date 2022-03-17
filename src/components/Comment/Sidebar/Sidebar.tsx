@@ -27,7 +27,7 @@ const Sidebar: FunctionComponent<SidebarProps> = (props) => {
       size={width && width <= 500 ? 70 : 30}
       noBackdrop={noBackdrop}
       backdropClicked={() => setIsOpen(false)}
-      panelClassName="dark:bg-gray-900 bg-gray-200 border-l-2 border-gray-300"
+      panelContainerClassName="dark:bg-gray-900 bg-gray-200 border-l-2 border-gray-300"
     >
       {children as ReactElement}
     </SlidingPanel>
