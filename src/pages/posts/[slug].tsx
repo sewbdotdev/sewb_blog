@@ -15,8 +15,8 @@ import { useGetPostBySlugQuery } from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
 import DataWrapper from "@/components/DataWrapper";
 import Markdown from "@/components/Markdown";
-import Sidebar from "@/components/Comments/Sidebar";
-import TextBox from "@/components/Comments/TextBox";
+import Sidebar from "@/components/Comment/Sidebar";
+import TextBox from "@/components/Comment/TextBox";
 
 const PostPage: NextPage = (props) => {
   const router = useRouter();
