@@ -1565,7 +1565,7 @@ export type UpdateCommentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment?: { __typename?: 'CommentEntityResponse', data?: { __typename?: 'CommentEntity', id?: string | null } | null } | null };
+export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment?: { __typename?: 'CommentEntityResponse', data?: { __typename?: 'CommentEntity', id?: string | null, attributes?: { __typename?: 'Comment', content?: string | null, createdAt?: any | null, author?: { __typename?: 'UsersPermissionsUserEntityResponse', data?: { __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string } | null } | null } | null } | null } | null } | null };
 
 export type CreateCommentMutationVariables = Exact<{
   content: Scalars['String'];
@@ -1851,6 +1851,18 @@ export const UpdateCommentDocument = `
   updateComment(id: $id, data: {content: $content}) {
     data {
       id
+      attributes {
+        content
+        createdAt
+        author {
+          data {
+            id
+            attributes {
+              username
+            }
+          }
+        }
+      }
     }
   }
 }

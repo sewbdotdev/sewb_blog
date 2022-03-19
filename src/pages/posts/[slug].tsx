@@ -37,8 +37,12 @@ const PostPage: NextPage = (props) => {
   });
 
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
+  const [pageSize, setPageSize] = useState(20);
+  const [postVars, setPostVars] = useState({
+    page,
+    pageSize,
+    postId: String(data?.posts?.data[0].id),
+  });
   const comments = useGetCommentsQuery(
     getClient(),
     {
@@ -125,6 +129,7 @@ const PostPage: NextPage = (props) => {
                 comments.data.comments &&
                 comments.data.comments.data.map((comment, i) => (
                   <Response
+                    commentCacheKey={postVars}
                     comment={comment as CommentEntity}
                     hideLastBorder={
                       Number(comments.data.comments?.data.length) - 1 === i

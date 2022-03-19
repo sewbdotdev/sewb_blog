@@ -82,6 +82,18 @@ mutation updateComment($id:ID!,$content:String!){
   }){
     data{
       id
+      attributes{
+        content
+        createdAt
+        author{
+          data{
+            id
+            attributes{
+              username
+            }
+          }
+        }
+      }
     }
   }
 }

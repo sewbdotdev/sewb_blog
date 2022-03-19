@@ -33,6 +33,11 @@ const TextBox: FunctionComponent<TextBoxProps> = (props) => {
         placeholder="Speak, the world is listening..."
         value={text}
         onChange={(e) => setText(e.target.value)}
+        onKeyPress={(e) => {
+          if (e.key === "Enter") {
+            onSubmit(text, callback);
+          }
+        }}
       />
       {text.length > 0 && (
         <button
