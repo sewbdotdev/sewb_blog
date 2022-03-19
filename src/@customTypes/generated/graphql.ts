@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import { RequestInit } from 'graphql-request/dist/types.dom';
-import { useQuery, UseQueryOptions } from 'react-query';
+import { useQuery, UseQueryOptions, useMutation, UseMutationOptions } from 'react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1536,6 +1536,46 @@ export type GetOneTagQueryVariables = Exact<{
 
 export type GetOneTagQuery = { __typename?: 'Query', tag?: { __typename?: 'TagEntityResponse', data?: { __typename?: 'TagEntity', id?: string | null, attributes?: { __typename?: 'Tag', title: string, slug?: string | null } | null } | null } | null };
 
+export type GetCommentsQueryVariables = Exact<{
+  postId: Scalars['ID'];
+  page: Scalars['Int'];
+  pageSize: Scalars['Int'];
+}>;
+
+
+export type GetCommentsQuery = { __typename?: 'Query', comments?: { __typename?: 'CommentEntityResponseCollection', data: Array<{ __typename?: 'CommentEntity', id?: string | null, attributes?: { __typename?: 'Comment', content?: string | null, createdAt?: any | null, author?: { __typename?: 'UsersPermissionsUserEntityResponse', data?: { __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string, avatar?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', formats?: any | null } | null } | null } | null } | null } | null } | null } | null }>, meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
+
+export type GetOneCommentQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetOneCommentQuery = { __typename?: 'Query', comment?: { __typename?: 'CommentEntityResponse', data?: { __typename?: 'CommentEntity', id?: string | null, attributes?: { __typename?: 'Comment', content?: string | null, author?: { __typename?: 'UsersPermissionsUserEntityResponse', data?: { __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', avatar?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', url: string, alternativeText?: string | null } | null } | null } | null } | null } | null } | null } | null } | null } | null };
+
+export type DeleteCommentMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment?: { __typename?: 'CommentEntityResponse', data?: { __typename?: 'CommentEntity', id?: string | null } | null } | null };
+
+export type UpdateCommentMutationVariables = Exact<{
+  id: Scalars['ID'];
+  content: Scalars['String'];
+}>;
+
+
+export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment?: { __typename?: 'CommentEntityResponse', data?: { __typename?: 'CommentEntity', id?: string | null } | null } | null };
+
+export type CreateCommentMutationVariables = Exact<{
+  content: Scalars['String'];
+  postId: Scalars['ID'];
+  authorId: Scalars['ID'];
+}>;
+
+
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment?: { __typename?: 'CommentEntityResponse', data?: { __typename?: 'CommentEntity', id?: string | null } | null } | null };
+
 export type GetFaqQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1693,6 +1733,168 @@ export const useGetOneTagQuery = <
     useQuery<GetOneTagQuery, TError, TData>(
       ['getOneTag', variables],
       fetcher<GetOneTagQuery, GetOneTagQueryVariables>(client, GetOneTagDocument, variables, headers),
+      options
+    );
+export const GetCommentsDocument = `
+    query getComments($postId: ID!, $page: Int!, $pageSize: Int!) {
+  comments(
+    filters: {post: {id: {eq: $postId}}}
+    pagination: {page: $page, pageSize: $pageSize}
+  ) {
+    data {
+      id
+      attributes {
+        content
+        createdAt
+        author {
+          data {
+            id
+            attributes {
+              username
+              avatar {
+                data {
+                  id
+                  attributes {
+                    formats
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    meta {
+      pagination {
+        total
+        page
+        pageSize
+        pageCount
+      }
+    }
+  }
+}
+    `;
+export const useGetCommentsQuery = <
+      TData = GetCommentsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: GetCommentsQueryVariables,
+      options?: UseQueryOptions<GetCommentsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<GetCommentsQuery, TError, TData>(
+      ['getComments', variables],
+      fetcher<GetCommentsQuery, GetCommentsQueryVariables>(client, GetCommentsDocument, variables, headers),
+      options
+    );
+export const GetOneCommentDocument = `
+    query getOneComment($id: ID!) {
+  comment(id: $id) {
+    data {
+      id
+      attributes {
+        content
+        author {
+          data {
+            id
+            attributes {
+              avatar {
+                data {
+                  id
+                  attributes {
+                    url
+                    alternativeText
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const useGetOneCommentQuery = <
+      TData = GetOneCommentQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: GetOneCommentQueryVariables,
+      options?: UseQueryOptions<GetOneCommentQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<GetOneCommentQuery, TError, TData>(
+      ['getOneComment', variables],
+      fetcher<GetOneCommentQuery, GetOneCommentQueryVariables>(client, GetOneCommentDocument, variables, headers),
+      options
+    );
+export const DeleteCommentDocument = `
+    mutation deleteComment($id: ID!) {
+  deleteComment(id: $id) {
+    data {
+      id
+    }
+  }
+}
+    `;
+export const useDeleteCommentMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<DeleteCommentMutation, TError, DeleteCommentMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<DeleteCommentMutation, TError, DeleteCommentMutationVariables, TContext>(
+      ['deleteComment'],
+      (variables?: DeleteCommentMutationVariables) => fetcher<DeleteCommentMutation, DeleteCommentMutationVariables>(client, DeleteCommentDocument, variables, headers)(),
+      options
+    );
+export const UpdateCommentDocument = `
+    mutation updateComment($id: ID!, $content: String!) {
+  updateComment(id: $id, data: {content: $content}) {
+    data {
+      id
+    }
+  }
+}
+    `;
+export const useUpdateCommentMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<UpdateCommentMutation, TError, UpdateCommentMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<UpdateCommentMutation, TError, UpdateCommentMutationVariables, TContext>(
+      ['updateComment'],
+      (variables?: UpdateCommentMutationVariables) => fetcher<UpdateCommentMutation, UpdateCommentMutationVariables>(client, UpdateCommentDocument, variables, headers)(),
+      options
+    );
+export const CreateCommentDocument = `
+    mutation createComment($content: String!, $postId: ID!, $authorId: ID!) {
+  createComment(data: {content: $content, post: $postId, author: $authorId}) {
+    data {
+      id
+    }
+  }
+}
+    `;
+export const useCreateCommentMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<CreateCommentMutation, TError, CreateCommentMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<CreateCommentMutation, TError, CreateCommentMutationVariables, TContext>(
+      ['createComment'],
+      (variables?: CreateCommentMutationVariables) => fetcher<CreateCommentMutation, CreateCommentMutationVariables>(client, CreateCommentDocument, variables, headers)(),
       options
     );
 export const GetFaqDocument = `

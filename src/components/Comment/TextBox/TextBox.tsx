@@ -3,11 +3,11 @@ import React, { FunctionComponent, useState } from "react";
 const TextBox: FunctionComponent = (props) => {
   const [text, setText] = useState("");
   return (
-    <div className="flex flex-col mb-5 md:w-full sticky top-0 z-50">
+    <div className="flex flex-col mb-5 md:w-full">
       <textarea
         className={`rounded-sm max-w-full h-${
           text.length > 0 ? "36" : "10"
-        } p-2 dark:bg-gray-700`}
+        } p-2 dark:bg-gray-700` }
         placeholder="Speak, the world is listening..."
         value={text}
         onChange={(e) => setText(e.target.value)}

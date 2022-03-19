@@ -11,7 +11,11 @@ import { ChatIcon, HeartIcon, XIcon } from "@heroicons/react/solid";
 import Related from "@/components/Related";
 import { getAllPosts, getPostsBSlug, getPostsByCategory } from "hooks/usePost";
 import { dehydrate, QueryClient } from "react-query";
-import { useGetPostBySlugQuery } from "@customTypes/generated/graphql";
+import {
+  useGetPostBySlugQuery,
+  useGetCommentsQuery,
+  CommentEntity,
+} from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
 import DataWrapper from "@/components/DataWrapper";
 import Markdown from "@/components/Markdown";
@@ -27,6 +31,22 @@ const PostPage: NextPage = (props) => {
     slug: String(router.query.slug),
   });
 
+  const comments = useGetCommentsQuery(
+    getClient(),
+    {
+      postId: String(data?.posts?.data[0].id),
+      page: 1,
+      pageSize: 10,
+    },
+    {
+      enabled: Boolean(
+        data && data.posts && data.posts.data && data.posts.data.length > 0
+      ),
+    }
+  );
+
+  console.log(comments.data);
+
   if (router.isFallback || status === "loading") {
     return <DataWrapper status="loading" />;
   }
@@ -40,37 +60,36 @@ const PostPage: NextPage = (props) => {
   return (
     <Content classNames="overflow-y-hidden">
       <Sidebar isOpen={open} setIsOpen={setOpen} noBackdrop={false}>
-        <section>
-          <section className="py-8 px-4">
-            <div className="flex justify-between mb-10">
-              <h1 className="text-base md:text-xl font-bold">Comments (20)</h1>
-              <XIcon
-                className="h-7 w-7 mr-10 text-gray-400 cursor-pointer"
-                onClick={() => setOpen(false)}
-              />
-            </div>
-            <TextBox />
+        <DataWrapper status={comments.status}>
+          <section>
+            <section className="py-8 px-4 relative">
+              <div className="flex justify-between mb-10">
+                <h1 className="text-base md:text-xl font-bold">
+                  Comments (20)
+                </h1>
+                <XIcon
+                  className="h-7 w-7 mr-10 text-gray-400 cursor-pointer"
+                  onClick={() => setOpen(false)}
+                />
+              </div>
+              <TextBox />
+            </section>
+            <hr className="border-gray-500" />
+            <section className="py-8 px-4">
+              {comments.data &&
+                comments.data.comments &&
+                comments.data.comments.data.map((comment, i) => (
+                  <Response
+                    comment={comment as CommentEntity}
+                    hideLastBorder={
+                      Number(comments.data.comments?.data.length) - 1 === i
+                    }
+                    key={comment.id}
+                  />
+                ))}
+            </section>
           </section>
-          <hr className="border-gray-500" />
-          <section className="py-8 px-4">
-            <Response />
-            <Response hideLastBorder={true} />
-            <Response />
-            <Response hideLastBorder={true} />
-            <Response />
-            <Response hideLastBorder={true} />
-            <Response />
-            <Response hideLastBorder={true} />
-            <Response />
-            <Response hideLastBorder={true} />
-            <Response />
-            <Response hideLastBorder={true} />
-            <Response />
-            <Response hideLastBorder={true} />
-            <Response />
-            <Response hideLastBorder={true} />
-          </section>
-        </section>
+        </DataWrapper>
       </Sidebar>
       <DataWrapper status={status}>
         {post ? (

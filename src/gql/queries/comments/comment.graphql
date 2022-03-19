@@ -1,0 +1,107 @@
+query getComments($postId:ID!, $page:Int!, $pageSize:Int!){
+  comments(filters:{
+    post:{
+      id:{
+        eq: $postId
+      }
+    }
+  },
+  pagination:{
+    page:$page,
+    pageSize: $pageSize
+  }
+  ){
+    data{
+      id
+      attributes{
+        content
+        createdAt
+        author{
+          data{
+            id
+            attributes{
+              username
+              avatar{
+                data{
+                  id
+                  attributes{
+                    formats
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    meta{
+      pagination{
+        total
+        page
+        pageSize
+        pageCount
+      }
+    }
+  }
+}
+
+
+query getOneComment($id:ID!) {
+  comment(id:$id) {
+    data{
+      id
+      attributes{
+        content
+        author{
+          data{
+            id
+            attributes{
+              avatar{
+                data{
+                  id
+                  attributes{
+                    url
+                    alternativeText
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+mutation deleteComment($id:ID!){
+  deleteComment(id:$id) {
+    data{
+      id
+    }
+  }
+}
+
+
+mutation updateComment($id:ID!,$content:String!){
+  updateComment(id: $id, data:{
+    content: $content
+  }){
+    data{
+      id
+    }
+  }
+}
+
+
+mutation createComment($content:String!, $postId:ID!,$authorId:ID!){
+  createComment(data:{
+    content: $content,
+    post: $postId,
+    author: $authorId
+  }) {
+    data{
+      id
+    }
+  }
+}
