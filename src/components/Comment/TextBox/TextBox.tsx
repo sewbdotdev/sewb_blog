@@ -5,9 +5,9 @@ const TextBox: FunctionComponent = (props) => {
   return (
     <div className="flex flex-col mb-5 md:w-full">
       <textarea
-        className={`rounded-sm max-w-full h-${
+        className={`rounded-md max-w-full h-${
           text.length > 0 ? "36" : "10"
-        } p-2 dark:bg-gray-700` }
+        } p-2 dark:bg-gray-700 shadow-xl focus:outline-none` }
         placeholder="Speak, the world is listening..."
         value={text}
         onChange={(e) => setText(e.target.value)}
