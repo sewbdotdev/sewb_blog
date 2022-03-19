@@ -5,8 +5,10 @@ import { useQueryClient } from "react-query";
 import { PencilIcon, TrashIcon, XIcon } from "@heroicons/react/outline";
 import {
   CommentEntity,
+  CommentEntityResponseCollection,
   GetCommentsQueryVariables,
   UpdateCommentMutationVariables,
+  useDeleteCommentMutation,
   useUpdateCommentMutation,
 } from "@customTypes/generated/graphql";
 import dateFormatter from "utils/dateFormatter";
@@ -52,6 +54,62 @@ const Response: FunctionComponent<ResponseProps> = (props) => {
     });
   };
 
+  const deleteComment = useDeleteCommentMutation(
+    getClient(),
+    {
+      // onMutate: async (commentToDelete) => {
+      //   console.log(commentToDelete);
+
+      //   await queryClient.cancelQueries(["getComments", commentCacheKey]);
+
+      //   // Snapshot the previous value
+      //   const previousTodo = queryClient.getQueryData([
+      //     "getComments",
+      //     commentCacheKey,
+      //   ]) as { comments: CommentEntityResponseCollection };
+      //   console.log(previousTodo);
+      //   const savedTodo = previousTodo;
+      //   const commentToDeleteIndex = previousTodo.comments.data.findIndex(
+      //     (d) => Number(d.id) === Number(commentToDelete.id)
+      //   );
+
+      //   let newComments = [...previousTodo.comments.data];
+      //   if (commentToDeleteIndex !== -1) {
+      //     newComments = newComments.splice(commentToDeleteIndex, 1);
+      //   }
+
+      //   console.log(newComments, "ddkdkdk");
+
+      //   previousTodo.comments.data = newComments;
+
+      //   console.log(previousTodo);
+      //   queryClient.setQueryData(
+      //     ["getComments", commentCacheKey],
+      //     previousTodo
+      //   );
+      //   return { savedTodo };
+      // },
+
+      // onError: (err, commentToDelete, context) => {
+      //   queryClient.setQueryData(
+      //     ["getComments", commentCacheKey],
+      //     // @ts-ignore
+      //     context.savedTodo
+      //   );
+      // },
+      onSuccess: (resp) => {
+        queryClient.invalidateQueries("getComments");
+      },
+    },
+    {
+      Authorization: `Bearer ${userData?.jwt}`,
+    }
+  );
+
+  const handleDelete = () => {
+    deleteComment.mutate({ id: String(data.id) });
+  };
+
   return (
     <div className="flex flex-col py-3 my-4">
       <div className="flex gap-5  mb-4">
@@ -89,7 +147,10 @@ const Response: FunctionComponent<ResponseProps> = (props) => {
                 onClick={() => setEditMode(true)}
               />
             )}
-            <TrashIcon className="h-6 w-7  text-yellow-500 cursor-pointer" />
+            <TrashIcon
+              className="h-6 w-7  text-yellow-500 cursor-pointer"
+              onClick={() => handleDelete()}
+            />
           </div>
         }
       </div>
