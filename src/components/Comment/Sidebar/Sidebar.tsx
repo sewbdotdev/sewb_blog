@@ -16,10 +16,9 @@ const Sidebar: FunctionComponent<SidebarProps> = (props) => {
     type = "right",
     noBackdrop = true,
     setIsOpen,
-    children
+    children,
   } = props;
   const { width } = useWindowSize();
-  console.log(width);
   return (
     <SlidingPanel
       isOpen={isOpen}

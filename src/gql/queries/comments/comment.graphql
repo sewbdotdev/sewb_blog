@@ -10,6 +10,7 @@ query getComments($postId:ID!, $page:Int!, $pageSize:Int!){
     page:$page,
     pageSize: $pageSize
   }
+    sort:["createdAt:desc"]
   ){
     data{
       id
@@ -21,14 +22,6 @@ query getComments($postId:ID!, $page:Int!, $pageSize:Int!){
             id
             attributes{
               username
-              avatar{
-                data{
-                  id
-                  attributes{
-                    formats
-                  }
-                }
-              }
             }
           }
         }
@@ -105,3 +98,4 @@ mutation createComment($content:String!, $postId:ID!,$authorId:ID!){
     }
   }
 }
+

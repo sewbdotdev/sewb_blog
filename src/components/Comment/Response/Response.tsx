@@ -14,7 +14,6 @@ type ResponseProps = {
 const Response: FunctionComponent<ResponseProps> = (props) => {
   const { hideLastBorder = false, comment } = props;
   const { data } = useSession();
-
   const [editMode, setEditMode] = useState(false);
   return (
     <div className="flex flex-col py-3 my-4">
@@ -57,7 +56,11 @@ const Response: FunctionComponent<ResponseProps> = (props) => {
         )}
       </div>
       {editMode ? (
-        <TextBox value={comment.attributes?.content ?? ""} autoFocus={true} />
+        <TextBox
+          defaultValue={comment.attributes?.content ?? ""}
+          autoFocus={true}
+          onSubmit={(value) => console.log(value)}
+        />
       ) : (
         <p className="text-sm">{comment.attributes?.content}</p>
       )}

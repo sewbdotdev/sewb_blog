@@ -10,11 +10,13 @@ import Author from "@/components/Author";
 import { ChatIcon, HeartIcon, XIcon } from "@heroicons/react/solid";
 import Related from "@/components/Related";
 import { getAllPosts, getPostsBSlug, getPostsByCategory } from "hooks/usePost";
-import { dehydrate, QueryClient } from "react-query";
+import { dehydrate, QueryClient, useQueryClient } from "react-query";
 import {
   useGetPostBySlugQuery,
   useGetCommentsQuery,
   CommentEntity,
+  useCreateCommentMutation,
+  CreateCommentMutationVariables,
 } from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
 import DataWrapper from "@/components/DataWrapper";
@@ -22,30 +24,63 @@ import Markdown from "@/components/Markdown";
 import Sidebar from "@/components/Comment/Sidebar";
 import TextBox from "@/components/Comment/TextBox";
 import Response from "@/components/Comment/Response";
+import { useSession } from "utils/session";
 
 const PostPage: NextPage = (props) => {
   const router = useRouter();
+  // Get QueryClient from the context
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-
+  const { data: userData } = useSession();
   const { data, status, error } = useGetPostBySlugQuery(getClient(), {
     slug: String(router.query.slug),
   });
+
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   const comments = useGetCommentsQuery(
     getClient(),
     {
       postId: String(data?.posts?.data[0].id),
-      page: 1,
-      pageSize: 10,
+      page,
+      pageSize,
     },
     {
       enabled: Boolean(
-        data && data.posts && data.posts.data && data.posts.data.length > 0
+        data &&
+          data.posts &&
+          data.posts.data &&
+          data.posts.data.length > 0 &&
+          open
       ),
     }
   );
 
-  console.log(comments.data);
+  const createComment = useCreateCommentMutation(
+    getClient(),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries("getComments");
+      },
+    },
+    {
+      Authorization: `Bearer ${userData?.jwt}`,
+    }
+  );
+
+  const handleCreate = (content: string, cb: Function) => {
+    // console.log("content", content);
+    const id = userData?.user.id;
+    const variable = {
+      content,
+      postId: String(data?.posts?.data[0].id),
+      authorId: String(userData?.user.id),
+    };
+    createComment.mutate(variable as CreateCommentMutationVariables, {
+      onSuccess: () => cb(),
+    });
+  };
 
   if (router.isFallback || status === "loading") {
     return <DataWrapper status="loading" />;
@@ -65,17 +100,26 @@ const PostPage: NextPage = (props) => {
             <section className="py-8 px-4 relative">
               <div className="flex justify-between mb-10">
                 <h1 className="text-base md:text-xl font-bold">
-                  Comments (20)
+                  Comments{" "}
+                  {comments.data &&
+                    comments.data.comments &&
+                    `(${comments.data.comments.meta.pagination.total})`}
                 </h1>
                 <XIcon
                   className="h-7 w-7 mr-10 text-gray-400 cursor-pointer"
                   onClick={() => setOpen(false)}
                 />
               </div>
-              <TextBox />
+              <TextBox
+                onSubmit={handleCreate}
+                loading={createComment.isLoading}
+              />
             </section>
             <hr className="border-gray-500" />
-            <section className="py-8 px-4">
+            <section
+              className="py-8 px-4"
+              key={comments.data?.comments?.data.length}
+            >
               {comments.data &&
                 comments.data.comments &&
                 comments.data.comments.data.map((comment, i) => (
