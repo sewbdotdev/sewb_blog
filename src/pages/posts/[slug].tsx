@@ -110,6 +110,7 @@ const PostPage: NextPage = (props) => {
                   onClick={() => setOpen(false)}
                 />
               </div>
+              {/* TODO add it get's better when you're logged in component for unauthenticated users to login instead of seeing the text box.  */}
               <TextBox
                 onSubmit={handleCreate}
                 loading={createComment.isLoading}
