@@ -10,7 +10,6 @@ type RelatedProps = {
 };
 const Related: FunctionComponent<RelatedProps> = (props) => {
   const { posts } = props;
-  console.log(posts);
   return (
     <section className={styles.container}>
       <h3 className={styles.title}>Related</h3>

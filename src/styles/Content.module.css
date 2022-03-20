@@ -29,7 +29,7 @@
   }
   
   .icon {
-    @apply flex;
+    @apply flex cursor-pointer;
   }
   .iconText {
     @apply self-end text-slate-500 dark:text-slate-50 pl-2;

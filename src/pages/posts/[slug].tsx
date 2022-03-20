@@ -20,6 +20,8 @@ import {
   useGetMinimalPostsByCategoryQuery,
   PostEntity,
   usePostCommentCountQuery,
+  UsersPermissionsUserEntity,
+  UsersPermissionsUser,
 } from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
 import DataWrapper from "@/components/DataWrapper";
@@ -28,6 +30,7 @@ import Sidebar from "@/components/Comment/Sidebar";
 import TextBox from "@/components/Comment/TextBox";
 import Response from "@/components/Comment/Response";
 import { useSession } from "utils/session";
+import Helpers from "utils/helpers";
 
 const PostPage: NextPage = (props) => {
   const router = useRouter();
@@ -116,8 +119,11 @@ const PostPage: NextPage = (props) => {
     return <DefaultErrorPage statusCode={404} />;
   }
 
-  const post = data?.posts?.data;
+  const post = data?.posts?.data[0];
 
+  const isImagePresent = Boolean(
+    post?.attributes?.featuredImage?.data?.attributes?.url
+  );
   return (
     <Content classNames="overflow-y-hidden">
       <Sidebar isOpen={open} setIsOpen={setOpen} noBackdrop={false}>
@@ -169,23 +175,30 @@ const PostPage: NextPage = (props) => {
             <section className={styles.contentContainer}>
               <div className={styles.titleContainer}>
                 <h2 className={styles.contentTitle}>
-                  {post[0].attributes?.title}
+                  {post.attributes?.title}
                 </h2>
               </div>
 
               <p className={styles.contentDescription}>
-                {post[0].attributes?.description}
+                {post.attributes?.description}
               </p>
-              <div className={styles.contentCoverImage}>
-                <Image
-                  src={TestImage2}
-                  alt="the featured image of the blog post. "
-                  width={800}
-                  height={665}
-                />
-              </div>
+              {isImagePresent && (
+                <div className={styles.contentCoverImage}>
+                  {isImagePresent && (
+                    <Image
+                      src={Helpers.getImageURL(
+                        post?.attributes?.featuredImage?.data?.attributes
+                          ?.url ?? ""
+                      )}
+                      alt="the featured image of the blog post. "
+                      width={800}
+                      height={665}
+                    />
+                  )}
+                </div>
+              )}
               <article className={styles.contentMain}>
-                <Markdown content={post[0].attributes?.content ?? ``} />
+                <Markdown content={post.attributes?.content ?? ``} />
               </article>
               <div className={styles.iconContainer}>
                 <p className={styles.icon} onClick={() => setOpen(!open)}>
@@ -207,13 +220,18 @@ const PostPage: NextPage = (props) => {
               </div>
             </section>
             <aside className={styles.asideContainer}>
-              <Author />
+              {post.attributes?.authors?.data.map((author, i) => (
+                <Author
+                  key={author.id}
+                  data={author.attributes as UsersPermissionsUser}
+                />
+              ))}
               <DataWrapper status={relatedPosts.status}>
                 {
                   <Related
                     posts={
                       (relatedPosts.data?.posts?.data?.filter(
-                        (p) => Number(p.id) !== Number(post[0].id)
+                        (p) => Number(p.id) !== Number(post.id)
                       ) as PostEntity[]) || []
                     }
                   />

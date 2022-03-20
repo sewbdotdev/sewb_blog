@@ -9,6 +9,36 @@ query getPostBySlug($slug: String!) {
         description
         readTime
          content
+        featuredImage{
+          data{
+            attributes{
+              url
+              previewUrl
+              width
+              height
+            }
+          }
+        }
+        authors{
+          data{
+            id
+            attributes{
+              username
+              bio
+              avatar{
+                data{
+                  attributes{
+                    url
+                    width
+                    height
+                  }
+                }
+              }
+              twitterUrl
+              linkedinUrl
+            }
+          }
+        }
         category{
           data{
             id

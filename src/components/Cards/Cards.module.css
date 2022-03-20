@@ -40,8 +40,8 @@
   @apply flex flex-col;
 }
 .relatedContentTitle {
-  @apply self-center text-sm cursor-pointer;
+  @apply self-center text-sm cursor-pointer hover:text-blue-500;
 }
 .relatedContentDescription {
-  @apply text-gray-400 text-xs;
+  @apply text-gray-400 text-xs cursor-pointer;
 }
