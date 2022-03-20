@@ -9,6 +9,14 @@ query getPostBySlug($slug: String!) {
         description
         readTime
          content
+        category{
+          data{
+            id
+            attributes{
+              slug
+            }
+          }
+        }
         postClaps {
           data {
             id
@@ -146,6 +154,53 @@ query getAllPosts($page: Int!, $pageSize: Int!) {
     }
     meta {
       pagination {
+        total
+        page
+        pageSize
+        pageCount
+      }
+    }
+  }
+}
+
+query getMinimalPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
+  posts(
+    filters: { category: { slug: { eq: $slug } } }
+    pagination: { page: $page, pageSize: $pageSize }
+  ) {
+    data {
+      id
+      attributes {
+        title
+        slug
+        description
+        featuredImage {
+          data {
+            id
+            attributes {
+              width
+              height
+              alternativeText
+              caption
+              url
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query postCommentCount($postSlug:String!){
+  comments(filters:{
+    post:{
+      slug:{
+        eq:$postSlug
+      }
+    }
+  }){
+    meta{
+      pagination{
         total
         page
         pageSize

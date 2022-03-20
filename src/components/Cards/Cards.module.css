@@ -36,6 +36,12 @@
   @apply flex flex-row gap-3 my-3;
 }
 
+.relatedContentTextContainer {
+  @apply flex flex-col;
+}
 .relatedContentTitle {
-  @apply self-center text-sm;
+  @apply self-center text-sm cursor-pointer;
+}
+.relatedContentDescription {
+  @apply text-gray-400 text-xs;
 }

@@ -9,7 +9,7 @@ import TestImage2 from "/public/img/test-2.jpeg";
 import Author from "@/components/Author";
 import { ChatIcon, HeartIcon, XIcon } from "@heroicons/react/solid";
 import Related from "@/components/Related";
-import { getAllPosts, getPostsBSlug, getPostsByCategory } from "hooks/usePost";
+import { getAllPosts, getPostsBSlug } from "hooks/usePost";
 import { dehydrate, QueryClient, useQueryClient } from "react-query";
 import {
   useGetPostBySlugQuery,
@@ -17,6 +17,9 @@ import {
   CommentEntity,
   useCreateCommentMutation,
   CreateCommentMutationVariables,
+  useGetMinimalPostsByCategoryQuery,
+  PostEntity,
+  usePostCommentCountQuery,
 } from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
 import DataWrapper from "@/components/DataWrapper";
@@ -73,6 +76,10 @@ const PostPage: NextPage = (props) => {
     }
   );
 
+  const postCommentStats = usePostCommentCountQuery(getClient(), {
+    postSlug: String(router.query.slug),
+  });
+
   const handleCreate = (content: string, cb: Function) => {
     // console.log("content", content);
     const id = userData?.user.id;
@@ -85,6 +92,21 @@ const PostPage: NextPage = (props) => {
       onSuccess: () => cb(),
     });
   };
+
+  const relatedPosts = useGetMinimalPostsByCategoryQuery(
+    getClient(),
+    {
+      slug:
+        data?.posts?.data[0].attributes?.category?.data?.attributes?.slug ?? "",
+      page: 1,
+      pageSize: 6,
+    },
+    {
+      enabled: Boolean(
+        data && data.posts && data.posts.data && data.posts.data.length > 0
+      ),
+    }
+  );
 
   if (router.isFallback || status === "loading") {
     return <DataWrapper status="loading" />;
@@ -168,21 +190,35 @@ const PostPage: NextPage = (props) => {
               <div className={styles.iconContainer}>
                 <p className={styles.icon} onClick={() => setOpen(!open)}>
                   <ChatIcon className="h-7 w-7" />
-                  <span className={styles.iconText}>100</span>
+                  <span className={styles.iconText}>
+                    {postCommentStats.data?.comments?.meta.pagination.total ??
+                      0}
+                  </span>
                 </p>
-                <p className={styles.icon}>
-                  <HeartIcon className="h-7 w-7 text-red-600 border-l-2 border-gray-300" />
+                {/* TODO: retrieve post claps and post likes */}
+                {/* <p className={styles.icon}>
+                  <HeartIcon className="h-7 w-7 text-red-600" />
                   <span className={styles.iconText}>100</span>
                 </p>
                 <p className={styles.icon}>
                   <span>👏</span>
                   <span className={styles.iconText}>100</span>
-                </p>
+                </p> */}
               </div>
             </section>
             <aside className={styles.asideContainer}>
               <Author />
-              <Related />
+              <DataWrapper status={relatedPosts.status}>
+                {
+                  <Related
+                    posts={
+                      (relatedPosts.data?.posts?.data?.filter(
+                        (p) => Number(p.id) !== Number(post[0].id)
+                      ) as PostEntity[]) || []
+                    }
+                  />
+                }
+              </DataWrapper>
             </aside>
           </div>
         ) : (

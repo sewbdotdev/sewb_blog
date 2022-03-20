@@ -1591,7 +1591,7 @@ export type GetPostBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GetPostBySlugQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description?: string | null, readTime?: number | null, content: string, postClaps?: { __typename?: 'PostClapRelationResponseCollection', data: Array<{ __typename?: 'PostClapEntity', id?: string | null }> } | null, comments?: { __typename?: 'CommentRelationResponseCollection', data: Array<{ __typename?: 'CommentEntity', id?: string | null }> } | null } | null }> } | null };
+export type GetPostBySlugQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description?: string | null, readTime?: number | null, content: string, category?: { __typename?: 'CategoryEntityResponse', data?: { __typename?: 'CategoryEntity', id?: string | null, attributes?: { __typename?: 'Category', slug?: string | null } | null } | null } | null, postClaps?: { __typename?: 'PostClapRelationResponseCollection', data: Array<{ __typename?: 'PostClapEntity', id?: string | null }> } | null, comments?: { __typename?: 'CommentRelationResponseCollection', data: Array<{ __typename?: 'CommentEntity', id?: string | null }> } | null } | null }> } | null };
 
 export type GetPostsByCategoryQueryVariables = Exact<{
   slug: Scalars['String'];
@@ -1609,6 +1609,22 @@ export type GetAllPostsQueryVariables = Exact<{
 
 
 export type GetAllPostsQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description?: string | null, readTime?: number | null, tags?: { __typename?: 'TagRelationResponseCollection', data: Array<{ __typename?: 'TagEntity', id?: string | null, attributes?: { __typename?: 'Tag', title: string, slug?: string | null } | null }> } | null, category?: { __typename?: 'CategoryEntityResponse', data?: { __typename?: 'CategoryEntity', id?: string | null, attributes?: { __typename?: 'Category', title: string, slug?: string | null } | null } | null } | null, authors?: { __typename?: 'UsersPermissionsUserRelationResponseCollection', data: Array<{ __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string, avatar?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', attributes?: { __typename?: 'UploadFile', url: string } | null } | null } | null } | null }> } | null, featuredImage: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', width?: number | null, height?: number | null, alternativeText?: string | null, caption?: string | null, url: string } | null } | null } } | null }>, meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
+
+export type GetMinimalPostsByCategoryQueryVariables = Exact<{
+  slug: Scalars['String'];
+  page: Scalars['Int'];
+  pageSize: Scalars['Int'];
+}>;
+
+
+export type GetMinimalPostsByCategoryQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, slug?: string | null, description?: string | null, featuredImage: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', width?: number | null, height?: number | null, alternativeText?: string | null, caption?: string | null, url: string } | null } | null } } | null }> } | null };
+
+export type PostCommentCountQueryVariables = Exact<{
+  postSlug: Scalars['String'];
+}>;
+
+
+export type PostCommentCountQuery = { __typename?: 'Query', comments?: { __typename?: 'CommentEntityResponseCollection', meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
 
 
 export const GetAllCategoriesDocument = `
@@ -1969,6 +1985,14 @@ export const GetPostBySlugDocument = `
         description
         readTime
         content
+        category {
+          data {
+            id
+            attributes {
+              slug
+            }
+          }
+        }
         postClaps {
           data {
             id
@@ -2158,5 +2182,76 @@ export const useGetAllPostsQuery = <
     useQuery<GetAllPostsQuery, TError, TData>(
       ['getAllPosts', variables],
       fetcher<GetAllPostsQuery, GetAllPostsQueryVariables>(client, GetAllPostsDocument, variables, headers),
+      options
+    );
+export const GetMinimalPostsByCategoryDocument = `
+    query getMinimalPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
+  posts(
+    filters: {category: {slug: {eq: $slug}}}
+    pagination: {page: $page, pageSize: $pageSize}
+  ) {
+    data {
+      id
+      attributes {
+        title
+        slug
+        description
+        featuredImage {
+          data {
+            id
+            attributes {
+              width
+              height
+              alternativeText
+              caption
+              url
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const useGetMinimalPostsByCategoryQuery = <
+      TData = GetMinimalPostsByCategoryQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: GetMinimalPostsByCategoryQueryVariables,
+      options?: UseQueryOptions<GetMinimalPostsByCategoryQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<GetMinimalPostsByCategoryQuery, TError, TData>(
+      ['getMinimalPostsByCategory', variables],
+      fetcher<GetMinimalPostsByCategoryQuery, GetMinimalPostsByCategoryQueryVariables>(client, GetMinimalPostsByCategoryDocument, variables, headers),
+      options
+    );
+export const PostCommentCountDocument = `
+    query postCommentCount($postSlug: String!) {
+  comments(filters: {post: {slug: {eq: $postSlug}}}) {
+    meta {
+      pagination {
+        total
+        page
+        pageSize
+        pageCount
+      }
+    }
+  }
+}
+    `;
+export const usePostCommentCountQuery = <
+      TData = PostCommentCountQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: PostCommentCountQueryVariables,
+      options?: UseQueryOptions<PostCommentCountQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<PostCommentCountQuery, TError, TData>(
+      ['postCommentCount', variables],
+      fetcher<PostCommentCountQuery, PostCommentCountQueryVariables>(client, PostCommentCountDocument, variables, headers),
       options
     );
