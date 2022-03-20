@@ -5,9 +5,13 @@ import DefaultErrorPage from "next/error";
 import styles from "../../styles/Content.module.css";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import TestImage2 from "/public/img/test-2.jpeg";
 import Author from "@/components/Author";
-import { ChatIcon, HeartIcon, XIcon } from "@heroicons/react/solid";
+import {
+  ChatIcon,
+  ClockIcon,
+  XIcon,
+  CalendarIcon,
+} from "@heroicons/react/solid";
 import Related from "@/components/Related";
 import { getAllPosts, getPostsBSlug } from "hooks/usePost";
 import { dehydrate, QueryClient, useQueryClient } from "react-query";
@@ -20,7 +24,6 @@ import {
   useGetMinimalPostsByCategoryQuery,
   PostEntity,
   usePostCommentCountQuery,
-  UsersPermissionsUserEntity,
   UsersPermissionsUser,
 } from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
@@ -31,6 +34,7 @@ import TextBox from "@/components/Comment/TextBox";
 import Response from "@/components/Comment/Response";
 import { useSession } from "utils/session";
 import Helpers from "utils/helpers";
+import dateFormatter from "utils/dateFormatter";
 
 const PostPage: NextPage = (props) => {
   const router = useRouter();
@@ -179,9 +183,17 @@ const PostPage: NextPage = (props) => {
                 </h2>
               </div>
 
-              <p className={styles.contentDescription}>
-                {post.attributes?.description}
-              </p>
+              <p>{post.attributes?.description}</p>
+              <div className="flex gap-5 pb-4">
+                <p className="text-sm text-gray-500 flex gap-2">
+                  <CalendarIcon className="h-4 w-4 self-center" />
+                  <span>{dateFormatter(post.attributes?.publishedAt)}</span>
+                </p>
+                <p className="text-sm text-gray-500 flex gap-2">
+                  <ClockIcon className="h-4 w-4 self-center" />
+                  <span>{post.attributes?.readTime} min read.</span>
+                </p>
+              </div>
               {isImagePresent && (
                 <div className={styles.contentCoverImage}>
                   {isImagePresent && (
@@ -191,10 +203,18 @@ const PostPage: NextPage = (props) => {
                           ?.url ?? ""
                       )}
                       alt="the featured image of the blog post. "
-                      width={800}
+                      width={600}
                       height={665}
                     />
                   )}
+                  <p className="text-center">
+                    <Markdown
+                      content={
+                        post.attributes?.featuredImage.data?.attributes
+                          ?.caption ?? ""
+                      }
+                    />
+                  </p>
                 </div>
               )}
               <article className={styles.contentMain}>

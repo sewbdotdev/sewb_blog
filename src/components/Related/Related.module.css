@@ -3,5 +3,5 @@
 }
 
 .title {
-  @apply font-bold mb-2;
+  @apply font-bold mb-6 text-2xl ;
 }

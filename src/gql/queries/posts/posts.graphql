@@ -16,6 +16,7 @@ query getPostBySlug($slug: String!) {
               previewUrl
               width
               height
+              caption
             }
           }
         }

@@ -14,12 +14,15 @@ import {
   useGetPostBySlugQuery,
 } from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
+import { useInView } from 'react-intersection-observer';
 const Home: NextPage = (props) => {
   const postsData = useInfinitePosts();
   const { data, status } = useGetAllCategoriesQuery(getClient(), {
     page: 1,
     pageSize: 10,
   });
+
+  const { ref, inView } = useInView();
 
   const categoryData = data?.categories?.data.map((cat) => ({
     id: String(cat.id),
