@@ -12,7 +12,7 @@ const OurStoryPage: NextPage = (props) => {
   const { data, status, error } = useGetStoryQuery(getClient());
 
   return (
-    <Content>
+    <Content classNames="text-justify">
       <DataWrapper status={status}>
         {data?.ourStory?.data?.attributes?.content && (
           <section className="mx-40 my-20">
