@@ -10,7 +10,6 @@ const getCommentsByPostId = async (
   page = 1,
   pageSize = 10
 ): Promise<CommentEntityResponseCollection> => {
-  console.log({ postId, page, pageSize });
   try {
     const response = await client.request(GetCommentsByPostIdDocument, {
       postId,
@@ -25,7 +24,7 @@ const getCommentsByPostId = async (
 };
 
 // sets up the hook to infinitely fetch new pages
-const useInfiniteComments = (id: string) =>
+const useInfiniteComments = (id: string, enabled = false) =>
   useInfiniteQuery(
     ["comments"],
     async ({ pageParam = 1 }) => {
@@ -33,6 +32,7 @@ const useInfiniteComments = (id: string) =>
     },
 
     {
+      enabled,
       refetchOnWindowFocus: false,
       getPreviousPageParam: (firstPage) =>
         firstPage.meta.pagination.pageCount !== 0

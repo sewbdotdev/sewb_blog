@@ -73,10 +73,15 @@ const PostPage: NextPage = (props) => {
     }
   );
 
-  const infiniteComments = useInfiniteComments(String(data?.posts?.data[0].id));
+  const isInfiniteCommentsEnabled = Boolean(
+    data && data.posts && data.posts.data && data.posts.data.length > 0 && open
+  );
+  const infiniteComments = useInfiniteComments(
+    String(data?.posts?.data[0].id),
+    isInfiniteCommentsEnabled
+  );
 
   const { ref, inView } = useInView();
-
   useEffect(() => {
     if (inView && infiniteComments.hasNextPage) {
       infiniteComments.fetchNextPage();
@@ -141,19 +146,18 @@ const PostPage: NextPage = (props) => {
     post?.attributes?.featuredImage?.data?.attributes?.url
   );
 
-  console.log(infiniteComments);
   return (
     <Content classNames="overflow-y-hidden">
       <Sidebar isOpen={open} setIsOpen={setOpen} noBackdrop={false}>
-        <DataWrapper status={comments.status}>
+        <DataWrapper status={infiniteComments.status}>
           <section>
             <section className="py-8 px-4 relative">
               <div className="flex justify-between mb-10">
                 <h1 className="text-base md:text-xl font-bold">
                   Comments{" "}
-                  {comments.data &&
-                    comments.data.comments &&
-                    `(${comments.data.comments.meta.pagination.total})`}
+                  {`(${
+                    postCommentStats.data?.comments?.meta.pagination.total ?? 0
+                  })`}
                 </h1>
                 <XIcon
                   className="h-7 w-7 mr-10 text-gray-400 cursor-pointer"
@@ -169,42 +173,23 @@ const PostPage: NextPage = (props) => {
             <hr className="border-gray-500" />
             <section
               className="py-8 px-4"
-              key={comments.data?.comments?.data.length}
+              key={infiniteComments.data?.pages[0].meta.pagination.total}
             >
-              {/* {comments.data &&
-                comments.data.comments &&
-                comments.data.comments.data.map((comment, i) => (
-                  <Response
-                    commentCacheKey={postVars}
-                    comment={comment as CommentEntity}
-                    hideLastBorder={
-                      Number(comments.data.comments?.data.length) - 1 === i
-                    }
-                    key={comment.id}
-                  />
-                ))} */}
               {infiniteComments.data &&
-                infiniteComments.data?.pages.map((page) => {
-                  console.log(page);
-                  return (
-                    <Fragment key={page.meta.pagination.page}>
-                      {page.data.map((comment) => {
-                        return (
-                          <Response
-                            commentCacheKey={postVars}
-                            comment={comment as CommentEntity}
-                            // hideLastBorder={
-                            //   Number(comments.data.comments?.data.length) - 1 === i
-                            // }
-                            key={comment.id}
-                          />
-                        );
-
-                        // return <ArticlePreview {...previewProps} key={project.id} />;
-                      })}
-                    </Fragment>
-                  );
-                })}
+                infiniteComments.data?.pages.map((page) => (
+                  <Fragment key={page.meta.pagination.page}>
+                    {page.data.map((comment, i) => {
+                      return (
+                        <Response
+                          commentCacheKey={postVars}
+                          comment={comment as CommentEntity}
+                          hideLastBorder={Number(page.data.length) - 1 === i}
+                          key={comment.id}
+                        />
+                      );
+                    })}
+                  </Fragment>
+                ))}
               <div className="flex justify-center">
                 <button
                   ref={ref}
