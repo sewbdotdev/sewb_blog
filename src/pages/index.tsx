@@ -11,10 +11,9 @@ import { useInfinitePosts } from "hooks/usePost";
 import DataWrapper from "@/components/DataWrapper";
 import {
   useGetAllCategoriesQuery,
-  useGetPostBySlugQuery,
 } from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
-import { useInView } from 'react-intersection-observer';
+import { useInView } from "react-intersection-observer";
 const Home: NextPage = (props) => {
   const postsData = useInfinitePosts();
   const { data, status } = useGetAllCategoriesQuery(getClient(), {
@@ -23,6 +22,12 @@ const Home: NextPage = (props) => {
   });
 
   const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && postsData.hasNextPage) {
+      postsData.fetchNextPage();
+    }
+  }, [inView, postsData.hasNextPage]);
 
   const categoryData = data?.categories?.data.map((cat) => ({
     id: String(cat.id),
@@ -63,6 +68,26 @@ const Home: NextPage = (props) => {
                 })}
               </Fragment>
             ))}
+            <div className="flex justify-center">
+              <button
+                ref={ref}
+                onClick={() => {
+                  postsData.fetchNextPage();
+                }}
+                disabled={
+                  !postsData.hasNextPage || postsData.isFetchingNextPage
+                }
+              >
+                {postsData.hasNextPage && postsData.isFetchingNextPage
+                  ? "Fetching..."
+                  : ""}
+              </button>
+            </div>
+            <div>
+              {postsData.isFetching && !postsData.isFetchingNextPage
+                ? "Background Updating..."
+                : null}
+            </div>
           </DataWrapper>
         </section>
       </section>

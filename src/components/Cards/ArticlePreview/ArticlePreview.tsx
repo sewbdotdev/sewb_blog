@@ -50,9 +50,11 @@ const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
           </Link>
         </h2>
         <div className={styles.articlePreviewMeta}>
-          <p>{dateFormatter(props.publishedAt)}</p>
-          <p>
-            · {props.readTime || 5} min read
+          <p className="text-xs text-ellipsis">
+            {dateFormatter(props.publishedAt)}
+          </p>
+          <p className="text-xs pr-3">
+            · {props.readTime || 5} min
             <span> ·</span>
           </p>
           <Tag
