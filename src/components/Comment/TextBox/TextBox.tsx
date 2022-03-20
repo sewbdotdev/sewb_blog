@@ -28,7 +28,6 @@ const TextBox: FunctionComponent<TextBoxProps> = (props) => {
           text.length > 0 ? "36" : "10"
         } p-2 dark:bg-gray-700 shadow-xl focus:outline-none`}
         autoFocus={autoFocus}
-        defaultValue={defaultValue}
         onFocus={(e) => e.target.setSelectionRange(text.length, text.length)}
         placeholder="Speak, the world is listening..."
         value={text}

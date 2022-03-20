@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Content from "@/components/Content";
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import DefaultErrorPage from "next/error";
@@ -35,6 +35,8 @@ import Response from "@/components/Comment/Response";
 import { useSession } from "utils/session";
 import Helpers from "utils/helpers";
 import dateFormatter from "utils/dateFormatter";
+import { useInfiniteComments } from "hooks/useComment";
+import { useInView } from "react-intersection-observer";
 
 const PostPage: NextPage = (props) => {
   const router = useRouter();
@@ -71,11 +73,22 @@ const PostPage: NextPage = (props) => {
     }
   );
 
+  const infiniteComments = useInfiniteComments(String(data?.posts?.data[0].id));
+
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && infiniteComments.hasNextPage) {
+      infiniteComments.fetchNextPage();
+    }
+  }, [inView, infiniteComments.hasNextPage]);
+
   const createComment = useCreateCommentMutation(
     getClient(),
     {
       onSuccess: (data) => {
         queryClient.invalidateQueries("getComments");
+        queryClient.invalidateQueries("comments");
       },
     },
     {
@@ -89,7 +102,6 @@ const PostPage: NextPage = (props) => {
 
   const handleCreate = (content: string, cb: Function) => {
     // console.log("content", content);
-    const id = userData?.user.id;
     const variable = {
       content,
       postId: String(data?.posts?.data[0].id),
@@ -128,6 +140,8 @@ const PostPage: NextPage = (props) => {
   const isImagePresent = Boolean(
     post?.attributes?.featuredImage?.data?.attributes?.url
   );
+
+  console.log(infiniteComments);
   return (
     <Content classNames="overflow-y-hidden">
       <Sidebar isOpen={open} setIsOpen={setOpen} noBackdrop={false}>
@@ -157,7 +171,7 @@ const PostPage: NextPage = (props) => {
               className="py-8 px-4"
               key={comments.data?.comments?.data.length}
             >
-              {comments.data &&
+              {/* {comments.data &&
                 comments.data.comments &&
                 comments.data.comments.data.map((comment, i) => (
                   <Response
@@ -168,7 +182,52 @@ const PostPage: NextPage = (props) => {
                     }
                     key={comment.id}
                   />
-                ))}
+                ))} */}
+              {infiniteComments.data &&
+                infiniteComments.data?.pages.map((page) => {
+                  console.log(page);
+                  return (
+                    <Fragment key={page.meta.pagination.page}>
+                      {page.data.map((comment) => {
+                        return (
+                          <Response
+                            commentCacheKey={postVars}
+                            comment={comment as CommentEntity}
+                            // hideLastBorder={
+                            //   Number(comments.data.comments?.data.length) - 1 === i
+                            // }
+                            key={comment.id}
+                          />
+                        );
+
+                        // return <ArticlePreview {...previewProps} key={project.id} />;
+                      })}
+                    </Fragment>
+                  );
+                })}
+              <div className="flex justify-center">
+                <button
+                  ref={ref}
+                  onClick={() => {
+                    infiniteComments.fetchNextPage();
+                  }}
+                  disabled={
+                    !infiniteComments.hasNextPage ||
+                    infiniteComments.isFetchingNextPage
+                  }
+                >
+                  {infiniteComments.hasNextPage &&
+                  infiniteComments.isFetchingNextPage
+                    ? "Fetching..."
+                    : ""}
+                </button>
+              </div>
+              <div>
+                {infiniteComments.isFetching &&
+                !infiniteComments.isFetchingNextPage
+                  ? "Background Updating..."
+                  : null}
+              </div>
             </section>
           </section>
         </DataWrapper>
@@ -207,14 +266,14 @@ const PostPage: NextPage = (props) => {
                       height={665}
                     />
                   )}
-                  <p className="text-center">
+                  <div className="text-center">
                     <Markdown
                       content={
                         post.attributes?.featuredImage.data?.attributes
                           ?.caption ?? ""
                       }
                     />
-                  </p>
+                  </div>
                 </div>
               )}
               <article className={styles.contentMain}>

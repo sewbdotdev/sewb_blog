@@ -1,34 +1,26 @@
-query getComments($postId:ID!, $page:Int!, $pageSize:Int!){
-  comments(filters:{
-    post:{
-      id:{
-        eq: $postId
-      }
-    }
-  },
-  pagination:{
-    page:$page,
-    pageSize: $pageSize
-  }
-    sort:["createdAt:desc"]
-  ){
-    data{
+query getComments($postId: ID!, $page: Int!, $pageSize: Int!) {
+  comments(
+    filters: { post: { id: { eq: $postId } } }
+    pagination: { page: $page, pageSize: $pageSize }
+    sort: ["createdAt:desc"]
+  ) {
+    data {
       id
-      attributes{
+      attributes {
         content
         createdAt
-        author{
-          data{
+        author {
+          data {
             id
-            attributes{
+            attributes {
               username
             }
           }
         }
       }
     }
-    meta{
-      pagination{
+    meta {
+      pagination {
         total
         page
         pageSize
@@ -38,21 +30,20 @@ query getComments($postId:ID!, $page:Int!, $pageSize:Int!){
   }
 }
 
-
-query getOneComment($id:ID!) {
-  comment(id:$id) {
-    data{
+query getOneComment($id: ID!) {
+  comment(id: $id) {
+    data {
       id
-      attributes{
+      attributes {
         content
-        author{
-          data{
+        author {
+          data {
             id
-            attributes{
-              avatar{
-                data{
+            attributes {
+              avatar {
+                data {
                   id
-                  attributes{
+                  attributes {
                     url
                     alternativeText
                   }
@@ -66,29 +57,25 @@ query getOneComment($id:ID!) {
   }
 }
 
-
-mutation deleteComment($id:ID!){
-  deleteComment(id:$id) {
-    data{
+mutation deleteComment($id: ID!) {
+  deleteComment(id: $id) {
+    data {
       id
     }
   }
 }
 
-
-mutation updateComment($id:ID!,$content:String!){
-  updateComment(id: $id, data:{
-    content: $content
-  }){
-    data{
+mutation updateComment($id: ID!, $content: String!) {
+  updateComment(id: $id, data: { content: $content }) {
+    data {
       id
-      attributes{
+      attributes {
         content
         createdAt
-        author{
-          data{
+        author {
+          data {
             id
-            attributes{
+            attributes {
               username
             }
           }
@@ -98,16 +85,47 @@ mutation updateComment($id:ID!,$content:String!){
   }
 }
 
-
-mutation createComment($content:String!, $postId:ID!,$authorId:ID!){
-  createComment(data:{
-    content: $content,
-    post: $postId,
-    author: $authorId
-  }) {
-    data{
+mutation createComment($content: String!, $postId: ID!, $authorId: ID!) {
+  createComment(data: { content: $content, post: $postId, author: $authorId }) {
+    data {
       id
     }
   }
 }
 
+query getCommentsByPostId($postId: ID!, $page: Int!, $pageSize: Int!) {
+  comments(
+    filters: { post: { id: { eq: $postId } } }
+    pagination: { page: $page, pageSize: $pageSize }
+    sort: ["createdAt:desc"]
+  ) {
+    data {
+      id
+      attributes {
+        content
+        post {
+          data {
+            id
+          }
+        }
+        createdAt
+        author {
+          data {
+            id
+            attributes {
+              username
+            }
+          }
+        }
+      }
+    }
+    meta {
+      pagination {
+        total
+        page
+        pageSize
+        pageCount
+      }
+    }
+  }
+}
