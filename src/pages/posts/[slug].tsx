@@ -315,7 +315,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getAllPosts(1, 100);
   const postPaths = posts.data.map((post) => ({
     params: {
-      slug: post.attributes.slug,
+      slug: String(post.attributes?.slug),
     },
   }));
 

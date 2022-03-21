@@ -1,45 +1,70 @@
 import React, { FunctionComponent } from "react";
 import styles from "../Cards.module.css";
-import Image from "next/image";
+import Image, { ImageLoaderProps } from "next/image";
 import Tag from "@/components/Tag";
-import { CategoryOrTag } from "@customTypes/categoryandtag";
 import dateFormatter from "utils/dateFormatter";
 import Link from "next/link";
+import {
+  CategoryEntity,
+  TagEntity,
+  UsersPermissionsUser,
+} from "@customTypes/generated/graphql";
+import DefaultUserImg from "/public/img/default-user.png";
+import DefaultPostImg from "/public/img/dark-feature.png";
+import Helpers from "utils/helpers";
 
 type ArticlePreviewProps = {
   className?: string;
-  authorName?: string;
   title: string;
-  tag: CategoryOrTag;
-  category: CategoryOrTag;
+  tag: TagEntity;
+  category: CategoryEntity;
   description: string;
-  readTime: number;
+  readTime: number | undefined;
   publishedAt: string;
-  hasMultiAuthor?: boolean;
+  isMultiAuthored?: boolean;
   slug: string;
+  author: UsersPermissionsUser;
+  featuredURL: string | undefined;
 };
+
+const sanityIoImageLoader = (props: ImageLoaderProps) => {
+  const { src, quality, width } = props;
+  return `https://cdn.sanity.io/${src}?w=${width}&q=${quality || 75}`;
+};
+
 const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
+  const isImagePresent = Boolean(props.author.avatar?.data?.attributes?.url);
   return (
     <div className={`${styles.articlePreviewContainer} ${props.className}`}>
       <div className={styles.articlePreviewChildOneContainer}>
         <div className={styles.articlePreviewChildOneContainerInnerContainer}>
           <div className={styles.articlePreviewNameImageContainer}>
-            <Image
-              src="/img/test-1.jpg"
-              layout="responsive"
-              width={10}
-              height={10}
-              alt="Picture of the author"
-              sizes="50vw"
-              priority={true}
-            />
+            {isImagePresent ? (
+              <Image
+                src={Helpers.getImageURL(
+                  String(props.author.avatar?.data?.attributes?.url)
+                )}
+                layout="responsive"
+                width={10}
+                height={10}
+                alt="Picture of the author"
+                sizes="50vw"
+              />
+            ) : (
+              <Image
+                src={DefaultUserImg}
+                layout="responsive"
+                alt="Picture of the author"
+                sizes="50vw"
+              />
+            )}
           </div>
           <h6 className={styles.articlePreviewName}>
-            {props.authorName} {props.hasMultiAuthor ? "et al" : ""}{" "}
+            {props.author.username} {props.isMultiAuthored ? "et al" : ""}{" "}
             <a className="font-normal">in</a>{" "}
-            <Link href={`/category/${props.category.attributes.slug}`}>
+            <Link href={`/category/${String(props.category.attributes?.slug)}`}>
               <a className="hover:underline">
-                {props.category.attributes.title}
+                {props.category.attributes?.title}
               </a>
             </Link>
           </h6>
@@ -58,21 +83,30 @@ const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
             <span> ·</span>
           </p>
           <Tag
-            title={props.tag.attributes.title}
+            title={props.tag.attributes?.title ?? ""}
             className="truncate"
             containerClassName="w-24"
-            slug={props.tag.attributes.slug}
+            slug={props.tag.attributes?.slug ?? ""}
           />
         </div>
       </div>
       <div className={styles.articlePreviewChildTwoContainer}>
-        <Image
-          src="/img/test-2.jpeg"
-          layout="fill"
-          objectFit="cover"
-          priority={true}
-          alt="Picture of the author"
-        />
+        {Boolean(props.featuredURL) ? (
+          <Image
+            src={Helpers.getImageURL(String(props.featuredURL))}
+            layout="fill"
+            objectFit="cover"
+            alt="Picture of the post"
+          />
+        ) : (
+          <Image
+            src={DefaultPostImg}
+            layout="fill"
+            objectFit="cover"
+            loading="lazy"
+            alt="Default picture used for post"
+          />
+        )}
       </div>
     </div>
   );

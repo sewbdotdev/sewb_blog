@@ -10,7 +10,10 @@ import { getCategories } from "hooks/useCategoryAndTag";
 import { useInfinitePosts } from "hooks/usePost";
 import DataWrapper from "@/components/DataWrapper";
 import {
+  CategoryEntity,
+  TagEntity,
   useGetAllCategoriesQuery,
+  UsersPermissionsUser,
 } from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
 import { useInView } from "react-intersection-observer";
@@ -50,21 +53,26 @@ const Home: NextPage = (props) => {
           <DataWrapper status={postsData.status}>
             {postsData.data?.pages.map((page) => (
               <Fragment key={page.meta.pagination.page}>
-                {page.data.map((project) => {
+                {page.data.map((post) => {
+                  const isMultiAuthored = post.attributes?.authors?.data
+                    ? post.attributes.authors.data.length > 1
+                    : false;
                   const previewProps = {
-                    authorName:
-                      project.attributes.authors.data[0].attributes.username,
-                    title: project.attributes.title,
-                    tag: project.attributes.tags.data[0],
-                    category: project.attributes.category.data,
-                    description: project.attributes.description,
-                    readTime: project.attributes.readTime,
-                    publishedAt: project.attributes.publishedAt,
-                    hasMultiAuthor: project.attributes.authors.data.length > 1,
-                    slug: project.attributes.slug,
+                    isMultiAuthored,
+                    author: post.attributes?.authors?.data[0]
+                      .attributes as UsersPermissionsUser,
+                    title: post.attributes?.title ?? "",
+                    tag: post.attributes?.tags?.data[0] as TagEntity,
+                    category: post.attributes?.category?.data as CategoryEntity,
+                    description: post.attributes?.description ?? "",
+                    readTime: Number(post.attributes?.readTime),
+                    publishedAt: post.attributes?.publishedAt,
+                    slug: post.attributes?.slug ?? "",
+                    featuredURL:
+                      post.attributes?.featuredImage.data?.attributes?.url,
                   };
 
-                  return <ArticlePreview {...previewProps} key={project.id} />;
+                  return <ArticlePreview {...previewProps} key={post.id} />;
                 })}
               </Fragment>
             ))}

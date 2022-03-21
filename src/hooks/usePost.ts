@@ -7,6 +7,7 @@ import {
 } from "@customTypes/categoryandtag";
 import PostQuery from "gql/queries/posts/posts";
 import { PostAPIResponse } from "@customTypes/post";
+import { PostEntityResponseCollection } from "@customTypes/generated/graphql";
 
 const getPostsByCategory = async (
   slug: string,
@@ -47,7 +48,7 @@ const getPostsByTag = async (
 const getAllPosts = async (
   page = 1,
   pageSize = 10
-): Promise<PostAPIResponse> => {
+): Promise<PostEntityResponseCollection> => {
   try {
     const response = await client.request(PostQuery.getAllPosts(), {
       page,
