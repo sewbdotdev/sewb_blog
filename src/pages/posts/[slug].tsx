@@ -37,13 +37,14 @@ import Helpers from "utils/helpers";
 import dateFormatter from "utils/dateFormatter";
 import { useInfiniteComments } from "hooks/useComment";
 import { useInView } from "react-intersection-observer";
+import AuthPrompt from "@/components/AuthPrompt";
 
 const PostPage: NextPage = (props) => {
   const router = useRouter();
   // Get QueryClient from the context
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const { data: userData } = useSession();
+  const { data: session } = useSession();
   const { data, status, error } = useGetPostBySlugQuery(getClient(), {
     slug: String(router.query.slug),
   });
@@ -97,7 +98,7 @@ const PostPage: NextPage = (props) => {
       },
     },
     {
-      Authorization: `Bearer ${userData?.jwt}`,
+      Authorization: `Bearer ${session?.jwt}`,
     }
   );
 
@@ -110,7 +111,7 @@ const PostPage: NextPage = (props) => {
     const variable = {
       content,
       postId: String(data?.posts?.data[0].id),
-      authorId: String(userData?.user.id),
+      authorId: String(session?.user.id),
     };
     createComment.mutate(variable as CreateCommentMutationVariables, {
       onSuccess: () => cb(),
@@ -165,10 +166,14 @@ const PostPage: NextPage = (props) => {
                 />
               </div>
               {/* TODO add it get's better when you're logged in component for unauthenticated users to login instead of seeing the text box.  */}
-              <TextBox
-                onSubmit={handleCreate}
-                loading={createComment.isLoading}
-              />
+              {session ? (
+                <TextBox
+                  onSubmit={handleCreate}
+                  loading={createComment.isLoading}
+                />
+              ) : (
+                <AuthPrompt />
+              )}
             </section>
             <hr className="border-gray-500" />
             <section
