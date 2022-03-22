@@ -10,31 +10,21 @@ import Markdown from "@/components/Markdown";
 
 const FAQPage: NextPage = (props) => {
   const { data, status, error } = useGetFaqQuery(getClient());
-  console.log(data);
-  console.log(data?.faq);
-  console.log(data?.faq?.data);
-  console.log(data?.faq?.data?.attributes);
-  console.log(data?.faq?.data?.attributes?.content);
   return (
     <Content classNames="text-justify">
       <DataWrapper status={status}>
-        {data &&
-          data.faq &&
-          data.faq.data &&
-          data.faq.data.attributes &&
-          data?.faq?.data?.attributes?.content &&
-          data?.faq?.data?.attributes?.content?.map((faq) => {
-            return (
-              <section className=" mx-5  md:w-1/2 md:mx-auto">
-                <ul className="py-2 mt-5 ">
-                  <li>
-                    <h2 className="text-xl font-semibold">{faq?.Question} ?</h2>
-                    <Markdown content={faq?.Answer ?? ""} />
-                  </li>
-                </ul>
-              </section>
-            );
-          })}
+        {data?.faq?.data?.attributes?.content?.map((faq) => {
+          return (
+            <section className=" mx-5  md:w-1/2 md:mx-auto">
+              <ul className="py-2 mt-5 ">
+                <li>
+                  <h2 className="text-xl font-semibold">{faq?.Question} ?</h2>
+                  <Markdown content={faq?.Answer ?? ""} />
+                </li>
+              </ul>
+            </section>
+          );
+        })}
       </DataWrapper>
     </Content>
   );
