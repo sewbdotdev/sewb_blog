@@ -1635,6 +1635,23 @@ export type PostCommentCountQueryVariables = Exact<{
 
 export type PostCommentCountQuery = { __typename?: 'Query', comments?: { __typename?: 'CommentEntityResponseCollection', meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
 
+export type GetUserProfileQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetUserProfileQuery = { __typename?: 'Query', usersPermissionsUser?: { __typename?: 'UsersPermissionsUserEntityResponse', data?: { __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string, bio?: string | null, twitterUrl?: string | null, linkedinUrl?: string | null, avatar?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', url: string, alternativeText?: string | null, width?: number | null, height?: number | null } | null } | null } | null } | null } | null } | null };
+
+export type UpdateMeMutationVariables = Exact<{
+  id: Scalars['ID'];
+  bio?: InputMaybe<Scalars['String']>;
+  twitterUrl?: InputMaybe<Scalars['String']>;
+  linkedinUrl?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UpdateMeMutation = { __typename?: 'Mutation', updateUsersPermissionsUser: { __typename?: 'UsersPermissionsUserEntityResponse', data?: { __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', bio?: string | null, twitterUrl?: string | null, linkedinUrl?: string | null } | null } | null } };
+
 
 export const GetAllCategoriesDocument = `
     query getAllCategories($page: Int!, $pageSize: Int!) {
@@ -2345,5 +2362,75 @@ export const usePostCommentCountQuery = <
     useQuery<PostCommentCountQuery, TError, TData>(
       ['postCommentCount', variables],
       fetcher<PostCommentCountQuery, PostCommentCountQueryVariables>(client, PostCommentCountDocument, variables, headers),
+      options
+    );
+export const GetUserProfileDocument = `
+    query getUserProfile($id: ID!) {
+  usersPermissionsUser(id: $id) {
+    data {
+      id
+      attributes {
+        username
+        bio
+        twitterUrl
+        linkedinUrl
+        avatar {
+          data {
+            id
+            attributes {
+              url
+              alternativeText
+              width
+              height
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const useGetUserProfileQuery = <
+      TData = GetUserProfileQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: GetUserProfileQueryVariables,
+      options?: UseQueryOptions<GetUserProfileQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<GetUserProfileQuery, TError, TData>(
+      ['getUserProfile', variables],
+      fetcher<GetUserProfileQuery, GetUserProfileQueryVariables>(client, GetUserProfileDocument, variables, headers),
+      options
+    );
+export const UpdateMeDocument = `
+    mutation updateMe($id: ID!, $bio: String, $twitterUrl: String, $linkedinUrl: String) {
+  updateUsersPermissionsUser(
+    id: $id
+    data: {bio: $bio, twitterUrl: $twitterUrl, linkedinUrl: $linkedinUrl}
+  ) {
+    data {
+      id
+      attributes {
+        bio
+        twitterUrl
+        linkedinUrl
+      }
+    }
+  }
+}
+    `;
+export const useUpdateMeMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<UpdateMeMutation, TError, UpdateMeMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<UpdateMeMutation, TError, UpdateMeMutationVariables, TContext>(
+      ['updateMe'],
+      (variables?: UpdateMeMutationVariables) => fetcher<UpdateMeMutation, UpdateMeMutationVariables>(client, UpdateMeDocument, variables, headers)(),
       options
     );

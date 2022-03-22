@@ -4,6 +4,8 @@ import {
   GetFaqDocument,
   GetStoryDocument,
   FaqEntityResponse,
+  UsersPermissionsUserEntityResponse,
+  GetUserProfileDocument,
 } from "../@customTypes/generated/graphql";
 
 const getOurStory = async () => {
@@ -25,4 +27,19 @@ const getFaq = async () => {
     console.log(error);
   }
 };
-export { getOurStory, getFaq };
+
+const getUserProfile = async (variable: { id: string }) => {
+  try {
+    const response = await client.request<UsersPermissionsUserEntityResponse>(
+      GetUserProfileDocument,
+      {
+        variable,
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export { getOurStory, getFaq, getUserProfile };

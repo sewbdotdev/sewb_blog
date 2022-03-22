@@ -6,13 +6,17 @@ type TextBoxProps = {
   autoFocus?: boolean;
   onSubmit: (value: string, cb: () => void) => void;
   loading?: boolean;
+  placeHolder?: string;
+  isButtonHidden?: boolean;
 };
 
 const TextBox: FunctionComponent<TextBoxProps> = (props) => {
   const {
     defaultValue = "",
+    placeHolder = "Speak, the world is listening...",
     autoFocus = false,
     loading = false,
+    isButtonHidden = false,
     onSubmit,
   } = props;
   const [text, setText] = useState(defaultValue);
@@ -29,16 +33,16 @@ const TextBox: FunctionComponent<TextBoxProps> = (props) => {
         } p-2 dark:bg-gray-700 shadow-xl focus:outline-none`}
         autoFocus={autoFocus}
         onFocus={(e) => e.target.setSelectionRange(text.length, text.length)}
-        placeholder="Speak, the world is listening..."
+        placeholder={placeHolder}
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyPress={(e) => {
-          if (e.key === "Enter") {
+          if (e.key === "Enter" && !isButtonHidden) {
             onSubmit(text, callback);
           }
         }}
       />
-      {text.length > 0 && (
+      {text.length > 0 && !isButtonHidden && (
         <button
           className={`md:self-end mt-4 ${
             loading ? "bg-yellow-500" : "bg-blue-500"

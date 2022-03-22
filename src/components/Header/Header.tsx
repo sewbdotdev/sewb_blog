@@ -57,7 +57,7 @@ const Header: FunctionComponent = (props) => {
           </Link>
           {data && !loading ? (
             <li>
-              <Link href="/profile">
+              <Link href={`/profile?id=${data.user.id}`}>
                 <a>Profile</a>
               </Link>
             </li>
@@ -66,7 +66,7 @@ const Header: FunctionComponent = (props) => {
           )}
           {data && !loading && <li onClick={() => signOut()}>Logout</li>}
 
-          <li onClick={switchTheme} className="cursor-pointer">
+          <li onClick={switchTheme} className="cursor-pointer -mt-1.5 md:-mt-0">
             {theme === "light" ? (
               <MoonIcon
                 className="text-gray-900 hover:animate-bounce"

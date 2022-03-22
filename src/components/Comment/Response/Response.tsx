@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useState } from "react";
 import DefaultUser from "/public/img/default-user.png";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useQueryClient } from "react-query";
 import { PencilIcon, TrashIcon, XIcon } from "@heroicons/react/outline";
 import {
@@ -24,9 +25,9 @@ type ResponseProps = {
 
 const Response: FunctionComponent<ResponseProps> = (props) => {
   const { hideLastBorder = false, comment, commentCacheKey } = props;
-  const { data: userData } = useSession();
+  const { data: session } = useSession();
   const [editMode, setEditMode] = useState(false);
-
+  const router = useRouter();
   const [data, setData] = useState(comment);
   const queryClient = useQueryClient();
   const updateComment = useUpdateCommentMutation(
@@ -38,7 +39,7 @@ const Response: FunctionComponent<ResponseProps> = (props) => {
       },
     },
     {
-      Authorization: `Bearer ${userData?.jwt}`,
+      Authorization: `Bearer ${session?.jwt}`,
     }
   );
 
@@ -103,7 +104,7 @@ const Response: FunctionComponent<ResponseProps> = (props) => {
       },
     },
     {
-      Authorization: `Bearer ${userData?.jwt}`,
+      Authorization: `Bearer ${session?.jwt}`,
     }
   );
 
@@ -125,6 +126,15 @@ const Response: FunctionComponent<ResponseProps> = (props) => {
                 comment.attributes?.author?.data?.attributes?.avatar?.data
                   ?.attributes?.url ?? ""
               )}
+              onClick={() => {
+                if (comment.attributes?.author?.data?.id) {
+                  router.push(
+                    `/profile?id=${comment.attributes.author.data.id}`
+                  );
+                } else {
+                  router.push(`/profile?`);
+                }
+              }}
               alt="the featured image of the blog post. "
               width={100}
               height={100}
@@ -136,12 +146,30 @@ const Response: FunctionComponent<ResponseProps> = (props) => {
               alt="the featured image of the blog post. "
               width={100}
               height={100}
+              onClick={() => {
+                if (comment.attributes?.author?.data?.id) {
+                  router.push(
+                    `/profile?id=${comment.attributes.author.data.id}`
+                  );
+                } else {
+                  router.push(`/profile?`);
+                }
+              }}
               className="inline-block h-6 w-6 rounded-full ring-2 "
             />
           )}
         </div>
         <div className="-mt-1">
-          <h4 className="text-base font-bold">
+          <h4
+            className="text-base font-bold cursor-pointer"
+            onClick={() => {
+              if (comment.attributes?.author?.data?.id) {
+                router.push(`/profile?id=${comment.attributes.author.data.id}`);
+              } else {
+                router.push(`/profile?`);
+              }
+            }}
+          >
             {data.attributes?.author?.data?.attributes?.username}
           </h4>
           <p className="text-xs">
@@ -152,7 +180,8 @@ const Response: FunctionComponent<ResponseProps> = (props) => {
         {/* !(
           Number(data?.user.id) === Number(data.attributes?.author?.data?.id)
         ) &&  */}
-        {
+        {Number(session?.user.id) ===
+          Number(data.attributes?.author?.data?.id) && (
           <div className="ml-auto flex gap-5 self-center">
             {editMode ? (
               <XIcon
@@ -170,7 +199,7 @@ const Response: FunctionComponent<ResponseProps> = (props) => {
               onClick={() => handleDelete()}
             />
           </div>
-        }
+        )}
       </div>
       {editMode ? (
         <TextBox
