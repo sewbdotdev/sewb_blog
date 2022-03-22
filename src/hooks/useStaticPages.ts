@@ -2,12 +2,14 @@ import client from "utils/client";
 import {
   OurStoryEntityResponse,
   GetFaqDocument,
+  GetStoryDocument,
+  FaqEntityResponse,
 } from "../@customTypes/generated/graphql";
 
 const getOurStory = async () => {
   try {
     const response = await client.request<OurStoryEntityResponse>(
-      GetFaqDocument
+      GetStoryDocument
     );
     return response;
   } catch (error) {
@@ -15,4 +17,12 @@ const getOurStory = async () => {
   }
 };
 
-export { getOurStory };
+const getFaq = async () => {
+  try {
+    const response = await client.request<FaqEntityResponse>(GetFaqDocument);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export { getOurStory, getFaq };

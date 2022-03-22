@@ -2,7 +2,7 @@ import React from "react";
 import type { GetStaticProps, NextPage } from "next";
 import { dehydrate, QueryClient } from "react-query";
 import Content from "@/components/Content";
-import { getOurStory } from "hooks/useOurStory";
+import { getOurStory } from "hooks/useStaticPages";
 import { useGetStoryQuery } from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
 import DataWrapper from "@/components/DataWrapper";
@@ -26,7 +26,7 @@ const OurStoryPage: NextPage = (props) => {
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["getFAQ"], () => getOurStory());
+  await queryClient.prefetchQuery(["getStory"], () => getOurStory());
 
   return {
     props: {
