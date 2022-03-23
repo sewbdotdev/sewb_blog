@@ -163,26 +163,32 @@ const ProfilePage: NextPage = (props) => {
                     onSubmit();
                   }}
                 >
+                  <label htmlFor="twitterUrl">You twitter url.</label>
                   <input
                     className="block w-full p-2 my-2 rounded dark:bg-gray-700 shadow-xl focus:outline-none"
                     type="url"
+                    id="twitterUrl"
                     value={twitterUrl}
                     onChange={(e) => setTwitterUrl(e.target.value)}
                     placeholder="Your twitter url..."
                   />
+                  <label htmlFor="linkedinUrl">Your linkedin url.</label>
                   <input
                     className="block w-full p-2 my-2 rounded dark:bg-gray-700 shadow-xl focus:outline-none"
                     type="url"
+                    id="linkedinUrl"
                     value={linkedinUrl}
                     onChange={(e) => setLinkedinUrl(e.target.value)}
                     placeholder="Your linkedin url..."
                   />
                   <div className="flex flex-col mb-5 md:w-full">
+                    <label htmlFor="bio">Your bio.</label>
                     <textarea
-                      className={`rounded-md max-w-full h-${
+                      className={`rounded-md max-w-full mt-2 h-${
                         bio.length > 0 ? "36" : "10"
                       } p-2 dark:bg-gray-700 shadow-xl focus:outline-none`}
                       value={bio}
+                      id="bio"
                       onChange={(e) => setBio(e.target.value)}
                       placeholder={`Who is ${
                         data?.usersPermissionsUser?.data?.attributes
