@@ -9,6 +9,7 @@ const Feature: FunctionComponent = (props) => {
         src="/img/dark-feature.png"
         alt="Featured image saying software engineering without borders with some tags like design patterns."
         layout="fill"
+        loading="eager"
         priority={true}
       />
       {props.children}

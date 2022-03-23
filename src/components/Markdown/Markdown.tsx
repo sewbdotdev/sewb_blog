@@ -40,10 +40,16 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
               {props.children}
             </a>
           ),
-        //   FIXME: nextjs not pulling image from API. Giving connection refused error.
-        //   TODO consider using nextjs image component
         img: ({ node, ...props }) => (
-          <img {...props} src={Helpers.getImageURL(props.src ?? "")} />
+          <div className="relative w-full" style={{ height: 600 }}>
+            <Image
+              src={Helpers.getImageURL(props.src ?? "")}
+              alt={props.alt}
+              layout="fill"
+              priority
+              className={`${props.className} text-center mx-auto`}
+            />
+          </div>
         ),
       }}
     >
