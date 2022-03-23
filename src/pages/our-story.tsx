@@ -13,6 +13,9 @@ const OurStoryPage: NextPage = (props) => {
 
   return (
     <Content classNames="text-justify">
+      <h2 className="text-3xl font-bold mt-5 border-b-2 border-slate-800 pb-2 w-1/2 mx-40">
+        Our Story
+      </h2>
       <DataWrapper status={status}>
         {data?.ourStory?.data?.attributes?.content && (
           <section className="mx-40 my-20">

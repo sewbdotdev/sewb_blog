@@ -30,7 +30,6 @@ const Header: FunctionComponent = (props) => {
     setIsDark(() => theme === "dark");
   }, [theme]);
 
-  console.log(router.pathname, router.basePath, router);
   return (
     <header className={styles.container}>
       <div className={styles.logoContainer}>
