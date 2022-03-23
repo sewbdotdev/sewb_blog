@@ -1635,6 +1635,15 @@ export type PostCommentCountQueryVariables = Exact<{
 
 export type PostCommentCountQuery = { __typename?: 'Query', comments?: { __typename?: 'CommentEntityResponseCollection', meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
 
+export type GetPostsByTagQueryVariables = Exact<{
+  slug: Scalars['String'];
+  page: Scalars['Int'];
+  pageSize: Scalars['Int'];
+}>;
+
+
+export type GetPostsByTagQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description: string, readTime?: number | null, tags?: { __typename?: 'TagRelationResponseCollection', data: Array<{ __typename?: 'TagEntity', id?: string | null, attributes?: { __typename?: 'Tag', title: string, slug?: string | null } | null }> } | null, category?: { __typename?: 'CategoryEntityResponse', data?: { __typename?: 'CategoryEntity', id?: string | null, attributes?: { __typename?: 'Category', title: string, slug?: string | null } | null } | null } | null, authors?: { __typename?: 'UsersPermissionsUserRelationResponseCollection', data: Array<{ __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string } | null }> } | null, featuredImage: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', width?: number | null, height?: number | null, alternativeText?: string | null, caption?: string | null, url: string } | null } | null } } | null }>, meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
+
 export type GetUserProfileQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -2362,6 +2371,85 @@ export const usePostCommentCountQuery = <
     useQuery<PostCommentCountQuery, TError, TData>(
       ['postCommentCount', variables],
       fetcher<PostCommentCountQuery, PostCommentCountQueryVariables>(client, PostCommentCountDocument, variables, headers),
+      options
+    );
+export const GetPostsByTagDocument = `
+    query getPostsByTag($slug: String!, $page: Int!, $pageSize: Int!) {
+  posts(
+    filters: {tags: {slug: {eq: $slug}}}
+    pagination: {page: $page, pageSize: $pageSize}
+  ) {
+    data {
+      id
+      attributes {
+        title
+        publishedAt
+        slug
+        description
+        readTime
+        tags {
+          data {
+            id
+            attributes {
+              title
+              slug
+            }
+          }
+        }
+        category {
+          data {
+            id
+            attributes {
+              title
+              slug
+            }
+          }
+        }
+        authors {
+          data {
+            id
+            attributes {
+              username
+            }
+          }
+        }
+        featuredImage {
+          data {
+            id
+            attributes {
+              width
+              height
+              alternativeText
+              caption
+              url
+            }
+          }
+        }
+      }
+    }
+    meta {
+      pagination {
+        total
+        page
+        pageSize
+        pageCount
+      }
+    }
+  }
+}
+    `;
+export const useGetPostsByTagQuery = <
+      TData = GetPostsByTagQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: GetPostsByTagQueryVariables,
+      options?: UseQueryOptions<GetPostsByTagQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<GetPostsByTagQuery, TError, TData>(
+      ['getPostsByTag', variables],
+      fetcher<GetPostsByTagQuery, GetPostsByTagQueryVariables>(client, GetPostsByTagDocument, variables, headers),
       options
     );
 export const GetUserProfileDocument = `

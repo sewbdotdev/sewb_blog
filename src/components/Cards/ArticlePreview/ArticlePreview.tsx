@@ -33,7 +33,7 @@ const sanityIoImageLoader = (props: ImageLoaderProps) => {
 };
 
 const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
-  const isImagePresent = Boolean(props.author.avatar?.data?.attributes?.url);
+  const isImagePresent = Boolean(props.author?.avatar?.data?.attributes?.url);
   return (
     <div className={`${styles.articlePreviewContainer} ${props.className}`}>
       <div className={styles.articlePreviewChildOneContainer}>
@@ -42,7 +42,7 @@ const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
             {isImagePresent ? (
               <Image
                 src={Helpers.getImageURL(
-                  String(props.author.avatar?.data?.attributes?.url)
+                  String(props.author?.avatar?.data?.attributes?.url)
                 )}
                 layout="responsive"
                 width={10}
@@ -60,7 +60,7 @@ const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
             )}
           </div>
           <h6 className={styles.articlePreviewName}>
-            {props.author.username} {props.isMultiAuthored ? "et al" : ""}{" "}
+            {props.author?.username} {props.isMultiAuthored ? "et al" : ""}{" "}
             <a className="font-normal">in</a>{" "}
             <Link href={`/category/${String(props.category.attributes?.slug)}`}>
               <a className="hover:underline">
@@ -97,6 +97,7 @@ const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
             layout="fill"
             objectFit="cover"
             alt="Picture of the post"
+            priority
           />
         ) : (
           <Image

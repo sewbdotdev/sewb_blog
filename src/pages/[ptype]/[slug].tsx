@@ -23,8 +23,20 @@ import {
 } from "hooks/useCategoryAndTag";
 import { dehydrate, QueryClient, useQuery } from "react-query";
 import { CategoryOrTag } from "@customTypes/categoryandtag";
-import { getPostsByCategory, getPostsByTag } from "hooks/usePost";
-import { useState } from "react";
+import {
+  getPostsByCategory,
+  getPostsByTag,
+  useInfinitePostByPtype,
+} from "hooks/usePost";
+import { Fragment, useEffect, useState } from "react";
+import {
+  CategoryEntity,
+  TagEntity,
+  UsersPermissionsUser,
+} from "@customTypes/generated/graphql";
+import DataWrapper from "@/components/DataWrapper";
+import { useInView } from "react-intersection-observer";
+
 interface Props {
   data: CategoryOrTag | undefined;
 }
@@ -32,29 +44,14 @@ interface Props {
 const CategoryOrTagPage: NextPage<Props> = (props) => {
   const router = useRouter();
   const { ptype, slug } = router.query;
-  const [page, setPageNo] = useState(1);
-  const { data: postData, status } = useQuery(
-    ["posts", { slug: String(slug), page }],
-    () =>
-      ptype === "tag"
-        ? getPostsByTag(String(slug))
-        : getPostsByCategory(String(slug))
-  );
-
-  if (status === "loading") {
-    return (
-      <Content>
-        <p>Loading...</p>
-      </Content>
-    );
-  }
-  if (status === "error") {
-    return (
-      <Content>
-        <p>An Error has occured...</p>
-      </Content>
-    );
-  }
+  // const [page, setPageNo] = useState(1);
+  const postData = useInfinitePostByPtype(String(slug), String(ptype));
+  const { ref, inView } = useInView();
+  useEffect(() => {
+    if (inView && postData.hasNextPage) {
+      postData.fetchNextPage();
+    }
+  }, [inView, postData.hasNextPage]);
 
   return (
     <Content classNames="overflow-y-hidden">
@@ -70,21 +67,54 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
           </div>
 
           <section className={styles.contentPreviewContainer}>
-            {postData?.data.map((post) => (
-              <ArticlePreview
-                className="border-b border-gray-600 pb-4"
-                publishedAt={post.attributes.publishedAt}
-                authorName={post.attributes.authors.data[0].attributes.username}
-                category={post.attributes.category.data}
-                tag={post.attributes.tags.data[0]}
-                description={post.attributes.description}
-                readTime={post.attributes.readTime}
-                key={post.id}
-                title={post.attributes.title}
-                hasMultiAuthor={post.attributes.authors.data.length > 1}
-                slug={post.attributes.slug}
-              />
-            ))}
+            <DataWrapper status={postData.status}>
+              {postData?.data?.pages?.map((page) => (
+                <Fragment key={page.meta.pagination.page}>
+                  {page.data.map((post) => {
+                    const isMultiAuthored = post.attributes?.authors?.data
+                      ? post.attributes.authors.data.length > 1
+                      : false;
+                    const previewProps = {
+                      isMultiAuthored,
+                      author: post.attributes?.authors?.data[0]
+                        .attributes as UsersPermissionsUser,
+                      title: post.attributes?.title ?? "",
+                      tag: post.attributes?.tags?.data[0] as TagEntity,
+                      category: post.attributes?.category
+                        ?.data as CategoryEntity,
+                      description: post.attributes?.description ?? "",
+                      readTime: Number(post.attributes?.readTime),
+                      publishedAt: post.attributes?.publishedAt,
+                      slug: post.attributes?.slug ?? "",
+                      featuredURL:
+                        post.attributes?.featuredImage.data?.attributes?.url,
+                    };
+
+                    return <ArticlePreview {...previewProps} key={post.id} />;
+                  })}
+                </Fragment>
+              ))}
+              <div className="flex justify-center">
+                <button
+                  ref={ref}
+                  onClick={() => {
+                    postData.fetchNextPage();
+                  }}
+                  disabled={
+                    !postData.hasNextPage || postData.isFetchingNextPage
+                  }
+                >
+                  {postData.hasNextPage && postData.isFetchingNextPage
+                    ? "Fetching..."
+                    : ""}
+                </button>
+              </div>
+              <div>
+                {postData.isFetching && !postData.isFetchingNextPage
+                  ? "Background Updating..."
+                  : null}
+              </div>
+            </DataWrapper>
           </section>
         </section>
         <aside className={`${styles.asideContainer}`}>
@@ -127,12 +157,12 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   if (params && params.ptype) {
     if (params.ptype === "tag") {
       await queryClient.prefetchQuery(
-        ["posts", { tagSlug: String(params.slug), page: 1 }],
+        ["posts", { ptype: "tag", slug: String(params.slug) }],
         () => getPostsByTag(String(params.slug))
       );
     } else {
       await queryClient.prefetchQuery(
-        ["posts", { categorySlug: String(params.slug), page: 1 }],
+        ["posts", { ptype: "category", slug: String(params.slug) }],
         () => getPostsByCategory(String(params.slug))
       );
     }
