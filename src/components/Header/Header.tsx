@@ -30,6 +30,7 @@ const Header: FunctionComponent = (props) => {
     setIsDark(() => theme === "dark");
   }, [theme]);
 
+  console.log(router.pathname, router.basePath, router);
   return (
     <header className={styles.container}>
       <div className={styles.logoContainer}>
@@ -47,16 +48,41 @@ const Header: FunctionComponent = (props) => {
       <div className={styles.linkContainer}>
         <ul className={styles.linkInnerContainer}>
           <Link href="/our-story">
-            <li>Our story</li>
+            <li
+              className={`${
+                router.pathname === "/our-story" &&
+                "border-b-2 border-b-slate-800"
+              }`}
+            >
+              Our story
+            </li>
           </Link>
           <Link href="/contact">
-            <li>Contact</li>
+            <li
+              className={`${
+                router.pathname === "/contact" &&
+                "border-b-2 border-b-slate-800"
+              }`}
+            >
+              Contact
+            </li>
           </Link>
           <Link href="/faq">
-            <li>FAQ</li>
+            <li
+              className={`${
+                router.pathname === "/faq" && "border-b-2 border-b-slate-800"
+              }`}
+            >
+              FAQ
+            </li>
           </Link>
           {data && !loading ? (
-            <li>
+            <li
+              className={`${
+                router.pathname.includes("/profile") &&
+                "border-b-2 border-b-slate-800"
+              }`}
+            >
               <Link href={`/profile?id=${data.user.id}`}>
                 <a>Profile</a>
               </Link>
