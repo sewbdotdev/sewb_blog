@@ -108,7 +108,6 @@ const PostPage: NextPage = (props) => {
   });
 
   const handleCreate = (content: string, cb: Function) => {
-    // console.log("content", content);
     const variable = {
       content,
       postId: String(data?.posts?.data[0].id),
