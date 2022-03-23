@@ -1644,6 +1644,28 @@ export type GetPostsByTagQueryVariables = Exact<{
 
 export type GetPostsByTagQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description: string, readTime?: number | null, tags?: { __typename?: 'TagRelationResponseCollection', data: Array<{ __typename?: 'TagEntity', id?: string | null, attributes?: { __typename?: 'Tag', title: string, slug?: string | null } | null }> } | null, category?: { __typename?: 'CategoryEntityResponse', data?: { __typename?: 'CategoryEntity', id?: string | null, attributes?: { __typename?: 'Category', title: string, slug?: string | null } | null } | null } | null, authors?: { __typename?: 'UsersPermissionsUserRelationResponseCollection', data: Array<{ __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string } | null }> } | null, featuredImage: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', width?: number | null, height?: number | null, alternativeText?: string | null, caption?: string | null, url: string } | null } | null } } | null }>, meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
 
+export type ClapMutationVariables = Exact<{
+  postId: Scalars['ID'];
+  userId: Scalars['ID'];
+}>;
+
+
+export type ClapMutation = { __typename?: 'Mutation', createPostClap?: { __typename?: 'PostClapEntityResponse', data?: { __typename?: 'PostClapEntity', id?: string | null } | null } | null };
+
+export type UnclapMutationVariables = Exact<{
+  clapId: Scalars['ID'];
+}>;
+
+
+export type UnclapMutation = { __typename?: 'Mutation', deletePostClap?: { __typename?: 'PostClapEntityResponse', data?: { __typename?: 'PostClapEntity', id?: string | null } | null } | null };
+
+export type GetPostClapsQueryVariables = Exact<{
+  postId: Scalars['ID'];
+}>;
+
+
+export type GetPostClapsQuery = { __typename?: 'Query', postClaps?: { __typename?: 'PostClapEntityResponseCollection', data: Array<{ __typename?: 'PostClapEntity', id?: string | null, attributes?: { __typename?: 'PostClap', users_permissions_user?: { __typename?: 'UsersPermissionsUserEntityResponse', data?: { __typename?: 'UsersPermissionsUserEntity', id?: string | null } | null } | null } | null }>, meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number } } } | null };
+
 export type GetUserProfileQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -2450,6 +2472,85 @@ export const useGetPostsByTagQuery = <
     useQuery<GetPostsByTagQuery, TError, TData>(
       ['getPostsByTag', variables],
       fetcher<GetPostsByTagQuery, GetPostsByTagQueryVariables>(client, GetPostsByTagDocument, variables, headers),
+      options
+    );
+export const ClapDocument = `
+    mutation clap($postId: ID!, $userId: ID!) {
+  createPostClap(data: {post: $postId, users_permissions_user: $userId}) {
+    data {
+      id
+    }
+  }
+}
+    `;
+export const useClapMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<ClapMutation, TError, ClapMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<ClapMutation, TError, ClapMutationVariables, TContext>(
+      ['clap'],
+      (variables?: ClapMutationVariables) => fetcher<ClapMutation, ClapMutationVariables>(client, ClapDocument, variables, headers)(),
+      options
+    );
+export const UnclapDocument = `
+    mutation unclap($clapId: ID!) {
+  deletePostClap(id: $clapId) {
+    data {
+      id
+    }
+  }
+}
+    `;
+export const useUnclapMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<UnclapMutation, TError, UnclapMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<UnclapMutation, TError, UnclapMutationVariables, TContext>(
+      ['unclap'],
+      (variables?: UnclapMutationVariables) => fetcher<UnclapMutation, UnclapMutationVariables>(client, UnclapDocument, variables, headers)(),
+      options
+    );
+export const GetPostClapsDocument = `
+    query getPostClaps($postId: ID!) {
+  postClaps(filters: {post: {id: {eq: $postId}}}) {
+    data {
+      id
+      attributes {
+        users_permissions_user {
+          data {
+            id
+          }
+        }
+      }
+    }
+    meta {
+      pagination {
+        total
+      }
+    }
+  }
+}
+    `;
+export const useGetPostClapsQuery = <
+      TData = GetPostClapsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: GetPostClapsQueryVariables,
+      options?: UseQueryOptions<GetPostClapsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<GetPostClapsQuery, TError, TData>(
+      ['getPostClaps', variables],
+      fetcher<GetPostClapsQuery, GetPostClapsQueryVariables>(client, GetPostClapsDocument, variables, headers),
       options
     );
 export const GetUserProfileDocument = `

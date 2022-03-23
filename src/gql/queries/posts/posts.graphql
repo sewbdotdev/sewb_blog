@@ -361,3 +361,47 @@ query getPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
     }
   }
 }
+
+
+mutation clap($postId: ID!, $userId: ID!) {
+  createPostClap(data: { post: $postId, users_permissions_user: $userId }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation unclap($clapId: ID!) {
+  deletePostClap(id: $clapId) {
+    data {
+      id
+    }
+  }
+}
+
+
+query getPostClaps($postId:ID!) {
+  postClaps(filters:{
+    post:{
+      id:{
+        eq:$postId
+      }
+    }
+  }){
+    data{
+      id
+      attributes{
+        users_permissions_user{
+          data{
+            id
+          }
+        }
+      }
+    }
+    meta{
+      pagination{
+        total
+      }
+    }
+  }
+}

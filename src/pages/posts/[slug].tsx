@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, useCallback, useMemo } from "react";
 import Content from "@/components/Content";
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import DefaultErrorPage from "next/error";
@@ -11,6 +11,7 @@ import {
   ClockIcon,
   XIcon,
   CalendarIcon,
+  HeartIcon,
 } from "@heroicons/react/solid";
 import Related from "@/components/Related";
 import { getAllPosts, getPostsBSlug } from "hooks/usePost";
@@ -25,6 +26,9 @@ import {
   PostEntity,
   usePostCommentCountQuery,
   UsersPermissionsUser,
+  useGetPostClapsQuery,
+  useClapMutation,
+  useUnclapMutation,
 } from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
 import DataWrapper from "@/components/DataWrapper";
@@ -38,6 +42,7 @@ import dateFormatter from "utils/dateFormatter";
 import { useInfiniteComments } from "hooks/useComment";
 import { useInView } from "react-intersection-observer";
 import AuthPrompt from "@/components/AuthPrompt";
+import Clap from "@/components/CustomIcons/Clap";
 
 const PostPage: NextPage = (props) => {
   const router = useRouter();
@@ -51,28 +56,20 @@ const PostPage: NextPage = (props) => {
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
+  const [clapId, setClapId] = useState<string | undefined | null>(undefined);
   const [postVars, setPostVars] = useState({
     page,
     pageSize,
     postId: String(data?.posts?.data[0].id),
   });
-  const comments = useGetCommentsQuery(
-    getClient(),
-    {
-      postId: String(data?.posts?.data[0].id),
-      page,
-      pageSize,
-    },
-    {
-      enabled: Boolean(
-        data &&
-          data.posts &&
-          data.posts.data &&
-          data.posts.data.length > 0 &&
-          open
-      ),
-    }
-  );
+
+  if (router.isFallback || status === "loading") {
+    return <DataWrapper status="loading" />;
+  }
+  if (data && data.posts?.data.length === 0) {
+    // return error page
+    return <DefaultErrorPage statusCode={404} />;
+  }
 
   const isInfiniteCommentsEnabled = Boolean(
     data && data.posts && data.posts.data && data.posts.data.length > 0 && open
@@ -81,6 +78,10 @@ const PostPage: NextPage = (props) => {
     String(data?.posts?.data[0].id),
     isInfiniteCommentsEnabled
   );
+
+  const getPostClaps = useGetPostClapsQuery(getClient(), {
+    postId: String(data?.posts?.data[0].id),
+  });
 
   const { ref, inView } = useInView();
   useEffect(() => {
@@ -133,19 +134,83 @@ const PostPage: NextPage = (props) => {
     }
   );
 
-  if (router.isFallback || status === "loading") {
-    return <DataWrapper status="loading" />;
-  }
-  if (data && data.posts?.data.length === 0) {
-    // return error page
-    return <DefaultErrorPage statusCode={404} />;
-  }
-
   const post = data?.posts?.data[0];
 
   const isImagePresent = Boolean(
     post?.attributes?.featuredImage?.data?.attributes?.url
   );
+
+  const hasUserClapped = () => {
+    if (
+      !getPostClaps.data ||
+      !getPostClaps.data.postClaps ||
+      !getPostClaps.data.postClaps.data
+    ) {
+      return false;
+    } else {
+      let hasClapped = false;
+      for (let clapVar of getPostClaps.data.postClaps.data) {
+        if (
+          Number(session?.user.id) ===
+          Number(clapVar.attributes?.users_permissions_user?.data?.id)
+        ) {
+          setClapId(String(clapVar.id));
+          hasClapped = true;
+          break;
+        }
+      }
+      return hasClapped;
+    }
+  };
+
+  const memoizedHasUserClapped = useMemo(
+    () => hasUserClapped(),
+    [getPostClaps.data, clapId]
+  );
+
+  const clap = useClapMutation(
+    getClient(),
+    {
+      onSettled: () => {
+        queryClient.invalidateQueries([
+          "getPostClaps",
+          { postId: String(data?.posts?.data[0].id) },
+        ]);
+      },
+    },
+    {
+      Authorization: `Bearer ${session?.jwt}`,
+    }
+  );
+  const unclap = useUnclapMutation(
+    getClient(),
+    {
+      onSettled: () => {
+        queryClient.invalidateQueries([
+          "getPostClaps",
+          { postId: String(data?.posts?.data[0].id) },
+        ]);
+      },
+    },
+    {
+      Authorization: `Bearer ${session?.jwt}`,
+    }
+  );
+
+  const onClapClick = () => {
+    if (memoizedHasUserClapped) {
+      if (clapId) {
+        unclap.mutate({
+          clapId,
+        });
+      }
+    } else {
+      clap.mutate({
+        postId: String(data?.posts?.data[0].id),
+        userId: String(session?.user.id),
+      });
+    }
+  };
 
   return (
     <Content classNames="overflow-y-hidden">
@@ -254,6 +319,7 @@ const PostPage: NextPage = (props) => {
                       alt="the featured image of the blog post. "
                       width={600}
                       height={665}
+                      priority
                     />
                   )}
                   <div className="text-center">
@@ -277,15 +343,21 @@ const PostPage: NextPage = (props) => {
                       0}
                   </span>
                 </p>
-                {/* TODO: retrieve post claps and post likes */}
-                {/* <p className={styles.icon}>
-                  <HeartIcon className="h-7 w-7 text-red-600" />
-                  <span className={styles.iconText}>100</span>
-                </p>
-                <p className={styles.icon}>
-                  <span>👏</span>
-                  <span className={styles.iconText}>100</span>
-                </p> */}
+                {getPostClaps.data?.postClaps?.data && (
+                  <p className={styles.icon}>
+                    <span
+                      className={`h-7 w-7  relative `}
+                      onClick={() => {
+                        onClapClick();
+                      }}
+                    >
+                      <Clap isClicked={memoizedHasUserClapped} />
+                    </span>
+                    <span className={styles.iconText}>
+                      {getPostClaps.data?.postClaps?.meta.pagination.total}
+                    </span>
+                  </p>
+                )}
               </div>
             </section>
             <aside className={styles.asideContainer}>
