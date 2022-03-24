@@ -11,18 +11,18 @@ import { NextSeo } from "next-seo";
 const OurStoryPage: NextPage = (props) => {
   const { data, status, error } = useGetStoryQuery(getClient());
   const seo = {
-    title: `Contact Page`,
-    description: `Contact page of users on SEWB.`,
+    title: `Our Story Page`,
+    description: `Our story page of users on SEWB.`,
   };
   return (
     <Content classNames="text-justify">
       <NextSeo {...seo} />
-      <h2 className="text-3xl font-bold mt-5 border-b-2 border-slate-800 pb-2 w-1/2 mx-40">
+      <h2 className="text-3xl font-bold mt-5 border-b-2 border-slate-800 pb-2 w-full md:w-1/2 px-10 md:mx-40">
         Our Story
       </h2>
       <DataWrapper status={status}>
         {data?.ourStory?.data?.attributes?.content && (
-          <section className="mx-40 my-20">
+          <section className="px-10 md:mx-40 my-20">
             <Markdown content={data?.ourStory?.data?.attributes?.content} />
           </section>
         )}

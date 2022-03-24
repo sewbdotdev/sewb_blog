@@ -16,7 +16,19 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Hydrate state={pageProps.dehydratedState}>
         <ThemeProvider attribute="class">
           <Layout>
-            <DefaultSeo {...SEO} />
+            <DefaultSeo
+              {...SEO}
+              additionalMetaTags={[
+                {
+                  httpEquiv: "content-type",
+                  content: "text/html; charset=utf-8",
+                },
+                {
+                  name: "viewport",
+                  content: "width=device-width, initial-scale=1",
+                },
+              ]}
+            />
             <Component {...pageProps} />
           </Layout>
         </ThemeProvider>
