@@ -235,6 +235,7 @@ const ProfilePage: NextPage = (props) => {
                           }
                           className="hover:text-blue-400"
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           Linkedin
                         </a>
@@ -248,6 +249,7 @@ const ProfilePage: NextPage = (props) => {
                           }
                           className="hover:text-blue-400"
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           Twitter
                         </a>

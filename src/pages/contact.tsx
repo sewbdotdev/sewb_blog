@@ -18,6 +18,7 @@ const ContactUsPage: NextPage = (props) => {
             <a
               className="text-blue-600 hover:underline"
               target="_blank"
+              rel="noopener noreferrer"
               href="mailto:sewb.dev@gmail.com"
             >
               sewb.dev@gmail.com
@@ -28,6 +29,7 @@ const ContactUsPage: NextPage = (props) => {
             <a
               className="text-blue-600 hover:underline"
               target="_blank"
+              rel="noopener noreferrer"
               href="https://twitter.com/themmyloluwaaa"
             >
               @themmyloluwaaa
@@ -38,6 +40,7 @@ const ContactUsPage: NextPage = (props) => {
             <a
               className="text-blue-600 hover:underline"
               target="_blank"
+              rel="noopener noreferrer"
               href="https://twitter.com/wolemercy"
             >
               @wolemercy
