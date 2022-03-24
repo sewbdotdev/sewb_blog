@@ -24,6 +24,36 @@ export type Post = {
   };
 };
 
+export type postClaps = {
+  id: string;
+  attributes: {
+    createdAt: string;
+    updatedAt: string;
+  }
+}
+
+export type Comment = {
+  id: string;
+  attributes: {
+    content: string;
+    createdAt: string;
+    updatedAt: string;
+  }
+}
+
+ type OmittedAttrInPost = Omit<Post, "tags" | "category"|"authors"|"featuredImage">
+
+ export type PostBySlug = {
+postClaps:{
+  data: postClaps;
+};
+comments:{
+  data: Comment;
+};
+
+ } & OmittedAttrInPost
+
 export type PostAPIResponse = {
   data: Post[];
 } & APIResponse;
+

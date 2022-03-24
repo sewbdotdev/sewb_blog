@@ -41,6 +41,14 @@ class Helpers {
     document.cookie = `token=${data.token}; path=/`;
     localStorage.setItem("token", data.token);
   }
+
+  static getImageURL(src: string): string {
+    if (src.startsWith("/")) {
+      return `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}${src}`;
+    } else {
+      return src;
+    }
+  }
 }
 
 export default Helpers;

@@ -1,30 +1,52 @@
 import React, { FunctionComponent } from "react";
 import styles from "./Author.module.css";
-import TestImage2 from "/public/img/test-2.jpeg";
+import DefaultUser from "/public/img/default-user.png";
 import Image from "next/image";
+import { UsersPermissionsUser } from "@customTypes/generated/graphql";
+import Helpers from "utils/helpers";
 
-const Author: FunctionComponent = () => {
+type AuthorProps = {
+  data: UsersPermissionsUser;
+};
+
+const Author: FunctionComponent<AuthorProps> = (props) => {
+  const { data } = props;
+  const isImagePresent = Boolean(data.avatar?.data?.attributes?.url);
   return (
     <article className={styles.container}>
       <div className={styles.imageContainer}>
-        <Image
-          src={TestImage2}
-          alt="the featured image of the blog post. "
-          width={80}
-          height={100}
-        />
-        <h3 className={styles.name}>Temiloluwa Ojo.</h3>
+        {isImagePresent ? (
+          <Image
+            src={Helpers.getImageURL(
+              String(data.avatar?.data?.attributes?.url)
+            )}
+            alt={`${data.username} image.`}
+            width={80}
+            height={100}
+          />
+        ) : (
+          <Image
+            src={DefaultUser}
+            alt="a default user image"
+            width={80}
+            height={100}
+          />
+        )}
+        <h3 className={styles.name}>{data.username}</h3>
         <p className={styles.bio}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur velit esse cillum dolore eu fugiat nulla pariatur.
+          {data.bio ?? "Update your bio in your profile :)"}
         </p>
         <div className={styles.linkContainer}>
-          <a className={styles.linkText}>Twitter here</a>
-          <a className={styles.linkText}>Linkedin here</a>
+          {data.twitterUrl && (
+            <a className={styles.linkText} href={data.twitterUrl}>
+              Twitter
+            </a>
+          )}
+          {data.linkedinUrl && (
+            <a className={styles.linkText} href={data.linkedinUrl}>
+              Linkedin
+            </a>
+          )}
         </div>
       </div>
     </article>

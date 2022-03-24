@@ -1,0 +1,10 @@
+query getStory{
+  ourStory {
+    data{
+      id
+      attributes{
+        content
+      }
+    }
+  }
+}

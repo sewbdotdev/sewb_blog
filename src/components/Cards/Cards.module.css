@@ -20,7 +20,7 @@
   @apply text-xs self-center  font-bold;
 }
 .articlePreviewNameImageContainer {
-  @apply rounded h-7 w-7;
+  @apply block rounded h-7 w-7;
 }
 .articlePreviewTitle {
   @apply font-extrabold text-lg truncate md:whitespace-normal cursor-pointer hover:text-blue-600;
@@ -29,13 +29,19 @@
   @apply flex gap-4  mb-2 text-sm font-light items-end;
 }
 .articlePreviewChildTwoContainer {
-  @apply bg-purple-400 w-2/6 h-20 md:h-32 relative;
+  @apply w-2/6 h-20 md:h-32 relative;
 }
 
 .relatedContentContainer {
   @apply flex flex-row gap-3 my-3;
 }
 
+.relatedContentTextContainer {
+  @apply flex flex-col;
+}
 .relatedContentTitle {
-  @apply self-center text-sm;
+  @apply self-center text-sm cursor-pointer hover:text-blue-500;
+}
+.relatedContentDescription {
+  @apply text-gray-400 text-xs cursor-pointer;
 }

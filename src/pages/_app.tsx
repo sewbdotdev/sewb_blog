@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import Layout from "../components/Layout";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import React from "react";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = React.useState(() => new QueryClient());
@@ -17,6 +18,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           </Layout>
         </ThemeProvider>
       </Hydrate>
+      {process.env.NODE_ENV === "development" && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
     </QueryClientProvider>
   );
 }
