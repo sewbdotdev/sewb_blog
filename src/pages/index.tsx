@@ -39,6 +39,7 @@ const Home: NextPage = (props) => {
       slug: String(cat.attributes?.slug),
     },
   }));
+  
 
   return (
     <Content>

@@ -36,7 +36,8 @@ import {
 } from "@customTypes/generated/graphql";
 import DataWrapper from "@/components/DataWrapper";
 import { useInView } from "react-intersection-observer";
-
+import { NextSeo } from "next-seo";
+import Helpers from "utils/helpers";
 interface Props {
   data: CategoryOrTag | undefined;
 }
@@ -53,8 +54,16 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
     }
   }, [inView, postData.hasNextPage]);
 
+  const seo = {
+    title: `${Helpers.capitalize(
+      Helpers.replace(String(slug))
+    )} ${Helpers.capitalize(String(ptype))}`,
+    description: `Post ${ptype} on SEWB Blog.`,
+  };
+
   return (
     <Content classNames="overflow-y-hidden">
+      <NextSeo {...seo} />
       <div className={contentStyles.container}>
         <section className={contentStyles.contentContainer}>
           <div className={styles.titleContainer}>
