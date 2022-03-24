@@ -1,37 +1,34 @@
 .container {
-    @apply px-10 md:px-10 flex flex-col md:flex-row md:h-screen overflow-y-hidden;
-  }
-  
-  .contentContainer {
-    @apply md:w-4/6 py-10 md:px-10 overflow-y-auto;
-  }
-  
-  .asideContainer {
-    @apply md:w-2/6 flex flex-col md:border-l md:border-gray-500 py-10 md:px-10 md:sticky md:top-0 md:overflow-y-auto;
-  }
-  .titleContainer {
-    @apply pb-10;
-  }
-  .contentTitle {
-    @apply font-extrabold text-3xl;
-  }
-  .contentDescription {
-    @apply pb-10;
-  }
-  .contentCoverImage {
-    @apply pb-10 relative;
-  }
-  .contentMain {
-  }
-  
-  .iconContainer {
-    @apply flex gap-5 mt-4;
-  }
-  
-  .icon {
-    @apply flex cursor-pointer;
-  }
-  .iconText {
-    @apply self-end text-slate-500 dark:text-slate-50 pl-2;
-  }
-  
+  @apply px-10 md:px-10 flex flex-col md:flex-row md:h-screen overflow-y-hidden;
+}
+
+.contentContainer {
+  @apply md:w-4/6 py-10 md:px-10 overflow-y-auto;
+}
+
+.asideContainer {
+  @apply md:w-2/6 flex flex-col md:border-l md:border-gray-500 py-10 md:px-10 md:sticky md:top-0 md:overflow-y-auto;
+}
+.titleContainer {
+  @apply pb-10;
+}
+.contentTitle {
+  @apply font-extrabold text-3xl;
+}
+
+.contentCoverImage {
+  @apply pb-10 relative flex justify-center flex-col;
+}
+.contentMain {
+}
+
+.iconContainer {
+  @apply flex gap-5 mt-4;
+}
+
+.icon {
+  @apply flex cursor-pointer;
+}
+.iconText {
+  @apply self-end text-slate-500 dark:text-slate-50 pl-2;
+}

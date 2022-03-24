@@ -8,26 +8,27 @@ query getPostBySlug($slug: String!) {
         slug
         description
         readTime
-         content
-        featuredImage{
-          data{
-            attributes{
+        content
+        featuredImage {
+          data {
+            attributes {
               url
               previewUrl
               width
               height
+              caption
             }
           }
         }
-        authors{
-          data{
+        authors {
+          data {
             id
-            attributes{
+            attributes {
               username
               bio
-              avatar{
-                data{
-                  attributes{
+              avatar {
+                data {
+                  attributes {
                     url
                     width
                     height
@@ -39,10 +40,10 @@ query getPostBySlug($slug: String!) {
             }
           }
         }
-        category{
-          data{
+        category {
+          data {
             id
-            attributes{
+            attributes {
               slug
             }
           }
@@ -221,20 +222,185 @@ query getMinimalPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
   }
 }
 
-query postCommentCount($postSlug:String!){
-  comments(filters:{
-    post:{
-      slug:{
-        eq:$postSlug
-      }
-    }
-  }){
-    meta{
-      pagination{
+query postCommentCount($postSlug: String!) {
+  comments(filters: { post: { slug: { eq: $postSlug } } }) {
+    meta {
+      pagination {
         total
         page
         pageSize
         pageCount
+      }
+    }
+  }
+}
+query getPostsByTag($slug: String!, $page: Int!, $pageSize: Int!) {
+  posts(
+    filters: { tags: { slug: { eq: $slug } } }
+    pagination: { page: $page, pageSize: $pageSize }
+  ) {
+    data {
+      id
+      attributes {
+        title
+        publishedAt
+        slug
+        description
+        readTime
+        tags {
+          data {
+            id
+            attributes {
+              title
+              slug
+            }
+          }
+        }
+        category {
+          data {
+            id
+            attributes {
+              title
+              slug
+            }
+          }
+        }
+        authors {
+          data {
+            id
+            attributes {
+              username
+            }
+          }
+        }
+        featuredImage {
+          data {
+            id
+            attributes {
+              width
+              height
+              alternativeText
+              caption
+              url
+            }
+          }
+        }
+      }
+    }
+    meta {
+      pagination {
+        total
+        page
+        pageSize
+        pageCount
+      }
+    }
+  }
+}
+
+query getPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
+  posts(
+    filters: { category: { slug: { eq: $slug } } }
+    pagination: { page: $page, pageSize: $pageSize }
+  ) {
+    data {
+      id
+      attributes {
+        title
+        publishedAt
+        slug
+        description
+        readTime
+        tags {
+          data {
+            id
+            attributes {
+              title
+              slug
+            }
+          }
+        }
+        category {
+          data {
+            id
+            attributes {
+              title
+              slug
+            }
+          }
+        }
+        authors {
+          data {
+            id
+            attributes {
+              username
+            }
+          }
+        }
+        featuredImage {
+          data {
+            id
+            attributes {
+              width
+              height
+              alternativeText
+              caption
+              url
+            }
+          }
+        }
+      }
+    }
+    meta {
+      pagination {
+        total
+        page
+        pageSize
+        pageCount
+      }
+    }
+  }
+}
+
+
+mutation clap($postId: ID!, $userId: ID!) {
+  createPostClap(data: { post: $postId, users_permissions_user: $userId }) {
+    data {
+      id
+    }
+  }
+}
+
+mutation unclap($clapId: ID!) {
+  deletePostClap(id: $clapId) {
+    data {
+      id
+    }
+  }
+}
+
+
+query getPostClaps($postId:ID!) {
+  postClaps(filters:{
+    post:{
+      id:{
+        eq:$postId
+      }
+    }
+  }){
+    data{
+      id
+      attributes{
+        users_permissions_user{
+          data{
+            id
+          }
+        }
+      }
+    }
+    meta{
+      pagination{
+        total
       }
     }
   }

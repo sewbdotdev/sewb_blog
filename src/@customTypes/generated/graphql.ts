@@ -771,7 +771,7 @@ export type Post = {
   comments?: Maybe<CommentRelationResponseCollection>;
   content: Scalars['String'];
   createdAt?: Maybe<Scalars['DateTime']>;
-  description?: Maybe<Scalars['String']>;
+  description: Scalars['String'];
   featuredImage: UploadFileEntityResponse;
   locale?: Maybe<Scalars['String']>;
   localizations?: Maybe<PostRelationResponseCollection>;
@@ -1576,6 +1576,15 @@ export type CreateCommentMutationVariables = Exact<{
 
 export type CreateCommentMutation = { __typename?: 'Mutation', createComment?: { __typename?: 'CommentEntityResponse', data?: { __typename?: 'CommentEntity', id?: string | null } | null } | null };
 
+export type GetCommentsByPostIdQueryVariables = Exact<{
+  postId: Scalars['ID'];
+  page: Scalars['Int'];
+  pageSize: Scalars['Int'];
+}>;
+
+
+export type GetCommentsByPostIdQuery = { __typename?: 'Query', comments?: { __typename?: 'CommentEntityResponseCollection', data: Array<{ __typename?: 'CommentEntity', id?: string | null, attributes?: { __typename?: 'Comment', content?: string | null, createdAt?: any | null, post?: { __typename?: 'PostEntityResponse', data?: { __typename?: 'PostEntity', id?: string | null } | null } | null, author?: { __typename?: 'UsersPermissionsUserEntityResponse', data?: { __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string } | null } | null } | null } | null }>, meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
+
 export type GetFaqQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1591,7 +1600,7 @@ export type GetPostBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GetPostBySlugQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description?: string | null, readTime?: number | null, content: string, featuredImage: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', attributes?: { __typename?: 'UploadFile', url: string, previewUrl?: string | null, width?: number | null, height?: number | null } | null } | null }, authors?: { __typename?: 'UsersPermissionsUserRelationResponseCollection', data: Array<{ __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string, bio?: string | null, twitterUrl?: string | null, linkedinUrl?: string | null, avatar?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', attributes?: { __typename?: 'UploadFile', url: string, width?: number | null, height?: number | null } | null } | null } | null } | null }> } | null, category?: { __typename?: 'CategoryEntityResponse', data?: { __typename?: 'CategoryEntity', id?: string | null, attributes?: { __typename?: 'Category', slug?: string | null } | null } | null } | null, postClaps?: { __typename?: 'PostClapRelationResponseCollection', data: Array<{ __typename?: 'PostClapEntity', id?: string | null }> } | null, comments?: { __typename?: 'CommentRelationResponseCollection', data: Array<{ __typename?: 'CommentEntity', id?: string | null }> } | null } | null }> } | null };
+export type GetPostBySlugQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description: string, readTime?: number | null, content: string, featuredImage: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', attributes?: { __typename?: 'UploadFile', url: string, previewUrl?: string | null, width?: number | null, height?: number | null, caption?: string | null } | null } | null }, authors?: { __typename?: 'UsersPermissionsUserRelationResponseCollection', data: Array<{ __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string, bio?: string | null, twitterUrl?: string | null, linkedinUrl?: string | null, avatar?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', attributes?: { __typename?: 'UploadFile', url: string, width?: number | null, height?: number | null } | null } | null } | null } | null }> } | null, category?: { __typename?: 'CategoryEntityResponse', data?: { __typename?: 'CategoryEntity', id?: string | null, attributes?: { __typename?: 'Category', slug?: string | null } | null } | null } | null, postClaps?: { __typename?: 'PostClapRelationResponseCollection', data: Array<{ __typename?: 'PostClapEntity', id?: string | null }> } | null, comments?: { __typename?: 'CommentRelationResponseCollection', data: Array<{ __typename?: 'CommentEntity', id?: string | null }> } | null } | null }> } | null };
 
 export type GetPostsByCategoryQueryVariables = Exact<{
   slug: Scalars['String'];
@@ -1600,7 +1609,7 @@ export type GetPostsByCategoryQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsByCategoryQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description?: string | null, readTime?: number | null, tags?: { __typename?: 'TagRelationResponseCollection', data: Array<{ __typename?: 'TagEntity', id?: string | null, attributes?: { __typename?: 'Tag', title: string, slug?: string | null } | null }> } | null, category?: { __typename?: 'CategoryEntityResponse', data?: { __typename?: 'CategoryEntity', id?: string | null, attributes?: { __typename?: 'Category', title: string, slug?: string | null } | null } | null } | null, authors?: { __typename?: 'UsersPermissionsUserRelationResponseCollection', data: Array<{ __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string } | null }> } | null, featuredImage: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', width?: number | null, height?: number | null, alternativeText?: string | null, caption?: string | null, url: string } | null } | null } } | null }>, meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
+export type GetPostsByCategoryQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description: string, readTime?: number | null, tags?: { __typename?: 'TagRelationResponseCollection', data: Array<{ __typename?: 'TagEntity', id?: string | null, attributes?: { __typename?: 'Tag', title: string, slug?: string | null } | null }> } | null, category?: { __typename?: 'CategoryEntityResponse', data?: { __typename?: 'CategoryEntity', id?: string | null, attributes?: { __typename?: 'Category', title: string, slug?: string | null } | null } | null } | null, authors?: { __typename?: 'UsersPermissionsUserRelationResponseCollection', data: Array<{ __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string } | null }> } | null, featuredImage: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', width?: number | null, height?: number | null, alternativeText?: string | null, caption?: string | null, url: string } | null } | null } } | null }>, meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
 
 export type GetAllPostsQueryVariables = Exact<{
   page: Scalars['Int'];
@@ -1608,7 +1617,7 @@ export type GetAllPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetAllPostsQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description?: string | null, readTime?: number | null, tags?: { __typename?: 'TagRelationResponseCollection', data: Array<{ __typename?: 'TagEntity', id?: string | null, attributes?: { __typename?: 'Tag', title: string, slug?: string | null } | null }> } | null, category?: { __typename?: 'CategoryEntityResponse', data?: { __typename?: 'CategoryEntity', id?: string | null, attributes?: { __typename?: 'Category', title: string, slug?: string | null } | null } | null } | null, authors?: { __typename?: 'UsersPermissionsUserRelationResponseCollection', data: Array<{ __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string, avatar?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', attributes?: { __typename?: 'UploadFile', url: string } | null } | null } | null } | null }> } | null, featuredImage: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', width?: number | null, height?: number | null, alternativeText?: string | null, caption?: string | null, url: string } | null } | null } } | null }>, meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
+export type GetAllPostsQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description: string, readTime?: number | null, tags?: { __typename?: 'TagRelationResponseCollection', data: Array<{ __typename?: 'TagEntity', id?: string | null, attributes?: { __typename?: 'Tag', title: string, slug?: string | null } | null }> } | null, category?: { __typename?: 'CategoryEntityResponse', data?: { __typename?: 'CategoryEntity', id?: string | null, attributes?: { __typename?: 'Category', title: string, slug?: string | null } | null } | null } | null, authors?: { __typename?: 'UsersPermissionsUserRelationResponseCollection', data: Array<{ __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string, avatar?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', attributes?: { __typename?: 'UploadFile', url: string } | null } | null } | null } | null }> } | null, featuredImage: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', width?: number | null, height?: number | null, alternativeText?: string | null, caption?: string | null, url: string } | null } | null } } | null }>, meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
 
 export type GetMinimalPostsByCategoryQueryVariables = Exact<{
   slug: Scalars['String'];
@@ -1617,7 +1626,7 @@ export type GetMinimalPostsByCategoryQueryVariables = Exact<{
 }>;
 
 
-export type GetMinimalPostsByCategoryQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, slug?: string | null, description?: string | null, featuredImage: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', width?: number | null, height?: number | null, alternativeText?: string | null, caption?: string | null, url: string } | null } | null } } | null }> } | null };
+export type GetMinimalPostsByCategoryQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, slug?: string | null, description: string, featuredImage: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', width?: number | null, height?: number | null, alternativeText?: string | null, caption?: string | null, url: string } | null } | null } } | null }> } | null };
 
 export type PostCommentCountQueryVariables = Exact<{
   postSlug: Scalars['String'];
@@ -1625,6 +1634,54 @@ export type PostCommentCountQueryVariables = Exact<{
 
 
 export type PostCommentCountQuery = { __typename?: 'Query', comments?: { __typename?: 'CommentEntityResponseCollection', meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
+
+export type GetPostsByTagQueryVariables = Exact<{
+  slug: Scalars['String'];
+  page: Scalars['Int'];
+  pageSize: Scalars['Int'];
+}>;
+
+
+export type GetPostsByTagQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', id?: string | null, attributes?: { __typename?: 'Post', title: string, publishedAt?: any | null, slug?: string | null, description: string, readTime?: number | null, tags?: { __typename?: 'TagRelationResponseCollection', data: Array<{ __typename?: 'TagEntity', id?: string | null, attributes?: { __typename?: 'Tag', title: string, slug?: string | null } | null }> } | null, category?: { __typename?: 'CategoryEntityResponse', data?: { __typename?: 'CategoryEntity', id?: string | null, attributes?: { __typename?: 'Category', title: string, slug?: string | null } | null } | null } | null, authors?: { __typename?: 'UsersPermissionsUserRelationResponseCollection', data: Array<{ __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string } | null }> } | null, featuredImage: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', width?: number | null, height?: number | null, alternativeText?: string | null, caption?: string | null, url: string } | null } | null } } | null }>, meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number, page: number, pageSize: number, pageCount: number } } } | null };
+
+export type ClapMutationVariables = Exact<{
+  postId: Scalars['ID'];
+  userId: Scalars['ID'];
+}>;
+
+
+export type ClapMutation = { __typename?: 'Mutation', createPostClap?: { __typename?: 'PostClapEntityResponse', data?: { __typename?: 'PostClapEntity', id?: string | null } | null } | null };
+
+export type UnclapMutationVariables = Exact<{
+  clapId: Scalars['ID'];
+}>;
+
+
+export type UnclapMutation = { __typename?: 'Mutation', deletePostClap?: { __typename?: 'PostClapEntityResponse', data?: { __typename?: 'PostClapEntity', id?: string | null } | null } | null };
+
+export type GetPostClapsQueryVariables = Exact<{
+  postId: Scalars['ID'];
+}>;
+
+
+export type GetPostClapsQuery = { __typename?: 'Query', postClaps?: { __typename?: 'PostClapEntityResponseCollection', data: Array<{ __typename?: 'PostClapEntity', id?: string | null, attributes?: { __typename?: 'PostClap', users_permissions_user?: { __typename?: 'UsersPermissionsUserEntityResponse', data?: { __typename?: 'UsersPermissionsUserEntity', id?: string | null } | null } | null } | null }>, meta: { __typename?: 'ResponseCollectionMeta', pagination: { __typename?: 'Pagination', total: number } } } | null };
+
+export type GetUserProfileQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetUserProfileQuery = { __typename?: 'Query', usersPermissionsUser?: { __typename?: 'UsersPermissionsUserEntityResponse', data?: { __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', username: string, bio?: string | null, twitterUrl?: string | null, linkedinUrl?: string | null, avatar?: { __typename?: 'UploadFileEntityResponse', data?: { __typename?: 'UploadFileEntity', id?: string | null, attributes?: { __typename?: 'UploadFile', url: string, alternativeText?: string | null, width?: number | null, height?: number | null } | null } | null } | null } | null } | null } | null };
+
+export type UpdateMeMutationVariables = Exact<{
+  id: Scalars['ID'];
+  bio?: InputMaybe<Scalars['String']>;
+  twitterUrl?: InputMaybe<Scalars['String']>;
+  linkedinUrl?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UpdateMeMutation = { __typename?: 'Mutation', updateUsersPermissionsUser: { __typename?: 'UsersPermissionsUserEntityResponse', data?: { __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', bio?: string | null, twitterUrl?: string | null, linkedinUrl?: string | null } | null } | null } };
 
 
 export const GetAllCategoriesDocument = `
@@ -1918,6 +1975,58 @@ export const useCreateCommentMutation = <
       (variables?: CreateCommentMutationVariables) => fetcher<CreateCommentMutation, CreateCommentMutationVariables>(client, CreateCommentDocument, variables, headers)(),
       options
     );
+export const GetCommentsByPostIdDocument = `
+    query getCommentsByPostId($postId: ID!, $page: Int!, $pageSize: Int!) {
+  comments(
+    filters: {post: {id: {eq: $postId}}}
+    pagination: {page: $page, pageSize: $pageSize}
+    sort: ["createdAt:desc"]
+  ) {
+    data {
+      id
+      attributes {
+        content
+        post {
+          data {
+            id
+          }
+        }
+        createdAt
+        author {
+          data {
+            id
+            attributes {
+              username
+            }
+          }
+        }
+      }
+    }
+    meta {
+      pagination {
+        total
+        page
+        pageSize
+        pageCount
+      }
+    }
+  }
+}
+    `;
+export const useGetCommentsByPostIdQuery = <
+      TData = GetCommentsByPostIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: GetCommentsByPostIdQueryVariables,
+      options?: UseQueryOptions<GetCommentsByPostIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<GetCommentsByPostIdQuery, TError, TData>(
+      ['getCommentsByPostId', variables],
+      fetcher<GetCommentsByPostIdQuery, GetCommentsByPostIdQueryVariables>(client, GetCommentsByPostIdDocument, variables, headers),
+      options
+    );
 export const GetFaqDocument = `
     query getFAQ {
   faq {
@@ -1992,6 +2101,7 @@ export const GetPostBySlugDocument = `
               previewUrl
               width
               height
+              caption
             }
           }
         }
@@ -2283,5 +2393,233 @@ export const usePostCommentCountQuery = <
     useQuery<PostCommentCountQuery, TError, TData>(
       ['postCommentCount', variables],
       fetcher<PostCommentCountQuery, PostCommentCountQueryVariables>(client, PostCommentCountDocument, variables, headers),
+      options
+    );
+export const GetPostsByTagDocument = `
+    query getPostsByTag($slug: String!, $page: Int!, $pageSize: Int!) {
+  posts(
+    filters: {tags: {slug: {eq: $slug}}}
+    pagination: {page: $page, pageSize: $pageSize}
+  ) {
+    data {
+      id
+      attributes {
+        title
+        publishedAt
+        slug
+        description
+        readTime
+        tags {
+          data {
+            id
+            attributes {
+              title
+              slug
+            }
+          }
+        }
+        category {
+          data {
+            id
+            attributes {
+              title
+              slug
+            }
+          }
+        }
+        authors {
+          data {
+            id
+            attributes {
+              username
+            }
+          }
+        }
+        featuredImage {
+          data {
+            id
+            attributes {
+              width
+              height
+              alternativeText
+              caption
+              url
+            }
+          }
+        }
+      }
+    }
+    meta {
+      pagination {
+        total
+        page
+        pageSize
+        pageCount
+      }
+    }
+  }
+}
+    `;
+export const useGetPostsByTagQuery = <
+      TData = GetPostsByTagQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: GetPostsByTagQueryVariables,
+      options?: UseQueryOptions<GetPostsByTagQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<GetPostsByTagQuery, TError, TData>(
+      ['getPostsByTag', variables],
+      fetcher<GetPostsByTagQuery, GetPostsByTagQueryVariables>(client, GetPostsByTagDocument, variables, headers),
+      options
+    );
+export const ClapDocument = `
+    mutation clap($postId: ID!, $userId: ID!) {
+  createPostClap(data: {post: $postId, users_permissions_user: $userId}) {
+    data {
+      id
+    }
+  }
+}
+    `;
+export const useClapMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<ClapMutation, TError, ClapMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<ClapMutation, TError, ClapMutationVariables, TContext>(
+      ['clap'],
+      (variables?: ClapMutationVariables) => fetcher<ClapMutation, ClapMutationVariables>(client, ClapDocument, variables, headers)(),
+      options
+    );
+export const UnclapDocument = `
+    mutation unclap($clapId: ID!) {
+  deletePostClap(id: $clapId) {
+    data {
+      id
+    }
+  }
+}
+    `;
+export const useUnclapMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<UnclapMutation, TError, UnclapMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<UnclapMutation, TError, UnclapMutationVariables, TContext>(
+      ['unclap'],
+      (variables?: UnclapMutationVariables) => fetcher<UnclapMutation, UnclapMutationVariables>(client, UnclapDocument, variables, headers)(),
+      options
+    );
+export const GetPostClapsDocument = `
+    query getPostClaps($postId: ID!) {
+  postClaps(filters: {post: {id: {eq: $postId}}}) {
+    data {
+      id
+      attributes {
+        users_permissions_user {
+          data {
+            id
+          }
+        }
+      }
+    }
+    meta {
+      pagination {
+        total
+      }
+    }
+  }
+}
+    `;
+export const useGetPostClapsQuery = <
+      TData = GetPostClapsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: GetPostClapsQueryVariables,
+      options?: UseQueryOptions<GetPostClapsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<GetPostClapsQuery, TError, TData>(
+      ['getPostClaps', variables],
+      fetcher<GetPostClapsQuery, GetPostClapsQueryVariables>(client, GetPostClapsDocument, variables, headers),
+      options
+    );
+export const GetUserProfileDocument = `
+    query getUserProfile($id: ID!) {
+  usersPermissionsUser(id: $id) {
+    data {
+      id
+      attributes {
+        username
+        bio
+        twitterUrl
+        linkedinUrl
+        avatar {
+          data {
+            id
+            attributes {
+              url
+              alternativeText
+              width
+              height
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const useGetUserProfileQuery = <
+      TData = GetUserProfileQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: GetUserProfileQueryVariables,
+      options?: UseQueryOptions<GetUserProfileQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<GetUserProfileQuery, TError, TData>(
+      ['getUserProfile', variables],
+      fetcher<GetUserProfileQuery, GetUserProfileQueryVariables>(client, GetUserProfileDocument, variables, headers),
+      options
+    );
+export const UpdateMeDocument = `
+    mutation updateMe($id: ID!, $bio: String, $twitterUrl: String, $linkedinUrl: String) {
+  updateUsersPermissionsUser(
+    id: $id
+    data: {bio: $bio, twitterUrl: $twitterUrl, linkedinUrl: $linkedinUrl}
+  ) {
+    data {
+      id
+      attributes {
+        bio
+        twitterUrl
+        linkedinUrl
+      }
+    }
+  }
+}
+    `;
+export const useUpdateMeMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<UpdateMeMutation, TError, UpdateMeMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) =>
+    useMutation<UpdateMeMutation, TError, UpdateMeMutationVariables, TContext>(
+      ['updateMe'],
+      (variables?: UpdateMeMutationVariables) => fetcher<UpdateMeMutation, UpdateMeMutationVariables>(client, UpdateMeDocument, variables, headers)(),
       options
     );

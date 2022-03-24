@@ -1,0 +1,45 @@
+query getUserProfile($id: ID!) {
+  usersPermissionsUser(id: $id) {
+    data {
+      id
+      attributes {
+        username
+        bio
+        twitterUrl
+        linkedinUrl
+        avatar {
+          data {
+            id
+            attributes {
+              url
+              alternativeText
+              width
+              height
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation updateMe(
+  $id: ID!
+  $bio: String
+  $twitterUrl: String
+  $linkedinUrl: String
+) {
+  updateUsersPermissionsUser(
+    id: $id
+    data: { bio: $bio, twitterUrl: $twitterUrl, linkedinUrl: $linkedinUrl }
+  ) {
+    data {
+      id
+      attributes {
+        bio
+        twitterUrl
+        linkedinUrl
+      }
+    }
+  }
+}

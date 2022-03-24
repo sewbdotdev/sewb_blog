@@ -4,16 +4,17 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import DarkLogo from "/public/img/logo-dark.png";
 import LightLogo from "/public/img/logo-light.png";
-import Link from "next/link";
-
+import { useRouter } from "next/router";
 import { SunIcon, MoonIcon } from "@heroicons/react/solid";
 import { useSession, signIn, signOut } from "utils/session";
+import Link from "next/link";
 // TODO: Improve image/logo using import
 const Header: FunctionComponent = (props) => {
   const { theme, setTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const { data, loading } = useSession();
+  const router = useRouter();
   useEffect(() => {
     setIsMounted(true);
     setIsDark(() => theme === "dark");
@@ -32,26 +33,56 @@ const Header: FunctionComponent = (props) => {
   return (
     <header className={styles.container}>
       <div className={styles.logoContainer}>
-        <Link href="/">
-          <Image
-            src={isDark ? LightLogo : DarkLogo}
-            className="cursor-pointer"
-            alt="SEWB BLOG Logo."
-            width={200}
-            height={100}
-            // layout="fixed"
-            // priority={true}
-          />
-        </Link>
+        <Image
+          src={isDark ? LightLogo : DarkLogo}
+          className="cursor-pointer"
+          alt="SEWB BLOG Logo."
+          width={200}
+          height={100}
+          onClick={() => router.push("/")}
+          // layout="fixed"
+          // priority={true}
+        />
       </div>
       <div className={styles.linkContainer}>
         <ul className={styles.linkInnerContainer}>
-          <li>Our story</li>
-          <li>Contact</li>
-          <li>FAQ</li>
+          <Link href="/our-story">
+            <li
+              className={`${
+                router.pathname === "/our-story" &&
+                "border-b-2 border-b-slate-800"
+              }`}
+            >
+              Our story
+            </li>
+          </Link>
+          <Link href="/contact">
+            <li
+              className={`${
+                router.pathname === "/contact" &&
+                "border-b-2 border-b-slate-800"
+              }`}
+            >
+              Contact
+            </li>
+          </Link>
+          <Link href="/faq">
+            <li
+              className={`${
+                router.pathname === "/faq" && "border-b-2 border-b-slate-800"
+              }`}
+            >
+              FAQ
+            </li>
+          </Link>
           {data && !loading ? (
-            <li>
-              <Link href="/profile">
+            <li
+              className={`${
+                router.pathname.includes("/profile") &&
+                "border-b-2 border-b-slate-800"
+              }`}
+            >
+              <Link href={`/profile?id=${data.user.id}`}>
                 <a>Profile</a>
               </Link>
             </li>
@@ -60,7 +91,7 @@ const Header: FunctionComponent = (props) => {
           )}
           {data && !loading && <li onClick={() => signOut()}>Logout</li>}
 
-          <li onClick={switchTheme} className="cursor-pointer">
+          <li onClick={switchTheme} className="cursor-pointer -mt-1.5 md:-mt-0">
             {theme === "light" ? (
               <MoonIcon
                 className="text-gray-900 hover:animate-bounce"

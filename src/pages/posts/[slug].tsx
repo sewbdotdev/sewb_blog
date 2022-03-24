@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { Fragment, useEffect, useState, useCallback, useMemo } from "react";
 import Content from "@/components/Content";
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next";
 import DefaultErrorPage from "next/error";
 import styles from "../../styles/Content.module.css";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import TestImage2 from "/public/img/test-2.jpeg";
 import Author from "@/components/Author";
-import { ChatIcon, HeartIcon, XIcon } from "@heroicons/react/solid";
+import {
+  ChatIcon,
+  ClockIcon,
+  XIcon,
+  CalendarIcon,
+  HeartIcon,
+} from "@heroicons/react/solid";
 import Related from "@/components/Related";
 import { getAllPosts, getPostsBSlug } from "hooks/usePost";
 import { dehydrate, QueryClient, useQueryClient } from "react-query";
@@ -20,8 +25,10 @@ import {
   useGetMinimalPostsByCategoryQuery,
   PostEntity,
   usePostCommentCountQuery,
-  UsersPermissionsUserEntity,
   UsersPermissionsUser,
+  useGetPostClapsQuery,
+  useClapMutation,
+  useUnclapMutation,
 } from "@customTypes/generated/graphql";
 import { getClient } from "utils/client";
 import DataWrapper from "@/components/DataWrapper";
@@ -31,51 +38,68 @@ import TextBox from "@/components/Comment/TextBox";
 import Response from "@/components/Comment/Response";
 import { useSession } from "utils/session";
 import Helpers from "utils/helpers";
+import dateFormatter from "utils/dateFormatter";
+import { useInfiniteComments } from "hooks/useComment";
+import { useInView } from "react-intersection-observer";
+import AuthPrompt from "@/components/AuthPrompt";
+import Clap from "@/components/CustomIcons/Clap";
 
 const PostPage: NextPage = (props) => {
   const router = useRouter();
   // Get QueryClient from the context
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const { data: userData } = useSession();
+  const { data: session } = useSession();
   const { data, status, error } = useGetPostBySlugQuery(getClient(), {
     slug: String(router.query.slug),
   });
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
+  const [clapId, setClapId] = useState<string | undefined | null>(undefined);
   const [postVars, setPostVars] = useState({
     page,
     pageSize,
     postId: String(data?.posts?.data[0].id),
   });
-  const comments = useGetCommentsQuery(
-    getClient(),
-    {
-      postId: String(data?.posts?.data[0].id),
-      page,
-      pageSize,
-    },
-    {
-      enabled: Boolean(
-        data &&
-          data.posts &&
-          data.posts.data &&
-          data.posts.data.length > 0 &&
-          open
-      ),
-    }
+
+  if (router.isFallback || status === "loading") {
+    return <DataWrapper status="loading" />;
+  }
+  if (data && data.posts?.data.length === 0) {
+    // return error page
+    return <DefaultErrorPage statusCode={404} />;
+  }
+
+  const isInfiniteCommentsEnabled = Boolean(
+    data && data.posts && data.posts.data && data.posts.data.length > 0 && open
   );
+  const infiniteComments = useInfiniteComments(
+    String(data?.posts?.data[0].id),
+    isInfiniteCommentsEnabled
+  );
+
+  const getPostClaps = useGetPostClapsQuery(getClient(), {
+    postId: String(data?.posts?.data[0].id),
+  });
+
+  const { ref, inView } = useInView();
+  useEffect(() => {
+    if (inView && infiniteComments.hasNextPage) {
+      infiniteComments.fetchNextPage();
+    }
+  }, [inView, infiniteComments.hasNextPage]);
 
   const createComment = useCreateCommentMutation(
     getClient(),
     {
       onSuccess: (data) => {
         queryClient.invalidateQueries("getComments");
+        queryClient.invalidateQueries("comments");
       },
     },
     {
-      Authorization: `Bearer ${userData?.jwt}`,
+      Authorization: `Bearer ${session?.jwt}`,
     }
   );
 
@@ -84,12 +108,10 @@ const PostPage: NextPage = (props) => {
   });
 
   const handleCreate = (content: string, cb: Function) => {
-    // console.log("content", content);
-    const id = userData?.user.id;
     const variable = {
       content,
       postId: String(data?.posts?.data[0].id),
-      authorId: String(userData?.user.id),
+      authorId: String(session?.user.id),
     };
     createComment.mutate(variable as CreateCommentMutationVariables, {
       onSuccess: () => cb(),
@@ -111,31 +133,96 @@ const PostPage: NextPage = (props) => {
     }
   );
 
-  if (router.isFallback || status === "loading") {
-    return <DataWrapper status="loading" />;
-  }
-  if (data && data.posts?.data.length === 0) {
-    // return error page
-    return <DefaultErrorPage statusCode={404} />;
-  }
-
   const post = data?.posts?.data[0];
 
   const isImagePresent = Boolean(
     post?.attributes?.featuredImage?.data?.attributes?.url
   );
+
+  const hasUserClapped = () => {
+    if (
+      !getPostClaps.data ||
+      !getPostClaps.data.postClaps ||
+      !getPostClaps.data.postClaps.data
+    ) {
+      return false;
+    } else {
+      let hasClapped = false;
+      for (let clapVar of getPostClaps.data.postClaps.data) {
+        if (
+          Number(session?.user.id) ===
+          Number(clapVar.attributes?.users_permissions_user?.data?.id)
+        ) {
+          setClapId(String(clapVar.id));
+          hasClapped = true;
+          break;
+        }
+      }
+      return hasClapped;
+    }
+  };
+
+  const memoizedHasUserClapped = useMemo(
+    () => hasUserClapped(),
+    [getPostClaps.data, clapId]
+  );
+
+  const clap = useClapMutation(
+    getClient(),
+    {
+      onSettled: () => {
+        queryClient.invalidateQueries([
+          "getPostClaps",
+          { postId: String(data?.posts?.data[0].id) },
+        ]);
+      },
+    },
+    {
+      Authorization: `Bearer ${session?.jwt}`,
+    }
+  );
+  const unclap = useUnclapMutation(
+    getClient(),
+    {
+      onSettled: () => {
+        queryClient.invalidateQueries([
+          "getPostClaps",
+          { postId: String(data?.posts?.data[0].id) },
+        ]);
+      },
+    },
+    {
+      Authorization: `Bearer ${session?.jwt}`,
+    }
+  );
+
+  const onClapClick = () => {
+    if (memoizedHasUserClapped) {
+      if (clapId) {
+        unclap.mutate({
+          clapId,
+        });
+      }
+    } else {
+      clap.mutate({
+        postId: String(data?.posts?.data[0].id),
+        userId: String(session?.user.id),
+      });
+    }
+  };
+
   return (
     <Content classNames="overflow-y-hidden">
       <Sidebar isOpen={open} setIsOpen={setOpen} noBackdrop={false}>
-        <DataWrapper status={comments.status}>
+        <DataWrapper status={infiniteComments.status}>
           <section>
             <section className="py-8 px-4 relative">
               <div className="flex justify-between mb-10">
                 <h1 className="text-base md:text-xl font-bold">
                   Comments{" "}
-                  {comments.data &&
-                    comments.data.comments &&
-                    `(${comments.data.comments.meta.pagination.total})`}
+                  {`(${
+                    postCommentStats.data?.comments?.meta.pagination.total ?? 0
+                  })`}
                 </h1>
                 <XIcon
                   className="h-7 w-7 mr-10 text-gray-400 cursor-pointer"
@@ -143,28 +230,58 @@ const PostPage: NextPage = (props) => {
                 />
               </div>
               {/* TODO add it get's better when you're logged in component for unauthenticated users to login instead of seeing the text box.  */}
-              <TextBox
-                onSubmit={handleCreate}
-                loading={createComment.isLoading}
-              />
+              {session ? (
+                <TextBox
+                  onSubmit={handleCreate}
+                  loading={createComment.isLoading}
+                />
+              ) : (
+                <AuthPrompt />
+              )}
             </section>
             <hr className="border-gray-500" />
             <section
               className="py-8 px-4"
-              key={comments.data?.comments?.data.length}
+              key={infiniteComments.data?.pages[0].meta.pagination.total}
             >
-              {comments.data &&
-                comments.data.comments &&
-                comments.data.comments.data.map((comment, i) => (
-                  <Response
-                    commentCacheKey={postVars}
-                    comment={comment as CommentEntity}
-                    hideLastBorder={
-                      Number(comments.data.comments?.data.length) - 1 === i
-                    }
-                    key={comment.id}
-                  />
+              {infiniteComments.data &&
+                infiniteComments.data?.pages.map((page) => (
+                  <Fragment key={page.meta.pagination.page}>
+                    {page.data.map((comment, i) => {
+                      return (
+                        <Response
+                          commentCacheKey={postVars}
+                          comment={comment as CommentEntity}
+                          hideLastBorder={Number(page.data.length) - 1 === i}
+                          key={comment.id}
+                        />
+                      );
+                    })}
+                  </Fragment>
                 ))}
+              <div className="flex justify-center">
+                <button
+                  ref={ref}
+                  onClick={() => {
+                    infiniteComments.fetchNextPage();
+                  }}
+                  disabled={
+                    !infiniteComments.hasNextPage ||
+                    infiniteComments.isFetchingNextPage
+                  }
+                >
+                  {infiniteComments.hasNextPage &&
+                  infiniteComments.isFetchingNextPage
+                    ? "Fetching..."
+                    : ""}
+                </button>
+              </div>
+              <div>
+                {infiniteComments.isFetching &&
+                !infiniteComments.isFetchingNextPage
+                  ? "Background Updating..."
+                  : null}
+              </div>
             </section>
           </section>
         </DataWrapper>
@@ -179,9 +296,17 @@ const PostPage: NextPage = (props) => {
                 </h2>
               </div>
 
-              <p className={styles.contentDescription}>
-                {post.attributes?.description}
-              </p>
+              <p>{post.attributes?.description}</p>
+              <div className="flex gap-5 pb-4">
+                <p className="text-sm text-gray-500 flex gap-2">
+                  <CalendarIcon className="h-4 w-4 self-center" />
+                  <span>{dateFormatter(post.attributes?.publishedAt)}</span>
+                </p>
+                <p className="text-sm text-gray-500 flex gap-2">
+                  <ClockIcon className="h-4 w-4 self-center" />
+                  <span>{post.attributes?.readTime} min read.</span>
+                </p>
+              </div>
               {isImagePresent && (
                 <div className={styles.contentCoverImage}>
                   {isImagePresent && (
@@ -191,10 +316,19 @@ const PostPage: NextPage = (props) => {
                           ?.url ?? ""
                       )}
                       alt="the featured image of the blog post. "
-                      width={800}
+                      width={600}
                       height={665}
+                      priority
                     />
                   )}
+                  <div className="text-center">
+                    <Markdown
+                      content={
+                        post.attributes?.featuredImage.data?.attributes
+                          ?.caption ?? ""
+                      }
+                    />
+                  </div>
                 </div>
               )}
               <article className={styles.contentMain}>
@@ -208,15 +342,21 @@ const PostPage: NextPage = (props) => {
                       0}
                   </span>
                 </p>
-                {/* TODO: retrieve post claps and post likes */}
-                {/* <p className={styles.icon}>
-                  <HeartIcon className="h-7 w-7 text-red-600" />
-                  <span className={styles.iconText}>100</span>
-                </p>
-                <p className={styles.icon}>
-                  <span>👏</span>
-                  <span className={styles.iconText}>100</span>
-                </p> */}
+                {getPostClaps.data?.postClaps?.data && (
+                  <p className={styles.icon}>
+                    <span
+                      className={`h-7 w-7  relative `}
+                      onClick={() => {
+                        onClapClick();
+                      }}
+                    >
+                      <Clap isClicked={memoizedHasUserClapped} />
+                    </span>
+                    <span className={styles.iconText}>
+                      {getPostClaps.data?.postClaps?.meta.pagination.total}
+                    </span>
+                  </p>
+                )}
               </div>
             </section>
             <aside className={styles.asideContainer}>
@@ -251,7 +391,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getAllPosts(1, 100);
   const postPaths = posts.data.map((post) => ({
     params: {
-      slug: post.attributes.slug,
+      slug: String(post.attributes?.slug),
     },
   }));
 
