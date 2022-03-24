@@ -1,131 +1,131 @@
 query getComments($postId: ID!, $page: Int!, $pageSize: Int!) {
-  comments(
-    filters: { post: { id: { eq: $postId } } }
-    pagination: { page: $page, pageSize: $pageSize }
-    sort: ["createdAt:desc"]
-  ) {
-    data {
-      id
-      attributes {
-        content
-        createdAt
-        author {
-          data {
+    comments(
+        filters: { post: { id: { eq: $postId } } }
+        pagination: { page: $page, pageSize: $pageSize }
+        sort: ["createdAt:desc"]
+    ) {
+        data {
             id
             attributes {
-              username
+                content
+                createdAt
+                author {
+                    data {
+                        id
+                        attributes {
+                            username
+                        }
+                    }
+                }
             }
-          }
         }
-      }
+        meta {
+            pagination {
+                total
+                page
+                pageSize
+                pageCount
+            }
+        }
     }
-    meta {
-      pagination {
-        total
-        page
-        pageSize
-        pageCount
-      }
-    }
-  }
 }
 
 query getOneComment($id: ID!) {
-  comment(id: $id) {
-    data {
-      id
-      attributes {
-        content
-        author {
-          data {
+    comment(id: $id) {
+        data {
             id
             attributes {
-              avatar {
-                data {
-                  id
-                  attributes {
-                    url
-                    alternativeText
-                  }
+                content
+                author {
+                    data {
+                        id
+                        attributes {
+                            avatar {
+                                data {
+                                    id
+                                    attributes {
+                                        url
+                                        alternativeText
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-              }
             }
-          }
         }
-      }
     }
-  }
 }
 
 mutation deleteComment($id: ID!) {
-  deleteComment(id: $id) {
-    data {
-      id
+    deleteComment(id: $id) {
+        data {
+            id
+        }
     }
-  }
 }
 
 mutation updateComment($id: ID!, $content: String!) {
-  updateComment(id: $id, data: { content: $content }) {
-    data {
-      id
-      attributes {
-        content
-        createdAt
-        author {
-          data {
+    updateComment(id: $id, data: { content: $content }) {
+        data {
             id
             attributes {
-              username
+                content
+                createdAt
+                author {
+                    data {
+                        id
+                        attributes {
+                            username
+                        }
+                    }
+                }
             }
-          }
         }
-      }
     }
-  }
 }
 
 mutation createComment($content: String!, $postId: ID!, $authorId: ID!) {
-  createComment(data: { content: $content, post: $postId, author: $authorId }) {
-    data {
-      id
+    createComment(data: { content: $content, post: $postId, author: $authorId }) {
+        data {
+            id
+        }
     }
-  }
 }
 
 query getCommentsByPostId($postId: ID!, $page: Int!, $pageSize: Int!) {
-  comments(
-    filters: { post: { id: { eq: $postId } } }
-    pagination: { page: $page, pageSize: $pageSize }
-    sort: ["createdAt:desc"]
-  ) {
-    data {
-      id
-      attributes {
-        content
-        post {
-          data {
-            id
-          }
-        }
-        createdAt
-        author {
-          data {
+    comments(
+        filters: { post: { id: { eq: $postId } } }
+        pagination: { page: $page, pageSize: $pageSize }
+        sort: ["createdAt:desc"]
+    ) {
+        data {
             id
             attributes {
-              username
+                content
+                post {
+                    data {
+                        id
+                    }
+                }
+                createdAt
+                author {
+                    data {
+                        id
+                        attributes {
+                            username
+                        }
+                    }
+                }
             }
-          }
         }
-      }
+        meta {
+            pagination {
+                total
+                page
+                pageSize
+                pageCount
+            }
+        }
     }
-    meta {
-      pagination {
-        total
-        page
-        pageSize
-        pageCount
-      }
-    }
-  }
 }
