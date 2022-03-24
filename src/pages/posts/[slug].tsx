@@ -16,9 +16,9 @@ import {
 import Related from "@/components/Related";
 import { getAllPosts, getPostsBSlug } from "hooks/usePost";
 import { dehydrate, QueryClient, useQueryClient } from "react-query";
+import { NextSeo } from "next-seo";
 import {
   useGetPostBySlugQuery,
-  useGetCommentsQuery,
   CommentEntity,
   useCreateCommentMutation,
   CreateCommentMutationVariables,
@@ -211,8 +211,14 @@ const PostPage: NextPage = (props) => {
     }
   };
 
+  const seo = {
+    title: String(post?.attributes?.title),
+    description: String(post?.attributes?.description),
+  };
+
   return (
     <Content classNames="overflow-y-hidden">
+      <NextSeo {...seo} />
       <Sidebar isOpen={open} setIsOpen={setOpen} noBackdrop={false}>
         <DataWrapper status={infiniteComments.status}>
           <section>
@@ -397,7 +403,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths: [...postPaths],
-    fallback: true,
+    fallback: "blocking",
   };
 };
 

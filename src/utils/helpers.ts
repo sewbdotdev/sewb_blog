@@ -49,6 +49,30 @@ class Helpers {
       return src;
     }
   }
+
+  static replace(item: string, remove = "-", add = " "): string {
+    let output = "";
+
+    for (let i = 0; i < item.length; i++) {
+      if (item[i] === remove) {
+        output += add;
+      } else {
+        output += item[i];
+      }
+    }
+    return output;
+  }
+
+  static capitalize(item: string): string {
+    const splitItem = item.split(" ");
+    let output = [];
+    for (let i = 0; i < splitItem.length; i++) {
+      const tmp = splitItem[i].toLowerCase();
+      output.push(tmp[0].toUpperCase() + tmp.slice(1));
+    }
+
+    return output.join(" ");
+  }
 }
 
 export default Helpers;

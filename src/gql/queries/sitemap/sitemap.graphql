@@ -1,0 +1,32 @@
+query categoriesForSitemap($page: Int!, $pageSize: Int!) {
+  categories(pagination: { page: $page, pageSize: $pageSize }) {
+    data {
+      attributes {
+        slug
+        updatedAt
+      }
+    }
+  }
+}
+
+query tagsForSitemap($page: Int!, $pageSize: Int!) {
+  tags(pagination: { page: $page, pageSize: $pageSize }) {
+    data {
+      attributes {
+        slug
+        updatedAt
+      }
+    }
+  }
+}
+
+query postsForSitemap($page: Int!, $pageSize: Int!) {
+  posts(pagination: { page: $page, pageSize: $pageSize }) {
+    data {
+      attributes {
+        slug
+        updatedAt
+      }
+    }
+  }
+}

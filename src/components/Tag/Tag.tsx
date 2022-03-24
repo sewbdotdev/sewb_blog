@@ -14,7 +14,7 @@ const Tag: FunctionComponent<TagProps> = (props) => {
   return (
     <div className={`${styles.container} ${containerClassName}`}>
       <Link href={`/tag/${slug}`}>
-        <p className={`${styles.title} ${className}`}>{title}</p>
+        <a className={`${styles.title} ${className}`}>{title}</a>
       </Link>
     </div>
   );

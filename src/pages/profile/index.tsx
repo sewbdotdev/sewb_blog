@@ -16,7 +16,7 @@ import { getClient } from "utils/client";
 import DataWrapper from "@/components/DataWrapper";
 import Helpers from "utils/helpers";
 import { useSession } from "utils/session";
-import TextBox from "@/components/Comment/TextBox";
+import { NextSeo } from "next-seo";
 const ProfilePage: NextPage = (props) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -81,8 +81,17 @@ const ProfilePage: NextPage = (props) => {
     // return error page
     return <DefaultErrorPage statusCode={404} />;
   }
+
+  const seo = {
+    title: `Profile Page`,
+    description: `Profile page of users on SEWB.`,
+    nofollow: true,
+    noindex: true,
+  };
+
   return (
     <Content classNames="text-justify">
+      <NextSeo {...seo} />
       <DataWrapper status={status}>
         <div className="h-screen   flex flex-wrap items-center  justify-center  ">
           <div className="container rounded-md lg:w-2/6 xl:w-2/7 sm:w-full md:w-2/3 dark:bg-gray-900 bg-gray-200  shadow-lg    transform   duration-200 easy-in-out">
@@ -226,6 +235,7 @@ const ProfilePage: NextPage = (props) => {
                           }
                           className="hover:text-blue-400"
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           Linkedin
                         </a>
@@ -239,6 +249,7 @@ const ProfilePage: NextPage = (props) => {
                           }
                           className="hover:text-blue-400"
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           Twitter
                         </a>
