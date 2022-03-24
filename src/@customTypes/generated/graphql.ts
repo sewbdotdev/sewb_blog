@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import { RequestInit } from 'graphql-request/dist/types.dom';
-import { useQuery, UseQueryOptions, useMutation, UseMutationOptions } from 'react-query';
+import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from 'react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1683,6 +1683,30 @@ export type UpdateMeMutationVariables = Exact<{
 
 export type UpdateMeMutation = { __typename?: 'Mutation', updateUsersPermissionsUser: { __typename?: 'UsersPermissionsUserEntityResponse', data?: { __typename?: 'UsersPermissionsUserEntity', id?: string | null, attributes?: { __typename?: 'UsersPermissionsUser', bio?: string | null, twitterUrl?: string | null, linkedinUrl?: string | null } | null } | null } };
 
+export type CategoriesForSitemapQueryVariables = Exact<{
+  page: Scalars['Int'];
+  pageSize: Scalars['Int'];
+}>;
+
+
+export type CategoriesForSitemapQuery = { __typename?: 'Query', categories?: { __typename?: 'CategoryEntityResponseCollection', data: Array<{ __typename?: 'CategoryEntity', attributes?: { __typename?: 'Category', slug?: string | null, updatedAt?: any | null } | null }> } | null };
+
+export type TagsForSitemapQueryVariables = Exact<{
+  page: Scalars['Int'];
+  pageSize: Scalars['Int'];
+}>;
+
+
+export type TagsForSitemapQuery = { __typename?: 'Query', tags?: { __typename?: 'TagEntityResponseCollection', data: Array<{ __typename?: 'TagEntity', attributes?: { __typename?: 'Tag', slug?: string | null, updatedAt?: any | null } | null }> } | null };
+
+export type PostsForSitemapQueryVariables = Exact<{
+  page: Scalars['Int'];
+  pageSize: Scalars['Int'];
+}>;
+
+
+export type PostsForSitemapQuery = { __typename?: 'Query', posts?: { __typename?: 'PostEntityResponseCollection', data: Array<{ __typename?: 'PostEntity', attributes?: { __typename?: 'Post', slug?: string | null, updatedAt?: any | null } | null }> } | null };
+
 
 export const GetAllCategoriesDocument = `
     query getAllCategories($page: Int!, $pageSize: Int!) {
@@ -2621,5 +2645,83 @@ export const useUpdateMeMutation = <
     useMutation<UpdateMeMutation, TError, UpdateMeMutationVariables, TContext>(
       ['updateMe'],
       (variables?: UpdateMeMutationVariables) => fetcher<UpdateMeMutation, UpdateMeMutationVariables>(client, UpdateMeDocument, variables, headers)(),
+      options
+    );
+export const CategoriesForSitemapDocument = `
+    query categoriesForSitemap($page: Int!, $pageSize: Int!) {
+  categories(pagination: {page: $page, pageSize: $pageSize}) {
+    data {
+      attributes {
+        slug
+        updatedAt
+      }
+    }
+  }
+}
+    `;
+export const useCategoriesForSitemapQuery = <
+      TData = CategoriesForSitemapQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: CategoriesForSitemapQueryVariables,
+      options?: UseQueryOptions<CategoriesForSitemapQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<CategoriesForSitemapQuery, TError, TData>(
+      ['categoriesForSitemap', variables],
+      fetcher<CategoriesForSitemapQuery, CategoriesForSitemapQueryVariables>(client, CategoriesForSitemapDocument, variables, headers),
+      options
+    );
+export const TagsForSitemapDocument = `
+    query tagsForSitemap($page: Int!, $pageSize: Int!) {
+  tags(pagination: {page: $page, pageSize: $pageSize}) {
+    data {
+      attributes {
+        slug
+        updatedAt
+      }
+    }
+  }
+}
+    `;
+export const useTagsForSitemapQuery = <
+      TData = TagsForSitemapQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: TagsForSitemapQueryVariables,
+      options?: UseQueryOptions<TagsForSitemapQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<TagsForSitemapQuery, TError, TData>(
+      ['tagsForSitemap', variables],
+      fetcher<TagsForSitemapQuery, TagsForSitemapQueryVariables>(client, TagsForSitemapDocument, variables, headers),
+      options
+    );
+export const PostsForSitemapDocument = `
+    query postsForSitemap($page: Int!, $pageSize: Int!) {
+  posts(pagination: {page: $page, pageSize: $pageSize}) {
+    data {
+      attributes {
+        slug
+        updatedAt
+      }
+    }
+  }
+}
+    `;
+export const usePostsForSitemapQuery = <
+      TData = PostsForSitemapQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: PostsForSitemapQueryVariables,
+      options?: UseQueryOptions<PostsForSitemapQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<PostsForSitemapQuery, TError, TData>(
+      ['postsForSitemap', variables],
+      fetcher<PostsForSitemapQuery, PostsForSitemapQueryVariables>(client, PostsForSitemapDocument, variables, headers),
       options
     );

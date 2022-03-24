@@ -38,5 +38,5 @@ yarn-error.log*
 
 
 # SEO
-**/*sitemap*.xml
-**/*robot**
+/public/sitemap*.xml
+/public/robots.txt
