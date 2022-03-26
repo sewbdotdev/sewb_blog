@@ -58,7 +58,7 @@ const Header: FunctionComponent = (props) => {
                                 router.pathname === '/our-story' && 'border-b-2 border-b-slate-800'
                             }`}
                         >
-                            <a> Our story</a>
+                            <a>Our story</a>
                         </li>
                     </Link>
                     <Link href="/contact" passHref>

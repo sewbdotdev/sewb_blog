@@ -98,13 +98,13 @@ const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
                     data-cy={`${DataCyPrefix}ArticlePreviewMetaContainer`}
                 >
                     <p
-                        className="text-xs text-ellipsis"
+                        className="text-xs text-ellipsis truncate"
                         data-cy={`${DataCyPrefix}ArticlePreviewMetaDate`}
                     >
                         {dateFormatter(props.publishedAt)}
                     </p>
                     <p
-                        className="text-xs pr-3"
+                        className="text-xs pr-3 truncate"
                         data-cy={`${DataCyPrefix}ArticlePreviewMetaReadTime`}
                     >
                         · {props.readTime || 5} min
@@ -113,7 +113,7 @@ const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
                     <Tag
                         title={props.tag.attributes?.title ?? ''}
                         className="truncate"
-                        containerClassName="w-24"
+                        containerClassName="w-30"
                         slug={props.tag.attributes?.slug ?? ''}
                     />
                 </div>

@@ -1,47 +1,47 @@
 .categoryCardContainer {
-  @apply border border-gray-400 rounded self-center;
+    @apply border border-gray-400 flex justify-center  rounded self-center;
 }
 
 .categoryCardItem {
-  @apply text-xs  text-center py-3 cursor-pointer h-full font-light;
+    @apply text-sm md:text-base py-2 cursor-pointer font-light text-center px-2 md:px-0;
 }
 
 .articlePreviewContainer {
-  @apply mt-2 mb-10 ml-2 flex justify-between gap-2 cursor-pointer;
+    @apply mt-2 mb-10 ml-2 flex justify-between gap-2 cursor-pointer;
 }
 
 .articlePreviewChildOneContainer {
-  @apply w-4/6 flex flex-col gap-2;
+    @apply w-4/6 flex flex-col gap-2;
 }
 .articlePreviewChildOneContainerInnerContainer {
-  @apply flex gap-2 relative;
+    @apply flex gap-2 relative;
 }
 .articlePreviewName {
-  @apply text-xs self-center  font-bold;
+    @apply text-xs self-center  font-bold;
 }
 .articlePreviewNameImageContainer {
-  @apply block rounded h-7 w-7;
+    @apply block rounded h-7 w-7;
 }
 .articlePreviewTitle {
-  @apply font-extrabold text-lg truncate md:whitespace-normal cursor-pointer hover:text-blue-600;
+    @apply font-extrabold text-lg truncate md:whitespace-normal cursor-pointer hover:text-blue-600;
 }
 .articlePreviewMeta {
-  @apply flex gap-4  mb-2 text-sm font-light items-end;
+    @apply flex gap-4  mb-2 text-sm font-light items-end;
 }
 .articlePreviewChildTwoContainer {
-  @apply w-2/6 h-20 md:h-32 relative;
+    @apply w-2/6 h-20 md:h-32 relative;
 }
 
 .relatedContentContainer {
-  @apply flex flex-row gap-3 my-3;
+    @apply flex flex-row gap-3 my-3;
 }
 
 .relatedContentTextContainer {
-  @apply flex flex-col;
+    @apply flex flex-col;
 }
 .relatedContentTitle {
-  @apply self-center text-sm cursor-pointer hover:text-blue-500;
+    @apply self-center text-sm cursor-pointer hover:text-blue-500;
 }
 .relatedContentDescription {
-  @apply text-gray-400 text-xs cursor-pointer;
+    @apply text-gray-400 text-xs cursor-pointer;
 }

@@ -24,7 +24,6 @@ describe('Test for the homepage', () => {
         cy.location('pathname').should('eq', '/posts/amazing-things-are-happening');
     });
 
-    // TODO Fix this failing test
     it('should visit the author profile page', () => {
         cy.get('[data-cy=ArticlePreviewComponentContainer]').should('be.visible');
         cy.get('[data-cy=ArticlePreviewComponentArticlePreviewNameLink]').first().click();
