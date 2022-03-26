@@ -1,23 +1,30 @@
-import Link from "next/link";
-import React, { FunctionComponent } from "react";
-import styles from "./Tag.module.css";
+import Link from 'next/link';
+import React, { FunctionComponent } from 'react';
+import styles from './Tag.module.css';
 
 type TagProps = {
-  className?: string;
-  title: string;
-  containerClassName?: string;
-  slug: string;
+    className?: string;
+    title: string;
+    containerClassName?: string;
+    slug: string;
 };
-const Tag: FunctionComponent<TagProps> = (props) => {
-  const { title, className, containerClassName, slug } = props;
+const DataCyPrefix = 'TagComponent';
 
-  return (
-    <div className={`${styles.container} ${containerClassName}`}>
-      <Link href={`/tag/${slug}`}>
-        <a className={`${styles.title} ${className}`}>{title}</a>
-      </Link>
-    </div>
-  );
+const Tag: FunctionComponent<TagProps> = (props) => {
+    const { title, className, containerClassName, slug } = props;
+
+    return (
+        <div
+            className={`${styles.container} ${containerClassName}`}
+            data-cy={`${DataCyPrefix}Container`}
+        >
+            <Link href={`/tag/${slug}`}>
+                <a className={`${styles.title} ${className}`} data-cy={`${DataCyPrefix}-${title}`}>
+                    {title}
+                </a>
+            </Link>
+        </div>
+    );
 };
 
 export default Tag;
