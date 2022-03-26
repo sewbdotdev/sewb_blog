@@ -1,13 +1,13 @@
-describe('Test for the homepage', () => {
+describe('Test for our page', () => {
     beforeEach(() => {
-        cy.visit('/').as('homePage');
+        cy.visit('/our-story').as('homePage');
     });
-    it('should visit the homepage', () => {
-        cy.location('pathname').should('equal', '/');
-        cy.get('[data-cy=CategoryComponentHeading]').should('be.visible');
-        cy.get('[data-cy=HomePagecontentSection]').should('be.visible');
-        cy.get('[data-cy=HomePagecontentSection]').children().should('have.length.greaterThan', 0);
+    it.only('should visit the our-story page', () => {
+        cy.location('pathname').should('equal', '/our-story');
+        cy.get('[data-cy=MarkdownComponent-h1]').should('contain.text', 'Hi');
+        cy.get('[data-cy=OurStoryPageStoryContainer]').then((item) => expect(item));
     });
+
     it('should visit the cateogry page', () => {
         cy.get('[data-cy=CategoryComponentHeading]').should('be.visible');
         cy.get('[data-cy=CategoryCardComponentContainer] > a').first().click();
