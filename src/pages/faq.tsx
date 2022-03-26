@@ -9,13 +9,13 @@ import DataWrapper from '@/components/DataWrapper';
 import Markdown from '@/components/Markdown';
 import { NextSeo } from 'next-seo';
 
+const DataCyPrefix = 'FAQPage';
+
 const FAQPage: NextPage = (props) => {
     const seo = {
         title: `FAQ Page`,
         description: `FAQ page of users on SEWB.`
     };
-
-    const DataCyPrefix = 'FAQPage';
 
     const { data, status, error } = useGetFaqQuery(getClient());
     return (
