@@ -23,11 +23,12 @@ type ArticlePreviewProps = {
     featuredURL: string | undefined;
 };
 
+const DataCyPrefix = 'ArticlePreviewComponent';
+
 const sanityIoImageLoader = (props: ImageLoaderProps) => {
     const { src, quality, width } = props;
     return `https://cdn.sanity.io/${src}?w=${width}&q=${quality || 75}`;
 };
-const DataCyPrefix = 'ArticlePreviewComponent';
 const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
     const isImagePresent = Boolean(props.author?.avatar?.data?.attributes?.url);
     return (
