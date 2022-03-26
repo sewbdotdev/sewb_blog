@@ -29,7 +29,6 @@ const DataCyPrefix = 'PtypePage';
 const CategoryOrTagPage: NextPage<Props> = (props) => {
     const router = useRouter();
     const { ptype, slug } = router.query;
-    // const [page, setPageNo] = useState(1);
     const postData = useInfinitePostByPtype(String(slug), String(ptype));
     const { ref, inView } = useInView();
     useEffect(() => {
@@ -72,7 +71,7 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
                             className={contentStyles.contentTitle}
                             data-cy={`${DataCyPrefix}ContentTitle`}
                         >
-                            {slug}
+                            {Helpers.capitalize(Helpers.replace(String(slug)))}
                         </h2>
                     </div>
 
