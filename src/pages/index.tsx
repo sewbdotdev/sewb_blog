@@ -65,6 +65,7 @@ const Home: NextPage = (props) => {
                                         : false;
                                     const previewProps = {
                                         isMultiAuthored,
+                                        authorId: post.attributes?.authors?.data[0].id ?? '',
                                         author: post.attributes?.authors?.data[0]
                                             .attributes as UsersPermissionsUser,
                                         title: post.attributes?.title ?? '',

@@ -99,7 +99,9 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
                                             publishedAt: post.attributes?.publishedAt,
                                             slug: post.attributes?.slug ?? '',
                                             featuredURL:
-                                                post.attributes?.featuredImage.data?.attributes?.url
+                                                post.attributes?.featuredImage.data?.attributes
+                                                    ?.url,
+                                            authorId: post.attributes?.authors?.data[0].id ?? ''
                                         };
 
                                         return <ArticlePreview {...previewProps} key={post.id} />;

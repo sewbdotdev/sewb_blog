@@ -21,6 +21,7 @@ type ArticlePreviewProps = {
     slug: string;
     author: UsersPermissionsUser;
     featuredURL: string | undefined;
+    authorId: string;
 };
 
 const DataCyPrefix = 'ArticlePreviewComponent';
@@ -68,8 +69,15 @@ const ArticlePreview: FunctionComponent<ArticlePreviewProps> = (props) => {
                         className={styles.articlePreviewName}
                         data-cy={`${DataCyPrefix}ArticlePreviewName`}
                     >
-                        {props.author?.username} {props.isMultiAuthored ? 'et al' : ''}{' '}
-                        <a className="font-normal">in</a>{' '}
+                        <Link href={`/profile?id=${props.authorId}`}>
+                            <a
+                                className="hover:underline"
+                                data-cy={`${DataCyPrefix}ArticlePreviewNameLink`}
+                            >
+                                {props.author?.username}
+                            </a>
+                        </Link>{' '}
+                        {props.isMultiAuthored ? 'et al' : ''} <a className="font-normal">in</a>{' '}
                         <Link href={`/category/${String(props.category.attributes?.slug)}`}>
                             <a className="hover:underline" data-cy={`${DataCyPrefix}ArticleTitle`}>
                                 {props.category.attributes?.title}

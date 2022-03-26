@@ -25,9 +25,10 @@ describe('Test for the homepage', () => {
     });
 
     // TODO Fix this failing test
-    it.skip('should visit the author profile page', () => {
+    it.only('should visit the author profile page', () => {
         cy.get('[data-cy=ArticlePreviewComponentContainer]').should('be.visible');
-        cy.get('[data-cy=ArticlePreviewComponentArticlePreviewName]').first().click();
-        cy.location('pathname').should('eq', '/profile?id=1');
+        cy.get('[data-cy=ArticlePreviewComponentArticlePreviewNameLink]').first().click();
+        cy.location('pathname').should('eq', '/profile');
+        cy.get('[data-cy=ProfilePageContainer]').should('be.visible');
     });
 });
