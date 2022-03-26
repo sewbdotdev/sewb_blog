@@ -25,7 +25,7 @@ describe('Test for the homepage', () => {
     });
 
     // TODO Fix this failing test
-    it.only('should visit the author profile page', () => {
+    it('should visit the author profile page', () => {
         cy.get('[data-cy=ArticlePreviewComponentContainer]').should('be.visible');
         cy.get('[data-cy=ArticlePreviewComponentArticlePreviewNameLink]').first().click();
         cy.location('pathname').should('eq', '/profile');

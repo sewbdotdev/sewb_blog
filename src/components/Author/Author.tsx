@@ -38,7 +38,7 @@ const Author: FunctionComponent<AuthorProps> = (props) => {
                     {data.username}
                 </h3>
                 <p className={styles.bio} data-cy={`${DataCyPrefix}Bio`}>
-                    {data.bio ?? 'Update your bio in your profile :)'}
+                    {data.bio ?? 'An amazing SEWB contributor. :)'}
                 </p>
                 <div className={styles.linkContainer} data-cy={`${DataCyPrefix}LinkContainer`}>
                     {data.twitterUrl && (
