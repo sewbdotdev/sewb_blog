@@ -80,34 +80,50 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
                         data-cy={`${DataCyPrefix}ContentPreviewContainer`}
                     >
                         <DataWrapper status={postData.status}>
-                            {postData?.data?.pages?.map((page) => (
-                                <Fragment key={page.meta.pagination.page}>
-                                    {page.data.map((post) => {
-                                        const isMultiAuthored = post.attributes?.authors?.data
-                                            ? post.attributes.authors.data.length > 1
-                                            : false;
-                                        const previewProps = {
-                                            isMultiAuthored,
-                                            author: post.attributes?.authors?.data[0]
-                                                .attributes as UsersPermissionsUser,
-                                            title: post.attributes?.title ?? '',
-                                            tag: post.attributes?.tags?.data[0] as TagEntity,
-                                            category: post.attributes?.category
-                                                ?.data as CategoryEntity,
-                                            description: post.attributes?.description ?? '',
-                                            readTime: Number(post.attributes?.readTime),
-                                            publishedAt: post.attributes?.publishedAt,
-                                            slug: post.attributes?.slug ?? '',
-                                            featuredURL:
-                                                post.attributes?.featuredImage.data?.attributes
-                                                    ?.url,
-                                            authorId: post.attributes?.authors?.data[0].id ?? ''
-                                        };
+                            {postData?.data?.pages && postData?.data?.pages?.length > 0 ? (
+                                postData?.data?.pages?.map((page) => (
+                                    <Fragment key={page.meta.pagination.page}>
+                                        {page.data.length > 0 ? (
+                                            page.data.map((post) => {
+                                                const isMultiAuthored = post.attributes?.authors
+                                                    ?.data
+                                                    ? post.attributes.authors.data.length > 1
+                                                    : false;
+                                                const previewProps = {
+                                                    isMultiAuthored,
+                                                    author: post.attributes?.authors?.data[0]
+                                                        .attributes as UsersPermissionsUser,
+                                                    title: post.attributes?.title ?? '',
+                                                    tag: post.attributes?.tags
+                                                        ?.data[0] as TagEntity,
+                                                    category: post.attributes?.category
+                                                        ?.data as CategoryEntity,
+                                                    description: post.attributes?.description ?? '',
+                                                    readTime: Number(post.attributes?.readTime),
+                                                    publishedAt: post.attributes?.publishedAt,
+                                                    slug: post.attributes?.slug ?? '',
+                                                    featuredURL:
+                                                        post.attributes?.featuredImage.data
+                                                            ?.attributes?.url,
+                                                    authorId:
+                                                        post.attributes?.authors?.data[0].id ?? ''
+                                                };
 
-                                        return <ArticlePreview {...previewProps} key={post.id} />;
-                                    })}
-                                </Fragment>
-                            ))}
+                                                return (
+                                                    <ArticlePreview
+                                                        {...previewProps}
+                                                        key={post.id}
+                                                    />
+                                                );
+                                            })
+                                        ) : (
+                                            <p>Oops, no post yet for this {ptype} :)</p>
+                                        )}
+                                    </Fragment>
+                                ))
+                            ) : (
+                                <p>No Post yet for this {ptype}</p>
+                            )}
                             <div className="flex justify-center">
                                 <button
                                     ref={ref}

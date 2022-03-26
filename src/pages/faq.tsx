@@ -19,19 +19,20 @@ const FAQPage: NextPage = (props) => {
 
     const { data, status, error } = useGetFaqQuery(getClient());
     return (
-        <Content classNames="text-justify mx-5  md:w-1/2 md:mx-auto">
+        <Content classNames=" mx-5  md:w-1/2 md:mx-auto">
             <NextSeo {...seo} />
             <h2
                 className="text-3xl font-bold mt-5 border-b-2 border-slate-800 pb-2"
                 data-cy={`${DataCyPrefix}Heading`}
             >
-                The FAQssssssssss
+                Frequently Asked Questions
             </h2>
             <DataWrapper status={status}>
                 {data?.faq?.data?.attributes?.content?.map((faq, i) => {
                     return (
                         <section
                             key={String(faq?.Question) + i}
+                            className="text-justify"
                             data-cy={`${DataCyPrefix}FAQContainer`}
                         >
                             <ul className="py-2 mt-5 ">

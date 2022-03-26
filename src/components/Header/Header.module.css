@@ -1,5 +1,5 @@
 .container {
-    @apply flex flex-col md:flex-row h-36 md:h-16 items-center px-5 md:px-28 border-b-2 border-gray-400;
+    @apply flex flex-col md:flex-row h-36 md:h-16 items-center  md:px-28 border-b-2 border-gray-400;
 }
 
 .logoContainer {
