@@ -4,7 +4,7 @@ describe('Test for faq page', () => {
     });
     it('should visit the our-story page', () => {
         cy.location('pathname').should('equal', '/faq');
-        cy.get('[data-cy=FAQPageHeading]').should('contain.text', 'The FAQssssssssss');
+        cy.get('[data-cy=FAQPageHeading]').should('contain.text', 'Frequently Asked Questions');
         cy.get('[data-cy=FAQPage-Question-0]').should(
             'contain.text',
             'Can I create articles for SEWB ?'
