@@ -26,7 +26,8 @@
         "**/*.tsx",
         "src/utils/session/index.js",
         "src/utils/session.ts",
-        "next-sitemap.js"
+        "next-sitemap.js",
+        "src/cypress/plugins/index.js"
     ],
     "exclude": ["node_modules"]
 }

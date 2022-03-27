@@ -1,19 +1,21 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent } from 'react';
 
 type DataWrapperProps = {
-  status: "loading" | "error" | "success" | "idle";
+    status: 'loading' | 'error' | 'success' | 'idle';
 };
 
-const DataWrapper: FunctionComponent<DataWrapperProps> = (props) => {
-  const { status } = props;
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
-  if (status === "error") {
-    return <p>Error...</p>;
-  }
+const DataCyPrefix = 'DataWrapperComponent';
 
-  return <>{props.children}</>;
+const DataWrapper: FunctionComponent<DataWrapperProps> = (props) => {
+    const { status } = props;
+    if (status === 'loading') {
+        return <p data-cy={`${DataCyPrefix}Loading`}>Loading...</p>;
+    }
+    if (status === 'error') {
+        return <p data-cy={`${DataCyPrefix}Error`}>Error...</p>;
+    }
+
+    return <>{props.children}</>;
 };
 
 export default DataWrapper;

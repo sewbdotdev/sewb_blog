@@ -40,3 +40,6 @@ yarn-error.log*
 # SEO
 /public/sitemap*.xml
 /public/robots.txt
+
+/src/cypress/integration/1-getting-started
+/src/cypress/integration/2-advanced-examples

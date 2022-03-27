@@ -1,0 +1,15 @@
+{
+    "component": {
+        "testFiles": "**/*.test.{js,ts,jsx,tsx}",
+        "componentFolder": "src/cypress/tests/components"
+    },
+    "integrationFolder": "src/cypress/tests/pages",
+    "video": false,
+    "baseUrl": "http://localhost:3000/",
+    "screenshotsFolder": "src/cypress/tests/screenshots",
+    "fixturesFolder": "src/cypress/fixtures",
+    "pluginsFile": "src/cypress/plugins/index.js",
+    "videosFolder": "src/cypress/videos",
+    "downloadsFolder": "src/cypress/downloads",
+    "supportFile": "src/cypress/support/index.ts"
+}

@@ -1,7 +1,7 @@
 import type { GetStaticProps, NextPage } from 'next';
 import styles from '../styles/Home.module.css';
-import { useEffect, useState, Fragment } from 'react';
-import { dehydrate, QueryClient, useQuery } from 'react-query';
+import { useEffect, Fragment } from 'react';
+import { dehydrate, QueryClient } from 'react-query';
 import Category from '@/components/Category';
 import ArticlePreview from '@/components/Cards/ArticlePreview';
 import Content from '@/components/Content';
@@ -17,6 +17,9 @@ import {
 } from '@customTypes/generated/graphql';
 import { getClient } from 'utils/client';
 import { useInView } from 'react-intersection-observer';
+
+const DataCyPrefix = 'HomePage';
+
 const Home: NextPage = (props) => {
     const postsData = useInfinitePosts();
     const { data, status } = useGetAllCategoriesQuery(getClient(), {
@@ -43,13 +46,16 @@ const Home: NextPage = (props) => {
     return (
         <Content>
             <Feature />
-            <section className={styles.container}>
-                <aside className={styles.asideSection}>
+            <section className={styles.container} data-cy={`${DataCyPrefix}Container`}>
+                <aside className={styles.asideSection} data-cy={`${DataCyPrefix}asideSection`}>
                     <DataWrapper status={status}>
                         {categoryData && <Category data={categoryData} />}
                     </DataWrapper>
                 </aside>
-                <section className={styles.contentSection}>
+                <section
+                    className={styles.contentSection}
+                    data-cy={`${DataCyPrefix}contentSection`}
+                >
                     <DataWrapper status={postsData.status}>
                         {postsData.data?.pages.map((page) => (
                             <Fragment key={page.meta.pagination.page}>
@@ -59,6 +65,7 @@ const Home: NextPage = (props) => {
                                         : false;
                                     const previewProps = {
                                         isMultiAuthored,
+                                        authorId: post.attributes?.authors?.data[0].id ?? '',
                                         author: post.attributes?.authors?.data[0]
                                             .attributes as UsersPermissionsUser,
                                         title: post.attributes?.title ?? '',
@@ -83,6 +90,7 @@ const Home: NextPage = (props) => {
                                     postsData.fetchNextPage();
                                 }}
                                 disabled={!postsData.hasNextPage || postsData.isFetchingNextPage}
+                                data-cy={`${DataCyPrefix}fetchMoreBtn`}
                             >
                                 {postsData.hasNextPage && postsData.isFetchingNextPage
                                     ? 'Fetching...'

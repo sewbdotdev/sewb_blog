@@ -9,6 +9,8 @@ import DataWrapper from '@/components/DataWrapper';
 import Markdown from '@/components/Markdown';
 import { NextSeo } from 'next-seo';
 
+const DataCyPrefix = 'FAQPage';
+
 const FAQPage: NextPage = (props) => {
     const seo = {
         title: `FAQ Page`,
@@ -17,18 +19,30 @@ const FAQPage: NextPage = (props) => {
 
     const { data, status, error } = useGetFaqQuery(getClient());
     return (
-        <Content classNames="text-justify mx-5  md:w-1/2 md:mx-auto">
+        <Content classNames=" mx-5  md:w-1/2 md:mx-auto">
             <NextSeo {...seo} />
-            <h2 className="text-3xl font-bold mt-5 border-b-2 border-slate-800 pb-2">
-                The FAQssssssssss
+            <h2
+                className="text-3xl font-bold mt-5 border-b-2 border-slate-800 pb-2"
+                data-cy={`${DataCyPrefix}Heading`}
+            >
+                Frequently Asked Questions
             </h2>
             <DataWrapper status={status}>
                 {data?.faq?.data?.attributes?.content?.map((faq, i) => {
                     return (
-                        <section key={String(faq?.Question) + i}>
+                        <section
+                            key={String(faq?.Question) + i}
+                            className="text-justify"
+                            data-cy={`${DataCyPrefix}FAQContainer`}
+                        >
                             <ul className="py-2 mt-5 ">
-                                <li>
-                                    <h2 className="text-xl font-semibold">{faq?.Question} ?</h2>
+                                <li data-cy={`${DataCyPrefix}-li`}>
+                                    <h2
+                                        className="text-xl font-semibold"
+                                        data-cy={`${DataCyPrefix}-Question-${i}`}
+                                    >
+                                        {faq?.Question} ?
+                                    </h2>
                                     <Markdown content={faq?.Answer ?? ''} />
                                 </li>
                             </ul>

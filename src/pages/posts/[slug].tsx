@@ -38,6 +38,8 @@ import { useInView } from 'react-intersection-observer';
 import AuthPrompt from '@/components/AuthPrompt';
 import Clap from '@/components/CustomIcons/Clap';
 
+const DataCyPrefix = 'PostPage';
+
 const PostPage: NextPage = (props) => {
     const router = useRouter();
     // Get QueryClient from the context
@@ -208,15 +210,22 @@ const PostPage: NextPage = (props) => {
             <Sidebar isOpen={open} setIsOpen={setOpen} noBackdrop={false}>
                 <DataWrapper status={infiniteComments.status}>
                     <section>
-                        <section className="py-8 px-4 relative">
+                        <section
+                            className="py-8 px-4 relative"
+                            data-cy={`${DataCyPrefix}CommentContainer`}
+                        >
                             <div className="flex justify-between mb-10">
-                                <h1 className="text-base md:text-xl font-bold">
+                                <h1
+                                    className="text-base md:text-xl font-bold"
+                                    data-cy={`${DataCyPrefix}CommentHeading`}
+                                >
                                     Comments{' '}
                                     {`(${
                                         postCommentStats.data?.comments?.meta.pagination.total ?? 0
                                     })`}
                                 </h1>
                                 <XIcon
+                                    data-cy={`${DataCyPrefix}CommentXIcon`}
                                     className="h-7 w-7 mr-10 text-gray-400 cursor-pointer"
                                     onClick={() => setOpen(false)}
                                 />
@@ -235,6 +244,7 @@ const PostPage: NextPage = (props) => {
                         <section
                             className="py-8 px-4"
                             key={infiniteComments.data?.pages[0].meta.pagination.total}
+                            data-cy={`${DataCyPrefix}ResponseContainer`}
                         >
                             {infiniteComments.data &&
                                 infiniteComments.data?.pages.map((page) => (
@@ -259,6 +269,7 @@ const PostPage: NextPage = (props) => {
                                     onClick={() => {
                                         infiniteComments.fetchNextPage();
                                     }}
+                                    data-cy={`${DataCyPrefix}fetchMoreBtn`}
                                     disabled={
                                         !infiniteComments.hasNextPage ||
                                         infiniteComments.isFetchingNextPage
@@ -281,21 +292,41 @@ const PostPage: NextPage = (props) => {
             </Sidebar>
             <DataWrapper status={status}>
                 {post ? (
-                    <div className={styles.container}>
-                        <section className={styles.contentContainer}>
-                            <div className={styles.titleContainer}>
-                                <h2 className={styles.contentTitle}>{post.attributes?.title}</h2>
+                    <div className={styles.container} data-cy={`${DataCyPrefix}PostContainer`}>
+                        <section
+                            className={styles.contentContainer}
+                            data-cy={`${DataCyPrefix}PostContentContainer`}
+                        >
+                            <div
+                                className={styles.titleContainer}
+                                data-cy={`${DataCyPrefix}PostTitleContainer`}
+                            >
+                                <h2
+                                    className={styles.contentTitle}
+                                    data-cy={`${DataCyPrefix}PostContentTitle`}
+                                >
+                                    {post.attributes?.title}
+                                </h2>
                             </div>
 
-                            <p>{post.attributes?.description}</p>
-                            <div className="flex gap-5 pb-4">
+                            <p data-cy={`${DataCyPrefix}PostContentDescription`}>
+                                {post.attributes?.description}
+                            </p>
+                            <div
+                                className="flex gap-5 pb-4"
+                                data-cy={`${DataCyPrefix}PostMetaContainer`}
+                            >
                                 <p className="text-sm text-gray-500 flex gap-2">
                                     <CalendarIcon className="h-4 w-4 self-center" />
-                                    <span>{dateFormatter(post.attributes?.publishedAt)}</span>
+                                    <span data-cy={`${DataCyPrefix}PostMetaPublishedAt`}>
+                                        {dateFormatter(post.attributes?.publishedAt)}
+                                    </span>
                                 </p>
                                 <p className="text-sm text-gray-500 flex gap-2">
                                     <ClockIcon className="h-4 w-4 self-center" />
-                                    <span>{post.attributes?.readTime} min read.</span>
+                                    <span data-cy={`${DataCyPrefix}PostMetaReadTime`}>
+                                        {post.attributes?.readTime} min read.
+                                    </span>
                                 </p>
                             </div>
                             {isImagePresent && (
@@ -306,13 +337,17 @@ const PostPage: NextPage = (props) => {
                                                 post?.attributes?.featuredImage?.data?.attributes
                                                     ?.url ?? ''
                                             )}
+                                            data-cy={`${DataCyPrefix}PostFeatureImage`}
                                             alt="the featured image of the blog post. "
                                             width={600}
                                             height={665}
                                             priority
                                         />
                                     )}
-                                    <div className="text-center">
+                                    <div
+                                        className="text-center"
+                                        data-cy={`${DataCyPrefix}PostMetaPublishedAt`}
+                                    >
                                         <Markdown
                                             content={
                                                 post.attributes?.featuredImage.data?.attributes
@@ -322,35 +357,58 @@ const PostPage: NextPage = (props) => {
                                     </div>
                                 </div>
                             )}
-                            <article className={styles.contentMain}>
+                            <article
+                                className={styles.contentMain}
+                                data-cy={`${DataCyPrefix}PostContentMain`}
+                            >
                                 <Markdown content={post.attributes?.content ?? ``} />
                             </article>
-                            <div className={styles.iconContainer}>
-                                <p className={styles.icon} onClick={() => setOpen(!open)}>
+                            <div
+                                className={styles.iconContainer}
+                                data-cy={`${DataCyPrefix}PostIconContainer`}
+                            >
+                                <p
+                                    className={styles.icon}
+                                    onClick={() => setOpen(!open)}
+                                    data-cy={`${DataCyPrefix}CommentOpenIcon`}
+                                >
                                     <ChatIcon className="h-7 w-7" />
-                                    <span className={styles.iconText}>
+                                    <span
+                                        className={styles.iconText}
+                                        data-cy={`${DataCyPrefix}CommentCount`}
+                                    >
                                         {postCommentStats.data?.comments?.meta.pagination.total ??
                                             0}
                                     </span>
                                 </p>
                                 {getPostClaps.data?.postClaps?.data && (
-                                    <p className={styles.icon}>
+                                    <p
+                                        className={styles.icon}
+                                        data-cy={`${DataCyPrefix}ClapContainer`}
+                                    >
                                         <span
                                             className={`h-7 w-7  relative `}
                                             onClick={() => {
                                                 onClapClick();
                                             }}
+                                            data-cy={`${DataCyPrefix}ClapIcon`}
                                         >
                                             <Clap isClicked={memoizedHasUserClapped} />
                                         </span>
-                                        <span className={styles.iconText}>
+                                        <span
+                                            className={styles.iconText}
+                                            data-cy={`${DataCyPrefix}ClapCount`}
+                                        >
                                             {getPostClaps.data?.postClaps?.meta.pagination.total}
                                         </span>
                                     </p>
                                 )}
                             </div>
                         </section>
-                        <aside className={styles.asideContainer}>
+                        <aside
+                            className={styles.asideContainer}
+                            data-cy={`${DataCyPrefix}AuthorContainer`}
+                        >
                             {post.attributes?.authors?.data.map((author, i) => (
                                 <Author
                                     key={author.id}
@@ -371,7 +429,7 @@ const PostPage: NextPage = (props) => {
                         </aside>
                     </div>
                 ) : (
-                    <p> No Post</p>
+                    <p data-cy={`${DataCyPrefix}NoPost`}> No Post</p>
                 )}
             </DataWrapper>
         </Content>

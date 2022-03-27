@@ -8,13 +8,20 @@ type TagProps = {
     containerClassName?: string;
     slug: string;
 };
+const DataCyPrefix = 'TagComponent';
+
 const Tag: FunctionComponent<TagProps> = (props) => {
     const { title, className, containerClassName, slug } = props;
 
     return (
-        <div className={`${styles.container} ${containerClassName}`}>
+        <div
+            className={`${styles.container} ${containerClassName}`}
+            data-cy={`${DataCyPrefix}Container`}
+        >
             <Link href={`/tag/${slug}`}>
-                <a className={`${styles.title} ${className}`}>{title}</a>
+                <a className={`${styles.title} ${className}`} data-cy={`${DataCyPrefix}-${title}`}>
+                    {title}
+                </a>
             </Link>
         </div>
     );

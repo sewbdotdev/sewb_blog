@@ -24,10 +24,11 @@ interface Props {
     data: CategoryOrTag | undefined;
 }
 
+const DataCyPrefix = 'PtypePage';
+
 const CategoryOrTagPage: NextPage<Props> = (props) => {
     const router = useRouter();
     const { ptype, slug } = router.query;
-    // const [page, setPageNo] = useState(1);
     const postData = useInfinitePostByPtype(String(slug), String(ptype));
     const { ref, inView } = useInView();
     useEffect(() => {
@@ -46,51 +47,90 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
     return (
         <Content classNames="overflow-y-hidden">
             <NextSeo {...seo} />
-            <div className={contentStyles.container}>
-                <section className={contentStyles.contentContainer}>
-                    <div className={styles.titleContainer}>
+            <div className={contentStyles.container} data-cy={`${DataCyPrefix}Container`}>
+                <section
+                    className={contentStyles.contentContainer}
+                    data-cy={`${DataCyPrefix}ContentContainer`}
+                >
+                    <div
+                        className={styles.titleContainer}
+                        data-cy={`${DataCyPrefix}TitleContainer`}
+                    >
                         {ptype === 'category' ? (
-                            <CollectionIcon className="h-5 w-5 self-center" />
+                            <CollectionIcon
+                                className="h-5 w-5 self-center"
+                                data-cy={`${DataCyPrefix}CollectionIcon`}
+                            />
                         ) : (
-                            <TagIcon className="h-5 w-5 self-center" />
+                            <TagIcon
+                                className="h-5 w-5 self-center"
+                                data-cy={`${DataCyPrefix}TagIcon`}
+                            />
                         )}
-                        <h2 className={contentStyles.contentTitle}>{slug}</h2>
+                        <h2
+                            className={contentStyles.contentTitle}
+                            data-cy={`${DataCyPrefix}ContentTitle`}
+                        >
+                            {Helpers.capitalize(Helpers.replace(String(slug)))}
+                        </h2>
                     </div>
 
-                    <section className={styles.contentPreviewContainer}>
+                    <section
+                        className={styles.contentPreviewContainer}
+                        data-cy={`${DataCyPrefix}ContentPreviewContainer`}
+                    >
                         <DataWrapper status={postData.status}>
-                            {postData?.data?.pages?.map((page) => (
-                                <Fragment key={page.meta.pagination.page}>
-                                    {page.data.map((post) => {
-                                        const isMultiAuthored = post.attributes?.authors?.data
-                                            ? post.attributes.authors.data.length > 1
-                                            : false;
-                                        const previewProps = {
-                                            isMultiAuthored,
-                                            author: post.attributes?.authors?.data[0]
-                                                .attributes as UsersPermissionsUser,
-                                            title: post.attributes?.title ?? '',
-                                            tag: post.attributes?.tags?.data[0] as TagEntity,
-                                            category: post.attributes?.category
-                                                ?.data as CategoryEntity,
-                                            description: post.attributes?.description ?? '',
-                                            readTime: Number(post.attributes?.readTime),
-                                            publishedAt: post.attributes?.publishedAt,
-                                            slug: post.attributes?.slug ?? '',
-                                            featuredURL:
-                                                post.attributes?.featuredImage.data?.attributes?.url
-                                        };
+                            {postData?.data?.pages && postData?.data?.pages?.length > 0 ? (
+                                postData?.data?.pages?.map((page) => (
+                                    <Fragment key={page.meta.pagination.page}>
+                                        {page.data.length > 0 ? (
+                                            page.data.map((post) => {
+                                                const isMultiAuthored = post.attributes?.authors
+                                                    ?.data
+                                                    ? post.attributes.authors.data.length > 1
+                                                    : false;
+                                                const previewProps = {
+                                                    isMultiAuthored,
+                                                    author: post.attributes?.authors?.data[0]
+                                                        .attributes as UsersPermissionsUser,
+                                                    title: post.attributes?.title ?? '',
+                                                    tag: post.attributes?.tags
+                                                        ?.data[0] as TagEntity,
+                                                    category: post.attributes?.category
+                                                        ?.data as CategoryEntity,
+                                                    description: post.attributes?.description ?? '',
+                                                    readTime: Number(post.attributes?.readTime),
+                                                    publishedAt: post.attributes?.publishedAt,
+                                                    slug: post.attributes?.slug ?? '',
+                                                    featuredURL:
+                                                        post.attributes?.featuredImage.data
+                                                            ?.attributes?.url,
+                                                    authorId:
+                                                        post.attributes?.authors?.data[0].id ?? ''
+                                                };
 
-                                        return <ArticlePreview {...previewProps} key={post.id} />;
-                                    })}
-                                </Fragment>
-                            ))}
+                                                return (
+                                                    <ArticlePreview
+                                                        {...previewProps}
+                                                        key={post.id}
+                                                    />
+                                                );
+                                            })
+                                        ) : (
+                                            <p>Oops, no post yet for this {ptype} :)</p>
+                                        )}
+                                    </Fragment>
+                                ))
+                            ) : (
+                                <p>No Post yet for this {ptype}</p>
+                            )}
                             <div className="flex justify-center">
                                 <button
                                     ref={ref}
                                     onClick={() => {
                                         postData.fetchNextPage();
                                     }}
+                                    data-cy={`${DataCyPrefix}fetchMoreBtn`}
                                     disabled={!postData.hasNextPage || postData.isFetchingNextPage}
                                 >
                                     {postData.hasNextPage && postData.isFetchingNextPage
@@ -106,7 +146,10 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
                         </DataWrapper>
                     </section>
                 </section>
-                <aside className={`${styles.asideContainer}`}>
+                <aside
+                    className={`${styles.asideContainer}`}
+                    data-cy={`${DataCyPrefix}AsideContainer`}
+                >
                     {/* <Category
             isTag={ptype === "tag"}
             heading={`Discover More ${
