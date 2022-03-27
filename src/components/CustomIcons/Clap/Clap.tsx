@@ -1,4 +1,5 @@
-import React, { FunctionComponent } from 'react';
+import React, { useEffect, useState, FunctionComponent } from 'react';
+import { useTheme } from 'next-themes';
 
 type ClapProps = {
     isClicked?: boolean;
@@ -7,6 +8,21 @@ type ClapProps = {
 const DataCyPrefix = 'ClapComponent';
 const Clap: FunctionComponent<ClapProps> = (props) => {
     const { isClicked = false } = props;
+    const { theme, setTheme } = useTheme();
+    const [isMounted, setIsMounted] = useState(false);
+    const [isDark, setIsDark] = useState(false);
+    const [colorFill, setColorFill] = useState(isDark ? 'white' : '');
+    useEffect(() => {
+        setIsMounted(true);
+        setIsDark(() => theme === 'dark');
+        setColorFill(isDark ? 'white' : '');
+    }, []);
+
+    useEffect(() => {
+        setIsDark(() => theme === 'dark');
+        setColorFill(isDark ? 'white' : '');
+    }, [theme]);
+
     return (
         <svg
             data-cy={`${DataCyPrefix}SVGContainer`}
@@ -17,7 +33,7 @@ const Clap: FunctionComponent<ClapProps> = (props) => {
             xmlnsXlink="http://www.w3.org/1999/xlink"
             x="0px"
             y="0px"
-            fill={`${isClicked && 'rgb(255,65,84)'}`}
+            fill={`${isClicked ? 'rgb(255,65,84)' : colorFill}`}
             viewBox="0 0 297.221 297.221"
             xmlSpace="preserve"
         >
