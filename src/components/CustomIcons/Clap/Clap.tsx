@@ -1,21 +1,23 @@
-import React, {FunctionComponent} from "react";
-
+import React, { FunctionComponent } from "react";
+import { useTheme } from "next-themes";
 type ClapProps = {
-    isClicked?:boolean;
-}
-const Clap:FunctionComponent<ClapProps> = (props) => {
-    const {isClicked=false} = props;
+  isClicked?: boolean;
+};
+const Clap: FunctionComponent<ClapProps> = (props) => {
+  const { isClicked = false } = props;
+  const { theme, setTheme } = useTheme();
+  const darkFill = theme === "dark" ? "white" : "";
   return (
     <svg
       version="1.1"
       id="Capa_1"
-      className="h-6 via-red-900 absolute"
+      className="h-6 absolute"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      fill={`${isClicked && "rgb(255,65,84)"}`}
-            viewBox="0 0 297.221 297.221"
+      fill={`${isClicked ? "rgb(255,65,84)" : darkFill}`}
+      viewBox="0 0 297.221 297.221"
       xmlSpace="preserve"
     >
       <g>
