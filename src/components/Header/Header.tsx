@@ -36,15 +36,27 @@ const Header: FunctionComponent = (props) => {
     return (
         <header className={styles.container} data-cy={`${DataCyPrefix}Container`}>
             <div className={styles.logoContainer} data-cy={`${DataCyPrefix}LogoContainer`}>
-                <Image
-                    data-cy={`${DataCyPrefix}Logo`}
-                    src={isDark ? LightLogo : DarkLogo}
-                    className="cursor-pointer"
-                    alt="SEWB BLOG Logo."
-                    width={200}
-                    height={100}
-                    onClick={() => router.push('/')}
-                />
+                {isDark ? (
+                    <Image
+                        data-cy={`${DataCyPrefix}Logo`}
+                        src={LightLogo}
+                        className="cursor-pointer"
+                        alt="SEWB BLOG Logo."
+                        width={200}
+                        height={100}
+                        onClick={() => router.push('/')}
+                    />
+                ) : (
+                    <Image
+                        data-cy={`${DataCyPrefix}Logo`}
+                        src={DarkLogo}
+                        className="cursor-pointer"
+                        alt="SEWB BLOG Logo."
+                        width={200}
+                        height={100}
+                        onClick={() => router.push('/')}
+                    />
+                )}
             </div>
             <div className={styles.linkContainer} data-cy={`${DataCyPrefix}LinkContainer`}>
                 <ul
