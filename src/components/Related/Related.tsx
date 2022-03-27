@@ -17,9 +17,11 @@ const Related: FunctionComponent<RelatedProps> = (props) => {
             <h3 className={styles.title} data-cy={`${DataCyPrefix}Heading`}>
                 Related
             </h3>
-            {posts.map((post) => (
-                <RelatedContent key={post.id} post={post.attributes as Post} />
-            ))}
+            {posts.length > 0 ? (
+                posts.map((post) => <RelatedContent key={post.id} post={post.attributes as Post} />)
+            ) : (
+                <p> No related post.</p>
+            )}
         </section>
     );
 };

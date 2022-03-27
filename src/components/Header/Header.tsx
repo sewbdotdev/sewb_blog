@@ -121,15 +121,15 @@ const Header: FunctionComponent = (props) => {
                         className="cursor-pointer -mt-1.5 md:-mt-0"
                         data-cy={`${DataCyPrefix}ThemeLink`}
                     >
-                        {theme === 'light' ? (
-                            <MoonIcon
-                                className="text-gray-900 hover:animate-bounce"
+                        {isDark ? (
+                            <SunIcon
+                                className="text-yellow-300 hover:animate-bounce"
                                 height="25"
                                 width="25"
                             />
                         ) : (
-                            <SunIcon
-                                className="text-yellow-300 hover:animate-bounce"
+                            <MoonIcon
+                                className="text-gray-900 hover:animate-bounce"
                                 height="25"
                                 width="25"
                             />
