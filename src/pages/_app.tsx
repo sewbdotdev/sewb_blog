@@ -2,12 +2,25 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { ThemeProvider } from 'next-themes';
 import Layout from '../components/Layout';
-import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
+import { Hydrate, QueryClient, QueryClientProvider, setLogger } from 'react-query';
 import React from 'react';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { DefaultSeo } from 'next-seo';
 import SEO from '../next-seo.config';
 import Script from 'next/script';
+import Sentry, { ErrorBoundary } from '@sentry/nextjs';
+
+setLogger({
+    log: (message) => {
+        Sentry.captureMessage(message);
+    },
+    warn: (message) => {
+        Sentry.captureMessage(message);
+    },
+    error: (error) => {
+        Sentry.captureException(error);
+    }
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
     const [queryClient] = React.useState(() => new QueryClient());
@@ -37,7 +50,10 @@ function MyApp({ Component, pageProps }: AppProps) {
                                     src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
                                 />
 
-                                <Script strategy="lazyOnload">
+                                <Script
+                                    strategy="lazyOnload"
+                                    id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}
+                                >
                                     {`
                                 window.dataLayer = window.dataLayer || [];
                                 function gtag(){dataLayer.push(arguments);}
@@ -47,7 +63,18 @@ function MyApp({ Component, pageProps }: AppProps) {
                                 </Script>
                             </>
                         )}
-                        <Component {...pageProps} />
+                        <ErrorBoundary
+                            fallback={({ error, componentStack, resetError }) => (
+                                <React.Fragment>
+                                    <div>You have encountered an error</div>
+                                    <div>{error.toString()}</div>
+                                    <div>{componentStack}</div>
+                                </React.Fragment>
+                            )}
+                            showDialog
+                        >
+                            <Component {...pageProps} />
+                        </ErrorBoundary>
                     </Layout>
                 </ThemeProvider>
             </Hydrate>

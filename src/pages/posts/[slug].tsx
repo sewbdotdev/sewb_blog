@@ -40,6 +40,7 @@ import Clap from '@/components/CustomIcons/Clap';
 
 const DataCyPrefix = 'PostPage';
 
+const enableComments = !process.env.NEXT_PUBLIC_ENABLE_COMMENTS || false;
 const PostPage: NextPage = (props) => {
     const router = useRouter();
     // Get QueryClient from the context
@@ -67,9 +68,9 @@ const PostPage: NextPage = (props) => {
         return <DefaultErrorPage statusCode={404} />;
     }
 
-    const isInfiniteCommentsEnabled = Boolean(
-        data && data.posts && data.posts.data && data.posts.data.length > 0 && open
-    );
+    const isInfiniteCommentsEnabled =
+        Boolean(data && data.posts && data.posts.data && data.posts.data.length > 0 && open) ||
+        enableComments;
     const infiniteComments = useInfiniteComments(
         String(data?.posts?.data[0].id),
         isInfiniteCommentsEnabled
@@ -367,20 +368,22 @@ const PostPage: NextPage = (props) => {
                                 className={styles.iconContainer}
                                 data-cy={`${DataCyPrefix}PostIconContainer`}
                             >
-                                <p
-                                    className={styles.icon}
-                                    onClick={() => setOpen(!open)}
-                                    data-cy={`${DataCyPrefix}CommentOpenIcon`}
-                                >
-                                    <ChatIcon className="h-7 w-7" />
-                                    <span
-                                        className={styles.iconText}
-                                        data-cy={`${DataCyPrefix}CommentCount`}
+                                {enableComments && (
+                                    <p
+                                        className={styles.icon}
+                                        onClick={() => setOpen(!open)}
+                                        data-cy={`${DataCyPrefix}CommentOpenIcon`}
                                     >
-                                        {postCommentStats.data?.comments?.meta.pagination.total ??
-                                            0}
-                                    </span>
-                                </p>
+                                        <ChatIcon className="h-7 w-7" />
+                                        <span
+                                            className={styles.iconText}
+                                            data-cy={`${DataCyPrefix}CommentCount`}
+                                        >
+                                            {postCommentStats.data?.comments?.meta.pagination
+                                                .total ?? 0}
+                                        </span>
+                                    </p>
+                                )}
                                 {getPostClaps.data?.postClaps?.data && (
                                     <p
                                         className={styles.icon}
