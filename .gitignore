@@ -43,3 +43,5 @@ yarn-error.log*
 
 /src/cypress/integration/1-getting-started
 /src/cypress/integration/2-advanced-examples
+# Sentry
+.sentryclirc

@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@heroicons/react": "^1.0.5",
+        "@sentry/nextjs": "^6.19.2",
         "and": "^0.0.3",
         "dayjs": "^1.10.7",
         "graphql": "^16.3.0",

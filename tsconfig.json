@@ -27,7 +27,9 @@
         "src/utils/session/index.js",
         "src/utils/session.ts",
         "next-sitemap.js",
-        "src/cypress/plugins/index.js"
+        "src/cypress/plugins/index.js",
+        "src/pages/_error.js",
+        "src/pages/404.tsx"
     ],
     "exclude": ["node_modules"]
 }
