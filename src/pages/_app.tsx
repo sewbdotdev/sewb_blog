@@ -8,17 +8,17 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { DefaultSeo } from 'next-seo';
 import SEO from '../next-seo.config';
 import Script from 'next/script';
-import Sentry, { ErrorBoundary } from '@sentry/nextjs';
+import { captureException, captureMessage, ErrorBoundary } from '@sentry/nextjs';
 
 setLogger({
     log: (message) => {
-        Sentry.captureMessage(message);
+        captureMessage(message);
     },
     warn: (message) => {
-        Sentry.captureMessage(message);
+        captureMessage(message);
     },
     error: (error) => {
-        Sentry.captureException(error);
+        captureException(error);
     }
 });
 
