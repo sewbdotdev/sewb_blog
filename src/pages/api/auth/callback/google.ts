@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { parseCookies, setCookie, destroyCookie } from 'nookies';
 import { getClient } from 'utils/client';
 import { withSentry } from '@sentry/nextjs';
+import Helpers from 'utils/helpers';
 
 const { STRAPI_BACKEND_URL } = process.env;
 const ThirtyDays = 30 * 24 * 60 * 60;
@@ -28,13 +29,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             maxAge: ThirtyDays,
             path: '/',
             // todo test that this two additions doesn't cause side effect
-            secure: process.env.NODE_ENV === 'production'
+            secure: Helpers.isProduction()
         });
         setCookie({ res }, 'userData', JSON.stringify(data.user), {
             maxAge: ThirtyDays,
             path: '/',
             // todo test that this two additions doesn't cause side effect
-            secure: process.env.NODE_ENV === 'production'
+            secure: Helpers.isProduction()
         });
 
         const client = getClient();

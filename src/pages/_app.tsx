@@ -9,6 +9,7 @@ import { DefaultSeo } from 'next-seo';
 import SEO from '../next-seo.config';
 import Script from 'next/script';
 import { captureException, captureMessage, ErrorBoundary } from '@sentry/nextjs';
+import Helpers from 'utils/helpers';
 
 setLogger({
     log: (message) => {
@@ -43,7 +44,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                 }
                             ]}
                         />
-                        {process.env.NODE_ENV === 'production' && (
+                        {Helpers.isProduction() && (
                             <>
                                 <Script
                                     strategy="lazyOnload"
@@ -78,7 +79,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     </Layout>
                 </ThemeProvider>
             </Hydrate>
-            {process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
+            {Helpers.isDevelopment() && <ReactQueryDevtools initialIsOpen={false} />}
         </QueryClientProvider>
     );
 }
