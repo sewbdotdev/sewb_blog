@@ -1,12 +1,14 @@
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import React, { FunctionComponent } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Image from 'next/image';
-import rehypeSanitize from 'rehype-sanitize';
-import rehypeHighlight from 'rehype-highlight';
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import styles from './Markdown.module.css';
 import Link from 'next/link';
 import Helpers from 'utils/helpers';
+
 type MarkdownProps = {
     content: string;
 };
@@ -17,8 +19,6 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
     const { content } = props;
     return (
         <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeSanitize, rehypeHighlight]}
             components={{
                 p: ({ node, ...props }) => (
                     <p className={styles.p} {...props} data-cy={`${DataCyPrefix}-p`} />
@@ -42,7 +42,6 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                     ) : (
                         <a
                             href={props.href}
-                            target="_blank"
                             rel="noopener noreferrer"
                             {...props}
                             className={styles.a}
@@ -66,8 +65,51 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                             data-cy={`${DataCyPrefix}-img`}
                         />
                     </div>
-                )
+                ),
+                code({ node, inline, className, children, ...props }) {
+                    const match = /language-(\w+)/.exec(className || '');
+                    return !inline && match ? (
+                        <SyntaxHighlighter
+                            children={String(children).replace(/\n$/, '')}
+                            style={dracula}
+                            language={match[1]}
+                            PreTag="div"
+                            {...props}
+                        />
+                    ) : (
+                        <code className={className} {...props}>
+                            {children}
+                        </code>
+                    );
+                }
             }}
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[
+                [
+                    rehypeSanitize,
+                    {
+                        ...defaultSchema,
+                        attributes: {
+                            ...defaultSchema.attributes,
+                            code: [
+                                ...(defaultSchema?.attributes?.code || []),
+                                // List of all allowed languages:
+                                [
+                                    'className',
+                                    'language-js',
+                                    'language-css',
+                                    'language-md',
+                                    'language-python',
+                                    'language-java',
+                                    'language-go',
+                                    'language-rust',
+                                    'language-ts'
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            ]}
         >
             {content}
         </ReactMarkdown>
