@@ -26,8 +26,6 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
     const { theme } = useTheme();
     const [style, setStyle] = useState(dracula);
 
-    const codeRef = useRef(null);
-
     useEffect(() => {
         setStyle(theme === 'dark' ? dracula : ghcolors);
     }, [theme]);
@@ -91,7 +89,6 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                                     className: 'w-5/6'
                                 }}
                                 showLineNumbers={true}
-                                ref={codeRef}
                                 language={match[1]}
                                 PreTag="div"
                                 {...props}
