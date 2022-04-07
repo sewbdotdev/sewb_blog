@@ -15,6 +15,8 @@ import RemarkEmoji from 'remark-emoji';
 import { rehypeAccessibleEmojis } from 'rehype-accessible-emojis';
 import rehypeSlug from 'rehype-slug';
 import remarkToc from 'remark-toc';
+import remarkUnwrapImages from 'remark-unwrap-images';
+
 type MarkdownProps = {
     content: string;
 };
@@ -35,7 +37,7 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                 p: ({ node, ...props }) => (
                     <p className={styles.p} {...props} data-cy={`${DataCyPrefix}-p`} />
                 ),
-                ul: ({ node, ...props }) => (
+                ul: ({ node, ordered, ...props }) => (
                     <ul className={styles.ul} {...props} data-cy={`${DataCyPrefix}-ul`} />
                 ),
                 h1: ({ node, ...props }) => (
@@ -110,7 +112,7 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                     );
                 }
             }}
-            remarkPlugins={[remarkGfm, RemarkEmoji, remarkToc]}
+            remarkPlugins={[remarkGfm, RemarkEmoji, remarkToc, remarkUnwrapImages]}
             rehypePlugins={[
                 [
                     rehypeSanitize,
