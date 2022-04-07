@@ -36,3 +36,15 @@
 .syntaxdiv > div {
     @apply w-full;
 }
+
+.keyTakeaway {
+    @apply bg-red-500;
+}
+
+.keyTakeaway {
+    @apply bg-red-600;
+}
+
+div#user-content-kta {
+    @apply bg-red-500;
+}

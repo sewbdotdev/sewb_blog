@@ -16,6 +16,9 @@ import { rehypeAccessibleEmojis } from 'rehype-accessible-emojis';
 import rehypeSlug from 'rehype-slug';
 import remarkToc from 'remark-toc';
 import remarkUnwrapImages from 'remark-unwrap-images';
+import remarkDirective from 'remark-directive';
+import rehypeFormat from 'rehype-format';
+import remarkPluginForKeyTakeaway from 'utils/plugins/remarkPluginForKeyTakeaway';
 
 type MarkdownProps = {
     content: string;
@@ -112,7 +115,14 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                     );
                 }
             }}
-            remarkPlugins={[remarkGfm, RemarkEmoji, remarkToc, remarkUnwrapImages]}
+            remarkPlugins={[
+                remarkGfm,
+                remarkDirective,
+                remarkPluginForKeyTakeaway,
+                RemarkEmoji,
+                remarkToc,
+                remarkUnwrapImages
+            ]}
             rehypePlugins={[
                 [
                     rehypeSanitize,
@@ -139,7 +149,8 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                     }
                 ],
                 rehypeAccessibleEmojis,
-                rehypeSlug
+                rehypeSlug,
+                rehypeFormat
             ]}
         >
             {content}

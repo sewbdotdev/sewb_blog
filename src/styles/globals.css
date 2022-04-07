@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+div#user-content-kta {
+    @apply my-5 flex flex-col justify-center px-4 pb-5 pt-5 bg-slate-400 dark:bg-slate-800;
+    min-height: 5vw;
+    border-radius: 15px 50px;
+}
+
+h1#key-takeaways {
+    @apply uppercase text-2xl my-2 font-bold;
+}
+
+#user-content-kta > p {
+    @apply text-sm leading-7;
+}
