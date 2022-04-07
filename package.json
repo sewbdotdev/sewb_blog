@@ -37,6 +37,7 @@
         "react-sliding-side-panel": "^2.0.3",
         "react-syntax-highlighter": "^15.5.0",
         "rehype-sanitize": "^5.0.1",
+        "remark-emoji": "^3.0.2",
         "remark-gfm": "^3.0.1",
         "sharp": "^0.29.3",
         "unified": "^10.1.1"

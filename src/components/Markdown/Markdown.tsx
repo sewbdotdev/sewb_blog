@@ -11,6 +11,7 @@ import Link from 'next/link';
 import Helpers from 'utils/helpers';
 import { useTheme } from 'next-themes';
 import { DocumentDuplicateIcon } from '@heroicons/react/solid';
+import RemarkEmoji from 'remark-emoji';
 type MarkdownProps = {
     content: string;
 };
@@ -109,7 +110,7 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                     );
                 }
             }}
-            remarkPlugins={[remarkGfm]}
+            remarkPlugins={[remarkGfm, RemarkEmoji]}
             rehypePlugins={[
                 [
                     rehypeSanitize,
