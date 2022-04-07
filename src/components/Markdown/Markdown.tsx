@@ -1,5 +1,5 @@
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula, ghcolors } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { dracula, vs } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import React, { FunctionComponent, useEffect, useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -19,6 +19,7 @@ import remarkUnwrapImages from 'remark-unwrap-images';
 import remarkDirective from 'remark-directive';
 import rehypeFormat from 'rehype-format';
 import remarkPluginForKeyTakeaway from 'utils/plugins/remarkPluginForKeyTakeaway';
+import remarkSmartypants from 'remark-smartypants';
 
 type MarkdownProps = {
     content: string;
@@ -32,7 +33,7 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
     const [style, setStyle] = useState(dracula);
 
     useEffect(() => {
-        setStyle(theme === 'dark' ? dracula : ghcolors);
+        setStyle(theme === 'dark' ? dracula : vs);
     }, [theme]);
     return (
         <ReactMarkdown
@@ -121,7 +122,8 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                 remarkPluginForKeyTakeaway,
                 RemarkEmoji,
                 remarkToc,
-                remarkUnwrapImages
+                remarkUnwrapImages,
+                remarkSmartypants
             ]}
             rehypePlugins={[
                 [

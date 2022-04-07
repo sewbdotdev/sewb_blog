@@ -16,7 +16,6 @@ function remarkPluginForKeyTakeaway() {
 
                 data.hName = tagName;
                 data.hProperties = h(tagName, node.attributes).properties;
-                console.log(data);
             }
         });
     };

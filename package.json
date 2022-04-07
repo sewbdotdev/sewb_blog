@@ -43,6 +43,7 @@
         "remark-directive": "^2.0.1",
         "remark-emoji": "^3.0.2",
         "remark-gfm": "^3.0.1",
+        "remark-smartypants": "^2.0.0",
         "remark-toc": "^8.0.1",
         "remark-unwrap-images": "^3.0.1",
         "sharp": "^0.29.3",
