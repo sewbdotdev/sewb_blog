@@ -13,6 +13,8 @@ import { useTheme } from 'next-themes';
 import { DocumentDuplicateIcon } from '@heroicons/react/solid';
 import RemarkEmoji from 'remark-emoji';
 import { rehypeAccessibleEmojis } from 'rehype-accessible-emojis';
+import rehypeSlug from 'rehype-slug';
+import remarkToc from 'remark-toc';
 type MarkdownProps = {
     content: string;
 };
@@ -111,7 +113,7 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                     );
                 }
             }}
-            remarkPlugins={[remarkGfm, RemarkEmoji]}
+            remarkPlugins={[remarkGfm, RemarkEmoji, remarkToc]}
             rehypePlugins={[
                 [
                     rehypeSanitize,
@@ -137,7 +139,8 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                         }
                     }
                 ],
-                rehypeAccessibleEmojis
+                rehypeAccessibleEmojis,
+                rehypeSlug
             ]}
         >
             {content}
