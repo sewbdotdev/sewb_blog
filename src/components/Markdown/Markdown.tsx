@@ -12,6 +12,7 @@ import Helpers from 'utils/helpers';
 import { useTheme } from 'next-themes';
 import { DocumentDuplicateIcon } from '@heroicons/react/solid';
 import RemarkEmoji from 'remark-emoji';
+import { rehypeAccessibleEmojis } from 'rehype-accessible-emojis';
 type MarkdownProps = {
     content: string;
 };
@@ -135,7 +136,8 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                             ]
                         }
                     }
-                ]
+                ],
+                rehypeAccessibleEmojis
             ]}
         >
             {content}
