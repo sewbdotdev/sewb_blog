@@ -33,7 +33,7 @@ const Home: NextPage = (props) => {
         if (inView && postsData.hasNextPage) {
             postsData.fetchNextPage();
         }
-    }, [inView, postsData.hasNextPage]);
+    }, [inView, postsData, postsData.hasNextPage]);
 
     const categoryData = data?.categories?.data.map((cat) => ({
         id: String(cat.id),

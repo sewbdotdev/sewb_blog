@@ -38,11 +38,6 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
         pageSize: 10
     };
 
-    const ptypeData =
-        ptype === 'tag'
-            ? useGetAllTagsQuery(getClient(), variables)
-            : useGetAllCategoriesQuery(getClient(), variables);
-
     const tagQuery = useGetAllTagsQuery(getClient(), variables, {
         enabled: ptype === 'tag'
     });
@@ -71,7 +66,7 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
         if (inView && postData.hasNextPage) {
             postData.fetchNextPage();
         }
-    }, [inView, postData.hasNextPage]);
+    }, [inView, postData, postData.hasNextPage]);
 
     const seo = {
         title: `${Helpers.capitalize(Helpers.replace(String(slug)))} ${Helpers.capitalize(
@@ -189,7 +184,7 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
                     <h2 className="text-lg font-bold capitalize">
                         Other amazing {ptype === 'category' ? 'categories' : 'tags'}.
                     </h2>
-                    <DataWrapper status={ptypeData.status}>
+                    <DataWrapper status={ptype === 'tag' ? tagQuery.status : categoryQuery.status}>
                         {ptype === 'tag' ? (
                             <Category
                                 isTag={ptype === 'tag'}
@@ -252,7 +247,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
             dehydratedState: dehydrate(queryClient),
             params
         },
-        revalidate: 1
+        revalidate: 60
     };
 };
 

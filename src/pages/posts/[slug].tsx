@@ -85,7 +85,7 @@ const PostPage: NextPage = (props) => {
         if (inView && infiniteComments.hasNextPage) {
             infiniteComments.fetchNextPage();
         }
-    }, [inView, infiniteComments.hasNextPage]);
+    }, [inView, infiniteComments, infiniteComments.hasNextPage]);
 
     const createComment = useCreateCommentMutation(
         getClient(),
@@ -464,7 +464,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
             dehydratedState: dehydrate(queryClient),
             params
         },
-        revalidate: 10
+        revalidate: 60
     };
 };
 

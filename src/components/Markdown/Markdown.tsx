@@ -27,8 +27,6 @@ type MarkdownProps = {
 
 const DataCyPrefix = 'MarkdownComponent';
 
-console.log(defaultSchema.attributes);
-
 const Markdown: FunctionComponent<MarkdownProps> = (props) => {
     const { content } = props;
     const { theme } = useTheme();
