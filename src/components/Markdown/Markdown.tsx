@@ -27,6 +27,8 @@ type MarkdownProps = {
 
 const DataCyPrefix = 'MarkdownComponent';
 
+console.log(defaultSchema.attributes);
+
 const Markdown: FunctionComponent<MarkdownProps> = (props) => {
     const { content } = props;
     const { theme } = useTheme();
@@ -50,6 +52,15 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                 h2: ({ node, ...props }) => (
                     <h2 className={styles.h2} {...props} data-cy={`${DataCyPrefix}-h2`} />
                 ),
+                h3: ({ node, ...props }) => (
+                    <h3 className={styles.h3} {...props} data-cy={`${DataCyPrefix}-h2`} />
+                ),
+                h4: ({ node, ...props }) => (
+                    <h4 className={styles.h4} {...props} data-cy={`${DataCyPrefix}-h2`} />
+                ),
+
+                sup: ({ node, ...props }) => <sup {...props} />,
+                sub: ({ node, ...props }) => <sub {...props} />,
                 a: ({ node, ...props }) =>
                     props.href?.startsWith('/') ? (
                         <Link href={props.href}>
@@ -146,6 +157,16 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                                     'language-rust',
                                     'language-ts'
                                 ]
+                            ],
+                            sub: [
+                                ...(defaultSchema?.attributes?.sub || []),
+                                // List of all allowed languages:
+                                ['className']
+                            ],
+                            sup: [
+                                ...(defaultSchema?.attributes?.sup || []),
+                                // List of all allowed languages:
+                                ['className']
                             ]
                         }
                     }

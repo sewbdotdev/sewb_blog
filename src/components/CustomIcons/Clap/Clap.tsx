@@ -11,16 +11,13 @@ const Clap: FunctionComponent<ClapProps> = (props) => {
     const { theme, setTheme } = useTheme();
     const [isMounted, setIsMounted] = useState(false);
     const [isDark, setIsDark] = useState(false);
-    const [colorFill, setColorFill] = useState(isDark ? 'white' : '');
     useEffect(() => {
         setIsMounted(true);
         setIsDark(() => theme === 'dark');
-        setColorFill(isDark ? 'white' : '');
     }, []);
 
     useEffect(() => {
         setIsDark(() => theme === 'dark');
-        setColorFill(isDark ? 'white' : '');
     }, [theme]);
 
     return (
@@ -33,7 +30,7 @@ const Clap: FunctionComponent<ClapProps> = (props) => {
             xmlnsXlink="http://www.w3.org/1999/xlink"
             x="0px"
             y="0px"
-            fill={`${isClicked ? 'rgb(255,65,84)' : colorFill}`}
+            fill={`${isClicked ? 'rgb(255,65,84)' : isDark ? 'white' : 'black'}`}
             viewBox="0 0 297.221 297.221"
             xmlSpace="preserve"
         >
