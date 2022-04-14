@@ -6,7 +6,8 @@ class Helpers {
         return typeof window === 'undefined';
     }
     static isProduction(): boolean {
-        return process.env.NODE_ENV === 'production';
+        const APP_ENV = process.env.APP_ENV || '';
+        return APP_ENV === 'production';
     }
     static isDevelopment(): boolean {
         return process.env.NODE_ENV === 'development';
