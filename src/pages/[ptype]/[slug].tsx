@@ -1,25 +1,28 @@
 import Content from '@/components/Content';
-import type { NextPage, GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next';
+import type { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import styles from '../../styles/CategoryOrTag.module.css';
 import contentStyles from '../../styles/Content.module.css';
-import Author from '@/components/Author';
 import { CollectionIcon, TagIcon } from '@heroicons/react/solid';
-import Related from '@/components/Related';
 import { useRouter } from 'next/router';
 import ArticlePreview from '@/components/Cards/ArticlePreview';
-import Tag from '@/components/Tag';
-import CategoryCard from '@/components/Cards/CategoryCard';
 import Category from '@/components/Category';
-import { getCategories, getOneCategory, getOneTag, getTags } from 'hooks/useCategoryAndTag';
-import { dehydrate, QueryClient, useQuery } from 'react-query';
+import { getCategories, getTags } from 'hooks/useCategoryAndTag';
+import { dehydrate, QueryClient } from 'react-query';
 import { CategoryOrTag } from '@customTypes/categoryandtag';
 import { getPostsByCategory, getPostsByTag, useInfinitePostByPtype } from 'hooks/usePost';
-import { Fragment, useEffect, useState } from 'react';
-import { CategoryEntity, TagEntity, UsersPermissionsUser } from '@customTypes/generated/graphql';
+import { Fragment, useEffect } from 'react';
+import {
+    CategoryEntity,
+    TagEntity,
+    UsersPermissionsUser,
+    useGetAllCategoriesQuery,
+    useGetAllTagsQuery
+} from '@customTypes/generated/graphql';
 import DataWrapper from '@/components/DataWrapper';
 import { useInView } from 'react-intersection-observer';
 import { NextSeo } from 'next-seo';
 import Helpers from 'utils/helpers';
+import { getClient } from 'utils/client';
 interface Props {
     data: CategoryOrTag | undefined;
 }
@@ -30,12 +33,40 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
     const router = useRouter();
     const { ptype, slug } = router.query;
     const postData = useInfinitePostByPtype(String(slug), String(ptype));
+    const variables = {
+        page: 1,
+        pageSize: 10
+    };
+
+    const tagQuery = useGetAllTagsQuery(getClient(), variables, {
+        enabled: ptype === 'tag'
+    });
+    const categoryQuery = useGetAllCategoriesQuery(getClient(), variables, {
+        enabled: ptype === 'category'
+    });
+
+    const categoryData = categoryQuery.data?.categories?.data.map((cat) => ({
+        id: String(cat.id),
+        attributes: {
+            title: String(cat.attributes?.title),
+            slug: String(cat.attributes?.slug)
+        }
+    }));
+
+    const tagData = tagQuery.data?.tags?.data.map((tag) => ({
+        id: String(tag.id),
+        attributes: {
+            title: String(tag.attributes?.title),
+            slug: String(tag.attributes?.slug)
+        }
+    }));
+
     const { ref, inView } = useInView();
     useEffect(() => {
         if (inView && postData.hasNextPage) {
             postData.fetchNextPage();
         }
-    }, [inView, postData.hasNextPage]);
+    }, [inView, postData, postData.hasNextPage]);
 
     const seo = {
         title: `${Helpers.capitalize(Helpers.replace(String(slug)))} ${Helpers.capitalize(
@@ -150,12 +181,24 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
                     className={`${styles.asideContainer}`}
                     data-cy={`${DataCyPrefix}AsideContainer`}
                 >
-                    {/* <Category
-            isTag={ptype === "tag"}
-            heading={`Discover More ${
-              ptype === "category" ? "Categories" : "Tags"
-            }`}
-          /> */}
+                    <h2 className="text-lg font-bold capitalize">
+                        Other amazing {ptype === 'category' ? 'categories' : 'tags'}.
+                    </h2>
+                    <DataWrapper status={ptype === 'tag' ? tagQuery.status : categoryQuery.status}>
+                        {ptype === 'tag' ? (
+                            <Category
+                                isTag={ptype === 'tag'}
+                                heading={`Discover More ${'Tags'}`}
+                                data={tagData ?? []}
+                            />
+                        ) : (
+                            <Category
+                                isTag={ptype === 'tag'}
+                                heading={`Discover More ${'Categories'}`}
+                                data={categoryData ?? []}
+                            />
+                        )}
+                    </DataWrapper>
                 </aside>
             </div>
         </Content>
@@ -204,7 +247,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
             dehydratedState: dehydrate(queryClient),
             params
         },
-        revalidate: 1
+        revalidate: 60
     };
 };
 

@@ -2,9 +2,9 @@
 }
 
 .innerContainer {
-  @apply grid grid-cols-3 grid-rows-3 gap-4 border-b-2 border-gray-400 pb-5;
+    @apply grid grid-cols-3 grid-rows-3 gap-4 border-b-2 border-gray-400 pb-5;
 }
 
 .title {
-  @apply pb-3 my-2 uppercase font-bold;
+    @apply pb-3 my-2 uppercase font-bold;
 }

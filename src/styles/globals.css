@@ -1,3 +1,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+div#user-content-kta {
+    @apply my-5 flex flex-col justify-center px-4 pb-5 pt-5 bg-slate-400 dark:bg-slate-800;
+    min-height: 5vw;
+    border-radius: 15px 50px;
+}
+
+h1#key-takeaways {
+    @apply uppercase text-2xl my-2 font-bold;
+}
+
+#user-content-kta > p {
+    @apply text-sm leading-7;
+}
+#user-content-kta > ul {
+    @apply text-sm;
+}
+h2#table-of-contents + ul {
+    @apply pl-0 mb-5;
+}
+h2#table-of-contents + ul > li {
+    @apply list-none m-0;
+}
+h2#table-of-contents + ul > li * {
+    @apply list-none m-0 px-3 pb-0 text-black underline dark:text-white;
+}
+
+h2#conclusion {
+    @apply my-4;
+}
