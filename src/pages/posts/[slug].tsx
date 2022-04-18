@@ -40,7 +40,7 @@ import Clap from '@/components/CustomIcons/Clap';
 
 const DataCyPrefix = 'PostPage';
 
-const enableComments = !process.env.NEXT_PUBLIC_ENABLE_COMMENTS || false;
+const enableComments = Boolean(process.env.NEXT_PUBLIC_ENABLE_COMMENTS) || false;
 const PostPage: NextPage = (props) => {
     const router = useRouter();
     // Get QueryClient from the context
