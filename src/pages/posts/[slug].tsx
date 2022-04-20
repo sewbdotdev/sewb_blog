@@ -35,14 +35,6 @@ const PostPage: NextPage = (props) => {
         slug: String(router.query.slug)
     });
 
-    if (router.isFallback || status === 'loading') {
-        return <DataWrapper status="loading" />;
-    }
-    if (data && data.posts?.data.length === 0) {
-        // return error page
-        return <DefaultErrorPage statusCode={404} />;
-    }
-
     const relatedPosts = useGetMinimalPostsByCategoryQuery(
         getClient(),
         {
@@ -55,10 +47,17 @@ const PostPage: NextPage = (props) => {
         }
     );
 
+    if (router.isFallback || status === 'loading') {
+        return <DataWrapper status="loading" />;
+    }
+    if (data && data.posts?.data.length === 0) {
+        // return error page
+        return <DefaultErrorPage statusCode={404} />;
+    }
+
     const post = data?.posts?.data[0];
 
     const isImagePresent = Boolean(post?.attributes?.featuredImage?.data?.attributes?.url);
-    const tags = post ? post?.attributes?.tags?.data.map((tag) => tag.attributes?.title) : [];
 
     const seo = {
         title: String(post?.attributes?.title),
