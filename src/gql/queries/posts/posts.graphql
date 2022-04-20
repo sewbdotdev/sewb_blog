@@ -1,407 +1,399 @@
 query getPostBySlug($slug: String!) {
-  posts(filters: { slug: { eq: $slug } }) {
-    data {
-      id
-      attributes {
-        title
-        publishedAt
-        slug
-        description
-        readTime
-        content
-        featuredImage {
-          data {
-            attributes {
-              url
-              previewUrl
-              width
-              height
-              caption
-            }
-          }
-        }
-        authors {
-          data {
+    posts(filters: { slug: { eq: $slug } }) {
+        data {
             id
             attributes {
-              username
-              bio
-              avatar {
-                data {
-                  attributes {
-                    url
-                    width
-                    height
-                  }
+                title
+                publishedAt
+                slug
+                description
+                readTime
+                content
+                featuredImage {
+                    data {
+                        attributes {
+                            url
+                            previewUrl
+                            width
+                            height
+                            caption
+                            alternativeText
+                        }
+                    }
                 }
-              }
-              twitterUrl
-              linkedinUrl
+                authors {
+                    data {
+                        id
+                        attributes {
+                            username
+                            bio
+                            avatar {
+                                data {
+                                    attributes {
+                                        url
+                                        width
+                                        height
+                                    }
+                                }
+                            }
+                            twitterUrl
+                            linkedinUrl
+                        }
+                    }
+                }
+                category {
+                    data {
+                        id
+                        attributes {
+                            slug
+                        }
+                    }
+                }
+                tags {
+                    data {
+                        id
+                        attributes {
+                            title
+                        }
+                    }
+                }
             }
-          }
         }
-        category {
-          data {
-            id
-            attributes {
-              slug
-            }
-          }
-        }
-        postClaps {
-          data {
-            id
-          }
-        }
-        comments {
-          data {
-            id
-          }
-        }
-      }
     }
-  }
 }
+
 query getPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
-  posts(
-    filters: { category: { slug: { eq: $slug } } }
-    pagination: { page: $page, pageSize: $pageSize }
-  ) {
-    data {
-      id
-      attributes {
-        title
-        publishedAt
-        slug
-        description
-        readTime
-        tags {
-          data {
+    posts(
+        filters: { category: { slug: { eq: $slug } } }
+        pagination: { page: $page, pageSize: $pageSize }
+    ) {
+        data {
             id
             attributes {
-              title
-              slug
+                title
+                publishedAt
+                slug
+                description
+                readTime
+                tags {
+                    data {
+                        id
+                        attributes {
+                            title
+                            slug
+                        }
+                    }
+                }
+                category {
+                    data {
+                        id
+                        attributes {
+                            title
+                            slug
+                        }
+                    }
+                }
+                authors {
+                    data {
+                        id
+                        attributes {
+                            username
+                        }
+                    }
+                }
+                featuredImage {
+                    data {
+                        id
+                        attributes {
+                            width
+                            height
+                            alternativeText
+                            caption
+                            url
+                        }
+                    }
+                }
             }
-          }
         }
-        category {
-          data {
-            id
-            attributes {
-              title
-              slug
+        meta {
+            pagination {
+                total
+                page
+                pageSize
+                pageCount
             }
-          }
         }
-        authors {
-          data {
-            id
-            attributes {
-              username
-            }
-          }
-        }
-        featuredImage {
-          data {
-            id
-            attributes {
-              width
-              height
-              alternativeText
-              caption
-              url
-            }
-          }
-        }
-      }
     }
-    meta {
-      pagination {
-        total
-        page
-        pageSize
-        pageCount
-      }
-    }
-  }
 }
 
 query getAllPosts($page: Int!, $pageSize: Int!) {
-  posts(pagination: { page: $page, pageSize: $pageSize }) {
-    data {
-      id
-      attributes {
-        title
-        publishedAt
-        slug
-        description
-        readTime
-        tags {
-          data {
+    posts(pagination: { page: $page, pageSize: $pageSize }, sort: ["publishedAt:DESC"]) {
+        data {
             id
             attributes {
-              title
-              slug
-            }
-          }
-        }
-        category {
-          data {
-            id
-            attributes {
-              title
-              slug
-            }
-          }
-        }
-        authors {
-          data {
-            id
-            attributes {
-              username
-              avatar {
-                data {
-                  attributes {
-                    url
-                  }
+                title
+                publishedAt
+                slug
+                description
+                readTime
+                tags {
+                    data {
+                        id
+                        attributes {
+                            title
+                            slug
+                        }
+                    }
                 }
-              }
+                category {
+                    data {
+                        id
+                        attributes {
+                            title
+                            slug
+                        }
+                    }
+                }
+                authors {
+                    data {
+                        id
+                        attributes {
+                            username
+                            avatar {
+                                data {
+                                    attributes {
+                                        url
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                featuredImage {
+                    data {
+                        id
+                        attributes {
+                            width
+                            height
+                            alternativeText
+                            caption
+                            url
+                        }
+                    }
+                }
             }
-          }
         }
-        featuredImage {
-          data {
-            id
-            attributes {
-              width
-              height
-              alternativeText
-              caption
-              url
+        meta {
+            pagination {
+                total
+                page
+                pageSize
+                pageCount
             }
-          }
         }
-      }
     }
-    meta {
-      pagination {
-        total
-        page
-        pageSize
-        pageCount
-      }
-    }
-  }
 }
 
 query getMinimalPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
-  posts(
-    filters: { category: { slug: { eq: $slug } } }
-    pagination: { page: $page, pageSize: $pageSize }
-  ) {
-    data {
-      id
-      attributes {
-        title
-        slug
-        description
-        featuredImage {
-          data {
+    posts(
+        filters: { category: { slug: { eq: $slug } } }
+        pagination: { page: $page, pageSize: $pageSize }
+    ) {
+        data {
             id
             attributes {
-              width
-              height
-              alternativeText
-              caption
-              url
+                title
+                slug
+                description
+                featuredImage {
+                    data {
+                        id
+                        attributes {
+                            width
+                            height
+                            alternativeText
+                            caption
+                            url
+                        }
+                    }
+                }
             }
-          }
         }
-      }
     }
-  }
 }
 
 query postCommentCount($postSlug: String!) {
-  comments(filters: { post: { slug: { eq: $postSlug } } }) {
-    meta {
-      pagination {
-        total
-        page
-        pageSize
-        pageCount
-      }
+    comments(filters: { post: { slug: { eq: $postSlug } } }) {
+        meta {
+            pagination {
+                total
+                page
+                pageSize
+                pageCount
+            }
+        }
     }
-  }
 }
 query getPostsByTag($slug: String!, $page: Int!, $pageSize: Int!) {
-  posts(
-    filters: { tags: { slug: { eq: $slug } } }
-    pagination: { page: $page, pageSize: $pageSize }
-  ) {
-    data {
-      id
-      attributes {
-        title
-        publishedAt
-        slug
-        description
-        readTime
-        tags {
-          data {
+    posts(
+        filters: { tags: { slug: { eq: $slug } } }
+        pagination: { page: $page, pageSize: $pageSize }
+    ) {
+        data {
             id
             attributes {
-              title
-              slug
+                title
+                publishedAt
+                slug
+                description
+                readTime
+                tags {
+                    data {
+                        id
+                        attributes {
+                            title
+                            slug
+                        }
+                    }
+                }
+                category {
+                    data {
+                        id
+                        attributes {
+                            title
+                            slug
+                        }
+                    }
+                }
+                authors {
+                    data {
+                        id
+                        attributes {
+                            username
+                        }
+                    }
+                }
+                featuredImage {
+                    data {
+                        id
+                        attributes {
+                            width
+                            height
+                            alternativeText
+                            caption
+                            url
+                        }
+                    }
+                }
             }
-          }
         }
-        category {
-          data {
-            id
-            attributes {
-              title
-              slug
+        meta {
+            pagination {
+                total
+                page
+                pageSize
+                pageCount
             }
-          }
         }
-        authors {
-          data {
-            id
-            attributes {
-              username
-            }
-          }
-        }
-        featuredImage {
-          data {
-            id
-            attributes {
-              width
-              height
-              alternativeText
-              caption
-              url
-            }
-          }
-        }
-      }
     }
-    meta {
-      pagination {
-        total
-        page
-        pageSize
-        pageCount
-      }
-    }
-  }
 }
 
 query getPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
-  posts(
-    filters: { category: { slug: { eq: $slug } } }
-    pagination: { page: $page, pageSize: $pageSize }
-  ) {
-    data {
-      id
-      attributes {
-        title
-        publishedAt
-        slug
-        description
-        readTime
-        tags {
-          data {
+    posts(
+        filters: { category: { slug: { eq: $slug } } }
+        pagination: { page: $page, pageSize: $pageSize }
+    ) {
+        data {
             id
             attributes {
-              title
-              slug
+                title
+                publishedAt
+                slug
+                description
+                readTime
+                tags {
+                    data {
+                        id
+                        attributes {
+                            title
+                            slug
+                        }
+                    }
+                }
+                category {
+                    data {
+                        id
+                        attributes {
+                            title
+                            slug
+                        }
+                    }
+                }
+                authors {
+                    data {
+                        id
+                        attributes {
+                            username
+                        }
+                    }
+                }
+                featuredImage {
+                    data {
+                        id
+                        attributes {
+                            width
+                            height
+                            alternativeText
+                            caption
+                            url
+                        }
+                    }
+                }
             }
-          }
         }
-        category {
-          data {
-            id
-            attributes {
-              title
-              slug
+        meta {
+            pagination {
+                total
+                page
+                pageSize
+                pageCount
             }
-          }
         }
-        authors {
-          data {
-            id
-            attributes {
-              username
-            }
-          }
-        }
-        featuredImage {
-          data {
-            id
-            attributes {
-              width
-              height
-              alternativeText
-              caption
-              url
-            }
-          }
-        }
-      }
     }
-    meta {
-      pagination {
-        total
-        page
-        pageSize
-        pageCount
-      }
-    }
-  }
 }
 
-
 mutation clap($postId: ID!, $userId: ID!) {
-  createPostClap(data: { post: $postId, users_permissions_user: $userId }) {
-    data {
-      id
+    createPostClap(data: { post: $postId, users_permissions_user: $userId }) {
+        data {
+            id
+        }
     }
-  }
 }
 
 mutation unclap($clapId: ID!) {
-  deletePostClap(id: $clapId) {
-    data {
-      id
+    deletePostClap(id: $clapId) {
+        data {
+            id
+        }
     }
-  }
 }
 
-
-query getPostClaps($postId:ID!) {
-  postClaps(filters:{
-    post:{
-      id:{
-        eq:$postId
-      }
-    }
-  }){
-    data{
-      id
-      attributes{
-        users_permissions_user{
-          data{
+query getPostClaps($postId: ID!) {
+    postClaps(filters: { post: { id: { eq: $postId } } }) {
+        data {
             id
-          }
+            attributes {
+                users_permissions_user {
+                    data {
+                        id
+                    }
+                }
+            }
         }
-      }
+        meta {
+            pagination {
+                total
+            }
+        }
     }
-    meta{
-      pagination{
-        total
-      }
-    }
-  }
 }

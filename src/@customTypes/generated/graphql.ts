@@ -748,6 +748,7 @@ export type Post = {
     featuredImage: UploadFileEntityResponse;
     locale?: Maybe<Scalars['String']>;
     localizations?: Maybe<PostRelationResponseCollection>;
+    newSlugOnSave?: Maybe<Scalars['Boolean']>;
     postClaps?: Maybe<PostClapRelationResponseCollection>;
     publishedAt?: Maybe<Scalars['DateTime']>;
     readTime?: Maybe<Scalars['Int']>;
@@ -862,6 +863,7 @@ export type PostFiltersInput = {
     id?: InputMaybe<IdFilterInput>;
     locale?: InputMaybe<StringFilterInput>;
     localizations?: InputMaybe<PostFiltersInput>;
+    newSlugOnSave?: InputMaybe<BooleanFilterInput>;
     not?: InputMaybe<PostFiltersInput>;
     or?: InputMaybe<Array<InputMaybe<PostFiltersInput>>>;
     postClaps?: InputMaybe<PostClapFiltersInput>;
@@ -880,6 +882,7 @@ export type PostInput = {
     content?: InputMaybe<Scalars['String']>;
     description?: InputMaybe<Scalars['String']>;
     featuredImage?: InputMaybe<Scalars['ID']>;
+    newSlugOnSave?: InputMaybe<Scalars['Boolean']>;
     postClaps?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
     publishedAt?: InputMaybe<Scalars['DateTime']>;
     readTime?: InputMaybe<Scalars['Int']>;
@@ -1787,6 +1790,7 @@ export type GetPostBySlugQuery = {
                             width?: number | null;
                             height?: number | null;
                             caption?: string | null;
+                            alternativeText?: string | null;
                         } | null;
                     } | null;
                 };
@@ -1824,13 +1828,13 @@ export type GetPostBySlugQuery = {
                         attributes?: { __typename?: 'Category'; slug?: string | null } | null;
                     } | null;
                 } | null;
-                postClaps?: {
-                    __typename?: 'PostClapRelationResponseCollection';
-                    data: Array<{ __typename?: 'PostClapEntity'; id?: string | null }>;
-                } | null;
-                comments?: {
-                    __typename?: 'CommentRelationResponseCollection';
-                    data: Array<{ __typename?: 'CommentEntity'; id?: string | null }>;
+                tags?: {
+                    __typename?: 'TagRelationResponseCollection';
+                    data: Array<{
+                        __typename?: 'TagEntity';
+                        id?: string | null;
+                        attributes?: { __typename?: 'Tag'; title: string } | null;
+                    }>;
                 } | null;
             } | null;
         }>;
@@ -2783,6 +2787,7 @@ export const GetPostBySlugDocument = `
               width
               height
               caption
+              alternativeText
             }
           }
         }
@@ -2814,14 +2819,12 @@ export const GetPostBySlugDocument = `
             }
           }
         }
-        postClaps {
+        tags {
           data {
             id
-          }
-        }
-        comments {
-          data {
-            id
+            attributes {
+              title
+            }
           }
         }
       }
@@ -2928,7 +2931,10 @@ export const useGetPostsByCategoryQuery = <TData = GetPostsByCategoryQuery, TErr
     );
 export const GetAllPostsDocument = `
     query getAllPosts($page: Int!, $pageSize: Int!) {
-  posts(pagination: {page: $page, pageSize: $pageSize}) {
+  posts(
+    pagination: {page: $page, pageSize: $pageSize}
+    sort: ["publishedAt:DESC"]
+  ) {
     data {
       id
       attributes {
