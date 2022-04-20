@@ -58,10 +58,34 @@ const PostPage: NextPage = (props) => {
     const post = data?.posts?.data[0];
 
     const isImagePresent = Boolean(post?.attributes?.featuredImage?.data?.attributes?.url);
+    const tags = post ? post?.attributes?.tags?.data.map((tag) => tag.attributes?.title) : [];
 
     const seo = {
         title: String(post?.attributes?.title),
-        description: String(post?.attributes?.description)
+        description: String(post?.attributes?.description),
+        openGraph: {
+            type: 'article',
+            article: {
+                publishedTime: post?.attributes?.publishedAt
+            },
+            locale: 'en_IE',
+            url: `https://www.sewb.dev/posts/${String(router.query.slug)}`,
+            images: [
+                {
+                    url: isImagePresent
+                        ? Helpers.getImageURL(
+                              post?.attributes?.featuredImage?.data?.attributes?.url ?? ''
+                          )
+                        : '/img/feature.jpeg',
+                    width: 600,
+                    height: 665,
+                    alt:
+                        post?.attributes?.featuredImage?.data?.attributes?.alternativeText ??
+                        'Featured image of this article',
+                    type: 'image/jpeg'
+                }
+            ]
+        }
     };
 
     return (
