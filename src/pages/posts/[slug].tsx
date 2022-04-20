@@ -27,7 +27,7 @@ import Giscus from '@/components/Comment/Giscus';
 
 const DataCyPrefix = 'PostPage';
 
-const enableComments = Boolean(process.env.NEXT_PUBLIC_ENABLE_COMMENTS) || false;
+const enableComments = Helpers.booleanParser(process.env.NEXT_PUBLIC_ENABLE_COMMENTS);
 const PostPage: NextPage = (props) => {
     const router = useRouter();
     // Get QueryClient from the context

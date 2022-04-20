@@ -74,6 +74,18 @@ class Helpers {
 
         return output.join(' ');
     }
+
+    static booleanParser(envValue: string | undefined) {
+        if (!envValue) {
+            return false;
+        }
+
+        if (envValue === 'true') {
+            return true;
+        }
+
+        return false;
+    }
 }
 
 export default Helpers;
