@@ -16,7 +16,6 @@ const Header: FunctionComponent = (props) => {
     const { theme, setTheme } = useTheme();
     const [isMounted, setIsMounted] = useState(false);
     const [isDark, setIsDark] = useState(false);
-    const { data, loading } = useSession();
     const router = useRouter();
     useEffect(() => {
         setIsMounted(true);
@@ -93,29 +92,6 @@ const Header: FunctionComponent = (props) => {
                             <a>FAQ </a>
                         </li>
                     </Link>
-                    {data && !loading ? (
-                        <li
-                            className={`${
-                                router.pathname.includes('/profile') &&
-                                'border-b-2 border-b-slate-800'
-                            }`}
-                            data-cy={`${DataCyPrefix}ProfileLink`}
-                        >
-                            <Link href={`/profile?id=${data.user.id}`}>
-                                <a>Profile</a>
-                            </Link>
-                        </li>
-                    ) : (
-                        <a onClick={() => signIn()} data-cy={`${DataCyPrefix}LoginLink`}>
-                            Login
-                        </a>
-                    )}
-                    {data && !loading && (
-                        <li onClick={() => signOut()} data-cy={`${DataCyPrefix}LogoutLink`}>
-                            Logout
-                        </li>
-                    )}
-
                     <li
                         onClick={switchTheme}
                         className="cursor-pointer -mt-1.5 md:-mt-0"

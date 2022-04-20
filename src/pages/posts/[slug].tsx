@@ -1,4 +1,3 @@
-import { Fragment, useEffect, useState, useCallback, useMemo } from 'react';
 import Content from '@/components/Content';
 import type { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import DefaultErrorPage from 'next/error';
@@ -6,37 +5,25 @@ import styles from '../../styles/Content.module.css';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Author from '@/components/Author';
-import { ChatIcon, ClockIcon, XIcon, CalendarIcon, HeartIcon } from '@heroicons/react/solid';
+import { ClockIcon, CalendarIcon } from '@heroicons/react/solid';
 import Related from '@/components/Related';
 import { getAllPosts, getPostsBSlug } from 'hooks/usePost';
-import { dehydrate, QueryClient, useQueryClient } from 'react-query';
+import { dehydrate, QueryClient } from 'react-query';
 import { NextSeo } from 'next-seo';
 import {
     useGetPostBySlugQuery,
-    CommentEntity,
-    useCreateCommentMutation,
-    CreateCommentMutationVariables,
     useGetMinimalPostsByCategoryQuery,
     PostEntity,
-    usePostCommentCountQuery,
-    UsersPermissionsUser,
-    useGetPostClapsQuery,
-    useClapMutation,
-    useUnclapMutation
+    UsersPermissionsUser
 } from '@customTypes/generated/graphql';
 import { getClient } from 'utils/client';
 import DataWrapper from '@/components/DataWrapper';
 import Markdown from '@/components/Markdown';
-import Sidebar from '@/components/Comment/Sidebar';
-import TextBox from '@/components/Comment/TextBox';
-import Response from '@/components/Comment/Response';
-import { useSession } from 'utils/session';
+
 import Helpers from 'utils/helpers';
 import dateFormatter from 'utils/dateFormatter';
-import { useInfiniteComments } from 'hooks/useComment';
-import { useInView } from 'react-intersection-observer';
-import AuthPrompt from '@/components/AuthPrompt';
-import Clap from '@/components/CustomIcons/Clap';
+
+import Giscus from '@/components/Comment/Giscus';
 
 const DataCyPrefix = 'PostPage';
 
@@ -44,20 +31,8 @@ const enableComments = Boolean(process.env.NEXT_PUBLIC_ENABLE_COMMENTS) || false
 const PostPage: NextPage = (props) => {
     const router = useRouter();
     // Get QueryClient from the context
-    const queryClient = useQueryClient();
-    const [open, setOpen] = useState(false);
-    const { data: session } = useSession();
     const { data, status, error } = useGetPostBySlugQuery(getClient(), {
         slug: String(router.query.slug)
-    });
-
-    const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(20);
-    const [clapId, setClapId] = useState<string | undefined | null>(undefined);
-    const [postVars, setPostVars] = useState({
-        page,
-        pageSize,
-        postId: String(data?.posts?.data[0].id)
     });
 
     if (router.isFallback || status === 'loading') {
@@ -67,53 +42,6 @@ const PostPage: NextPage = (props) => {
         // return error page
         return <DefaultErrorPage statusCode={404} />;
     }
-
-    const isInfiniteCommentsEnabled =
-        Boolean(data && data.posts && data.posts.data && data.posts.data.length > 0 && open) ||
-        enableComments;
-    const infiniteComments = useInfiniteComments(
-        String(data?.posts?.data[0].id),
-        isInfiniteCommentsEnabled
-    );
-
-    const getPostClaps = useGetPostClapsQuery(getClient(), {
-        postId: String(data?.posts?.data[0].id)
-    });
-
-    const { ref, inView } = useInView();
-    useEffect(() => {
-        if (inView && infiniteComments.hasNextPage) {
-            infiniteComments.fetchNextPage();
-        }
-    }, [inView, infiniteComments, infiniteComments.hasNextPage]);
-
-    const createComment = useCreateCommentMutation(
-        getClient(),
-        {
-            onSuccess: (data) => {
-                queryClient.invalidateQueries('getComments');
-                queryClient.invalidateQueries('comments');
-            }
-        },
-        {
-            Authorization: `Bearer ${session?.jwt}`
-        }
-    );
-
-    const postCommentStats = usePostCommentCountQuery(getClient(), {
-        postSlug: String(router.query.slug)
-    });
-
-    const handleCreate = (content: string, cb: Function) => {
-        const variable = {
-            content,
-            postId: String(data?.posts?.data[0].id),
-            authorId: String(session?.user.id)
-        };
-        createComment.mutate(variable as CreateCommentMutationVariables, {
-            onSuccess: () => cb()
-        });
-    };
 
     const relatedPosts = useGetMinimalPostsByCategoryQuery(
         getClient(),
@@ -131,75 +59,6 @@ const PostPage: NextPage = (props) => {
 
     const isImagePresent = Boolean(post?.attributes?.featuredImage?.data?.attributes?.url);
 
-    const hasUserClapped = () => {
-        if (
-            !getPostClaps.data ||
-            !getPostClaps.data.postClaps ||
-            !getPostClaps.data.postClaps.data
-        ) {
-            return false;
-        } else {
-            let hasClapped = false;
-            for (let clapVar of getPostClaps.data.postClaps.data) {
-                if (
-                    Number(session?.user.id) ===
-                    Number(clapVar.attributes?.users_permissions_user?.data?.id)
-                ) {
-                    setClapId(String(clapVar.id));
-                    hasClapped = true;
-                    break;
-                }
-            }
-            return hasClapped;
-        }
-    };
-
-    const memoizedHasUserClapped = useMemo(() => hasUserClapped(), [getPostClaps.data, clapId]);
-
-    const clap = useClapMutation(
-        getClient(),
-        {
-            onSettled: () => {
-                queryClient.invalidateQueries([
-                    'getPostClaps',
-                    { postId: String(data?.posts?.data[0].id) }
-                ]);
-            }
-        },
-        {
-            Authorization: `Bearer ${session?.jwt}`
-        }
-    );
-    const unclap = useUnclapMutation(
-        getClient(),
-        {
-            onSettled: () => {
-                queryClient.invalidateQueries([
-                    'getPostClaps',
-                    { postId: String(data?.posts?.data[0].id) }
-                ]);
-            }
-        },
-        {
-            Authorization: `Bearer ${session?.jwt}`
-        }
-    );
-
-    const onClapClick = () => {
-        if (memoizedHasUserClapped) {
-            if (clapId) {
-                unclap.mutate({
-                    clapId
-                });
-            }
-        } else {
-            clap.mutate({
-                postId: String(data?.posts?.data[0].id),
-                userId: String(session?.user.id)
-            });
-        }
-    };
-
     const seo = {
         title: String(post?.attributes?.title),
         description: String(post?.attributes?.description)
@@ -208,89 +67,6 @@ const PostPage: NextPage = (props) => {
     return (
         <Content classNames="overflow-y-hidden">
             <NextSeo {...seo} />
-            <Sidebar isOpen={open} setIsOpen={setOpen} noBackdrop={false}>
-                <DataWrapper status={infiniteComments.status}>
-                    <section>
-                        <section
-                            className="py-8 px-4 relative"
-                            data-cy={`${DataCyPrefix}CommentContainer`}
-                        >
-                            <div className="flex justify-between mb-10">
-                                <h1
-                                    className="text-base md:text-xl font-bold"
-                                    data-cy={`${DataCyPrefix}CommentHeading`}
-                                >
-                                    Comments{' '}
-                                    {`(${
-                                        postCommentStats.data?.comments?.meta.pagination.total ?? 0
-                                    })`}
-                                </h1>
-                                <XIcon
-                                    data-cy={`${DataCyPrefix}CommentXIcon`}
-                                    className="h-7 w-7 mr-10 text-gray-400 cursor-pointer"
-                                    onClick={() => setOpen(false)}
-                                />
-                            </div>
-                            {/* TODO add it get's better when you're logged in component for unauthenticated users to login instead of seeing the text box.  */}
-                            {session ? (
-                                <TextBox
-                                    onSubmit={handleCreate}
-                                    loading={createComment.isLoading}
-                                />
-                            ) : (
-                                <AuthPrompt />
-                            )}
-                        </section>
-                        <hr className="border-gray-500" />
-                        <section
-                            className="py-8 px-4"
-                            key={infiniteComments.data?.pages[0].meta.pagination.total}
-                            data-cy={`${DataCyPrefix}ResponseContainer`}
-                        >
-                            {infiniteComments.data &&
-                                infiniteComments.data?.pages.map((page) => (
-                                    <Fragment key={page.meta.pagination.page}>
-                                        {page.data.map((comment, i) => {
-                                            return (
-                                                <Response
-                                                    commentCacheKey={postVars}
-                                                    comment={comment as CommentEntity}
-                                                    hideLastBorder={
-                                                        Number(page.data.length) - 1 === i
-                                                    }
-                                                    key={comment.id}
-                                                />
-                                            );
-                                        })}
-                                    </Fragment>
-                                ))}
-                            <div className="flex justify-center">
-                                <button
-                                    ref={ref}
-                                    onClick={() => {
-                                        infiniteComments.fetchNextPage();
-                                    }}
-                                    data-cy={`${DataCyPrefix}fetchMoreBtn`}
-                                    disabled={
-                                        !infiniteComments.hasNextPage ||
-                                        infiniteComments.isFetchingNextPage
-                                    }
-                                >
-                                    {infiniteComments.hasNextPage &&
-                                    infiniteComments.isFetchingNextPage
-                                        ? 'Fetching...'
-                                        : ''}
-                                </button>
-                            </div>
-                            <div>
-                                {infiniteComments.isFetching && !infiniteComments.isFetchingNextPage
-                                    ? 'Background Updating...'
-                                    : null}
-                            </div>
-                        </section>
-                    </section>
-                </DataWrapper>
-            </Sidebar>
             <DataWrapper status={status}>
                 {post ? (
                     <div className={styles.container} data-cy={`${DataCyPrefix}PostContainer`}>
@@ -367,46 +143,12 @@ const PostPage: NextPage = (props) => {
                             <div
                                 className={styles.iconContainer}
                                 data-cy={`${DataCyPrefix}PostIconContainer`}
-                            >
-                                {enableComments && (
-                                    <p
-                                        className={styles.icon}
-                                        onClick={() => setOpen(!open)}
-                                        data-cy={`${DataCyPrefix}CommentOpenIcon`}
-                                    >
-                                        <ChatIcon className="h-7 w-7" />
-                                        <span
-                                            className={styles.iconText}
-                                            data-cy={`${DataCyPrefix}CommentCount`}
-                                        >
-                                            {postCommentStats.data?.comments?.meta.pagination
-                                                .total ?? 0}
-                                        </span>
-                                    </p>
-                                )}
-                                {getPostClaps.data?.postClaps?.data && (
-                                    <p
-                                        className={styles.icon}
-                                        data-cy={`${DataCyPrefix}ClapContainer`}
-                                    >
-                                        <span
-                                            className={`h-7 w-7  relative `}
-                                            onClick={() => {
-                                                onClapClick();
-                                            }}
-                                            data-cy={`${DataCyPrefix}ClapIcon`}
-                                        >
-                                            <Clap isClicked={memoizedHasUserClapped} />
-                                        </span>
-                                        <span
-                                            className={styles.iconText}
-                                            data-cy={`${DataCyPrefix}ClapCount`}
-                                        >
-                                            {getPostClaps.data?.postClaps?.meta.pagination.total}
-                                        </span>
-                                    </p>
-                                )}
-                            </div>
+                            ></div>
+                            {enableComments && (
+                                <div className="hidden md:block">
+                                    <Giscus />
+                                </div>
+                            )}
                         </section>
                         <aside
                             className={styles.asideContainer}
@@ -430,6 +172,11 @@ const PostPage: NextPage = (props) => {
                                 }
                             </DataWrapper>
                         </aside>
+                        {enableComments && (
+                            <div className="md:hidden">
+                                <Giscus />
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <p data-cy={`${DataCyPrefix}NoPost`}> No Post</p>
