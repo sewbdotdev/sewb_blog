@@ -127,7 +127,7 @@ query getPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
 }
 
 query getAllPosts($page: Int!, $pageSize: Int!) {
-    posts(pagination: { page: $page, pageSize: $pageSize }) {
+    posts(pagination: { page: $page, pageSize: $pageSize }, sort: ["publishedAt:DESC"]) {
         data {
             id
             attributes {

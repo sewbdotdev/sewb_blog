@@ -1,8 +1,8 @@
-import { gql } from "graphql-request";
+import { gql } from 'graphql-request';
 
 class PostQuery {
-  static getPostsByCategory() {
-    return gql`
+    static getPostsByCategory() {
+        return gql`
       query getPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
         posts(
           filters: { category: { slug: { eq: $slug } } }
@@ -67,79 +67,80 @@ class PostQuery {
         }
       }
     `;
-  }
-  static getPostsByTags() {
-    return gql`
-      query getPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
-        posts(
-          filters: { tags: { slug: { eq: $slug } } }
-          pagination: { page: $page, pageSize: $pageSize }
-        ) {
-          data {
-            id
-            attributes {
-              title
-              publishedAt
-              slug
-              description
-              readTime
-              tags {
-                data {
-                  id
-                  attributes {
-                    title
-                    slug
-                  }
+    }
+    static getPostsByTags() {
+        return gql`
+            query getPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
+                posts(
+                    filters: { tags: { slug: { eq: $slug } } }
+                    pagination: { page: $page, pageSize: $pageSize }
+                ) {
+                    data {
+                        id
+                        attributes {
+                            title
+                            publishedAt
+                            slug
+                            description
+                            readTime
+                            tags {
+                                data {
+                                    id
+                                    attributes {
+                                        title
+                                        slug
+                                    }
+                                }
+                            }
+                            category {
+                                data {
+                                    id
+                                    attributes {
+                                        title
+                                        slug
+                                    }
+                                }
+                            }
+                            authors {
+                                data {
+                                    id
+                                    attributes {
+                                        username
+                                    }
+                                }
+                            }
+                            featuredImage {
+                                data {
+                                    id
+                                    attributes {
+                                        width
+                                        height
+                                        alternativeText
+                                        caption
+                                        url
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    meta {
+                        pagination {
+                            total
+                            page
+                            pageSize
+                            pageCount
+                        }
+                    }
                 }
-              }
-              category {
-                data {
-                  id
-                  attributes {
-                    title
-                    slug
-                  }
-                }
-              }
-              authors {
-                data {
-                  id
-                  attributes {
-                    username
-                  }
-                }
-              }
-              featuredImage {
-                data {
-                  id
-                  attributes {
-                    width
-                    height
-                    alternativeText
-                    caption
-                    url
-                  }
-                }
-              }
             }
-          }
-          meta {
-            pagination {
-              total
-              page
-              pageSize
-              pageCount
-            }
-          }
-        }
-      }
-    `;
-  }
-  static getAllPosts() {
-    return `
+        `;
+    }
+    static getAllPosts() {
+        return `
     query getAllPosts($page: Int!, $pageSize: Int!) {
       posts(
-        pagination: { page: $page, pageSize: $pageSize }
+        pagination: { page: $page, pageSize: $pageSize },
+        sort:["publishedAt:DESC"]
       ) {
         data {
           id
@@ -208,9 +209,9 @@ class PostQuery {
     }
     
     `;
-  }
-  static getPostBySlug() {
-    return `
+    }
+    static getPostBySlug() {
+        return `
     query getPostBySlug($slug: String!) {
       posts(filters:{
         slug: {
@@ -241,8 +242,8 @@ class PostQuery {
       }
     }
   
-    `
-  }
+    `;
+    }
 }
 
 export default PostQuery;

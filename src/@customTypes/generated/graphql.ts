@@ -2931,7 +2931,10 @@ export const useGetPostsByCategoryQuery = <TData = GetPostsByCategoryQuery, TErr
     );
 export const GetAllPostsDocument = `
     query getAllPosts($page: Int!, $pageSize: Int!) {
-  posts(pagination: {page: $page, pageSize: $pageSize}) {
+  posts(
+    pagination: {page: $page, pageSize: $pageSize}
+    sort: ["publishedAt:DESC"]
+  ) {
     data {
       id
       attributes {
