@@ -1,8 +1,26 @@
 /** @type {import('next').NextConfig} */
 const { withSentryConfig } = require('@sentry/nextjs');
 
+const ContentSecurityPolicy = `
+  frame-ancestors giscus.app 'self';
+`;
+
+const securityHeaders = [
+    {
+        key: 'Content-Security-Policy',
+        value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim()
+    }
+];
 const nextConfig = {
     reactStrictMode: true,
+    headers: async () => {
+        return [
+            {
+                source: '/posts/:path*',
+                headers: securityHeaders
+            }
+        ];
+    },
     webpack: (config) => {
         // Find the base rule that contains nested rules (which contains css-loader)
         const rules = config.module.rules.find((r) => !!r.oneOf);
