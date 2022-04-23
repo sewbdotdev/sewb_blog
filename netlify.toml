@@ -5,4 +5,4 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "frame-ancestors 'self' giscus.app;"
+    Content-Security-Policy = "frame-ancestors giscus.app 'self';"
