@@ -47,12 +47,12 @@ function MyApp({ Component, pageProps }: AppProps) {
                         {Helpers.isProduction() && (
                             <>
                                 <Script
-                                    strategy="lazyOnload"
+                                    strategy="afterInteractive"
                                     src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
                                 />
 
                                 <Script
-                                    strategy="lazyOnload"
+                                    strategy="afterInteractive"
                                     id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}
                                 >
                                     {`

@@ -16,6 +16,7 @@
         "ci:dev": "start-server-and-test start-server http://localhost:3000 test:dev"
     },
     "dependencies": {
+        "@giscus/react": "^2.0.3",
         "@heroicons/react": "^1.0.5",
         "@sentry/nextjs": "^6.19.3",
         "and": "^0.0.3",

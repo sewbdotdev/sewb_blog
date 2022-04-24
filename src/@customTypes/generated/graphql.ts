@@ -748,6 +748,7 @@ export type Post = {
     featuredImage: UploadFileEntityResponse;
     locale?: Maybe<Scalars['String']>;
     localizations?: Maybe<PostRelationResponseCollection>;
+    newSlugOnSave?: Maybe<Scalars['Boolean']>;
     postClaps?: Maybe<PostClapRelationResponseCollection>;
     publishedAt?: Maybe<Scalars['DateTime']>;
     readTime?: Maybe<Scalars['Int']>;
@@ -862,6 +863,7 @@ export type PostFiltersInput = {
     id?: InputMaybe<IdFilterInput>;
     locale?: InputMaybe<StringFilterInput>;
     localizations?: InputMaybe<PostFiltersInput>;
+    newSlugOnSave?: InputMaybe<BooleanFilterInput>;
     not?: InputMaybe<PostFiltersInput>;
     or?: InputMaybe<Array<InputMaybe<PostFiltersInput>>>;
     postClaps?: InputMaybe<PostClapFiltersInput>;
@@ -880,6 +882,7 @@ export type PostInput = {
     content?: InputMaybe<Scalars['String']>;
     description?: InputMaybe<Scalars['String']>;
     featuredImage?: InputMaybe<Scalars['ID']>;
+    newSlugOnSave?: InputMaybe<Scalars['Boolean']>;
     postClaps?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
     publishedAt?: InputMaybe<Scalars['DateTime']>;
     readTime?: InputMaybe<Scalars['Int']>;
@@ -1787,6 +1790,7 @@ export type GetPostBySlugQuery = {
                             width?: number | null;
                             height?: number | null;
                             caption?: string | null;
+                            alternativeText?: string | null;
                         } | null;
                     } | null;
                 };
@@ -1824,13 +1828,13 @@ export type GetPostBySlugQuery = {
                         attributes?: { __typename?: 'Category'; slug?: string | null } | null;
                     } | null;
                 } | null;
-                postClaps?: {
-                    __typename?: 'PostClapRelationResponseCollection';
-                    data: Array<{ __typename?: 'PostClapEntity'; id?: string | null }>;
-                } | null;
-                comments?: {
-                    __typename?: 'CommentRelationResponseCollection';
-                    data: Array<{ __typename?: 'CommentEntity'; id?: string | null }>;
+                tags?: {
+                    __typename?: 'TagRelationResponseCollection';
+                    data: Array<{
+                        __typename?: 'TagEntity';
+                        id?: string | null;
+                        attributes?: { __typename?: 'Tag'; title: string } | null;
+                    }>;
                 } | null;
             } | null;
         }>;
@@ -1889,6 +1893,13 @@ export type GetPostsByCategoryQuery = {
                         attributes?: {
                             __typename?: 'UsersPermissionsUser';
                             username: string;
+                            avatar?: {
+                                __typename?: 'UploadFileEntityResponse';
+                                data?: {
+                                    __typename?: 'UploadFileEntity';
+                                    attributes?: { __typename?: 'UploadFile'; url: string } | null;
+                                } | null;
+                            } | null;
                         } | null;
                     }>;
                 } | null;
@@ -2072,6 +2083,57 @@ export type PostCommentCountQuery = {
     } | null;
 };
 
+export type ClapMutationVariables = Exact<{
+    postId: Scalars['ID'];
+    userId: Scalars['ID'];
+}>;
+
+export type ClapMutation = {
+    __typename?: 'Mutation';
+    createPostClap?: {
+        __typename?: 'PostClapEntityResponse';
+        data?: { __typename?: 'PostClapEntity'; id?: string | null } | null;
+    } | null;
+};
+
+export type UnclapMutationVariables = Exact<{
+    clapId: Scalars['ID'];
+}>;
+
+export type UnclapMutation = {
+    __typename?: 'Mutation';
+    deletePostClap?: {
+        __typename?: 'PostClapEntityResponse';
+        data?: { __typename?: 'PostClapEntity'; id?: string | null } | null;
+    } | null;
+};
+
+export type GetPostClapsQueryVariables = Exact<{
+    postId: Scalars['ID'];
+}>;
+
+export type GetPostClapsQuery = {
+    __typename?: 'Query';
+    postClaps?: {
+        __typename?: 'PostClapEntityResponseCollection';
+        data: Array<{
+            __typename?: 'PostClapEntity';
+            id?: string | null;
+            attributes?: {
+                __typename?: 'PostClap';
+                users_permissions_user?: {
+                    __typename?: 'UsersPermissionsUserEntityResponse';
+                    data?: { __typename?: 'UsersPermissionsUserEntity'; id?: string | null } | null;
+                } | null;
+            } | null;
+        }>;
+        meta: {
+            __typename?: 'ResponseCollectionMeta';
+            pagination: { __typename?: 'Pagination'; total: number };
+        };
+    } | null;
+};
+
 export type GetPostsByTagQueryVariables = Exact<{
     slug: Scalars['String'];
     page: Scalars['Int'];
@@ -2124,6 +2186,13 @@ export type GetPostsByTagQuery = {
                         attributes?: {
                             __typename?: 'UsersPermissionsUser';
                             username: string;
+                            avatar?: {
+                                __typename?: 'UploadFileEntityResponse';
+                                data?: {
+                                    __typename?: 'UploadFileEntity';
+                                    attributes?: { __typename?: 'UploadFile'; url: string } | null;
+                                } | null;
+                            } | null;
                         } | null;
                     }>;
                 } | null;
@@ -2153,57 +2222,6 @@ export type GetPostsByTagQuery = {
                 pageSize: number;
                 pageCount: number;
             };
-        };
-    } | null;
-};
-
-export type ClapMutationVariables = Exact<{
-    postId: Scalars['ID'];
-    userId: Scalars['ID'];
-}>;
-
-export type ClapMutation = {
-    __typename?: 'Mutation';
-    createPostClap?: {
-        __typename?: 'PostClapEntityResponse';
-        data?: { __typename?: 'PostClapEntity'; id?: string | null } | null;
-    } | null;
-};
-
-export type UnclapMutationVariables = Exact<{
-    clapId: Scalars['ID'];
-}>;
-
-export type UnclapMutation = {
-    __typename?: 'Mutation';
-    deletePostClap?: {
-        __typename?: 'PostClapEntityResponse';
-        data?: { __typename?: 'PostClapEntity'; id?: string | null } | null;
-    } | null;
-};
-
-export type GetPostClapsQueryVariables = Exact<{
-    postId: Scalars['ID'];
-}>;
-
-export type GetPostClapsQuery = {
-    __typename?: 'Query';
-    postClaps?: {
-        __typename?: 'PostClapEntityResponseCollection';
-        data: Array<{
-            __typename?: 'PostClapEntity';
-            id?: string | null;
-            attributes?: {
-                __typename?: 'PostClap';
-                users_permissions_user?: {
-                    __typename?: 'UsersPermissionsUserEntityResponse';
-                    data?: { __typename?: 'UsersPermissionsUserEntity'; id?: string | null } | null;
-                } | null;
-            } | null;
-        }>;
-        meta: {
-            __typename?: 'ResponseCollectionMeta';
-            pagination: { __typename?: 'Pagination'; total: number };
         };
     } | null;
 };
@@ -2783,6 +2801,7 @@ export const GetPostBySlugDocument = `
               width
               height
               caption
+              alternativeText
             }
           }
         }
@@ -2814,14 +2833,12 @@ export const GetPostBySlugDocument = `
             }
           }
         }
-        postClaps {
+        tags {
           data {
             id
-          }
-        }
-        comments {
-          data {
-            id
+            attributes {
+              title
+            }
           }
         }
       }
@@ -2882,6 +2899,13 @@ export const GetPostsByCategoryDocument = `
             id
             attributes {
               username
+              avatar {
+                data {
+                  attributes {
+                    url
+                  }
+                }
+              }
             }
           }
         }
@@ -2928,7 +2952,10 @@ export const useGetPostsByCategoryQuery = <TData = GetPostsByCategoryQuery, TErr
     );
 export const GetAllPostsDocument = `
     query getAllPosts($page: Int!, $pageSize: Int!) {
-  posts(pagination: {page: $page, pageSize: $pageSize}) {
+  posts(
+    pagination: {page: $page, pageSize: $pageSize}
+    sort: ["publishedAt:DESC"]
+  ) {
     data {
       id
       attributes {
@@ -3089,87 +3116,6 @@ export const usePostCommentCountQuery = <TData = PostCommentCountQuery, TError =
         ),
         options
     );
-export const GetPostsByTagDocument = `
-    query getPostsByTag($slug: String!, $page: Int!, $pageSize: Int!) {
-  posts(
-    filters: {tags: {slug: {eq: $slug}}}
-    pagination: {page: $page, pageSize: $pageSize}
-  ) {
-    data {
-      id
-      attributes {
-        title
-        publishedAt
-        slug
-        description
-        readTime
-        tags {
-          data {
-            id
-            attributes {
-              title
-              slug
-            }
-          }
-        }
-        category {
-          data {
-            id
-            attributes {
-              title
-              slug
-            }
-          }
-        }
-        authors {
-          data {
-            id
-            attributes {
-              username
-            }
-          }
-        }
-        featuredImage {
-          data {
-            id
-            attributes {
-              width
-              height
-              alternativeText
-              caption
-              url
-            }
-          }
-        }
-      }
-    }
-    meta {
-      pagination {
-        total
-        page
-        pageSize
-        pageCount
-      }
-    }
-  }
-}
-    `;
-export const useGetPostsByTagQuery = <TData = GetPostsByTagQuery, TError = unknown>(
-    client: GraphQLClient,
-    variables: GetPostsByTagQueryVariables,
-    options?: UseQueryOptions<GetPostsByTagQuery, TError, TData>,
-    headers?: RequestInit['headers']
-) =>
-    useQuery<GetPostsByTagQuery, TError, TData>(
-        ['getPostsByTag', variables],
-        fetcher<GetPostsByTagQuery, GetPostsByTagQueryVariables>(
-            client,
-            GetPostsByTagDocument,
-            variables,
-            headers
-        ),
-        options
-    );
 export const ClapDocument = `
     mutation clap($postId: ID!, $userId: ID!) {
   createPostClap(data: {post: $postId, users_permissions_user: $userId}) {
@@ -3252,6 +3198,94 @@ export const useGetPostClapsQuery = <TData = GetPostClapsQuery, TError = unknown
         fetcher<GetPostClapsQuery, GetPostClapsQueryVariables>(
             client,
             GetPostClapsDocument,
+            variables,
+            headers
+        ),
+        options
+    );
+export const GetPostsByTagDocument = `
+    query getPostsByTag($slug: String!, $page: Int!, $pageSize: Int!) {
+  posts(
+    filters: {tags: {slug: {eq: $slug}}}
+    pagination: {page: $page, pageSize: $pageSize}
+  ) {
+    data {
+      id
+      attributes {
+        title
+        publishedAt
+        slug
+        description
+        readTime
+        tags {
+          data {
+            id
+            attributes {
+              title
+              slug
+            }
+          }
+        }
+        category {
+          data {
+            id
+            attributes {
+              title
+              slug
+            }
+          }
+        }
+        authors {
+          data {
+            id
+            attributes {
+              username
+              avatar {
+                data {
+                  attributes {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+        featuredImage {
+          data {
+            id
+            attributes {
+              width
+              height
+              alternativeText
+              caption
+              url
+            }
+          }
+        }
+      }
+    }
+    meta {
+      pagination {
+        total
+        page
+        pageSize
+        pageCount
+      }
+    }
+  }
+}
+    `;
+export const useGetPostsByTagQuery = <TData = GetPostsByTagQuery, TError = unknown>(
+    client: GraphQLClient,
+    variables: GetPostsByTagQueryVariables,
+    options?: UseQueryOptions<GetPostsByTagQuery, TError, TData>,
+    headers?: RequestInit['headers']
+) =>
+    useQuery<GetPostsByTagQuery, TError, TData>(
+        ['getPostsByTag', variables],
+        fetcher<GetPostsByTagQuery, GetPostsByTagQueryVariables>(
+            client,
+            GetPostsByTagDocument,
             variables,
             headers
         ),
