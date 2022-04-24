@@ -1,4 +1,4 @@
-let siteUrl = process.env.SITE_URL || 'http://localhost:3000/';
+let siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000/';
 siteUrl = siteUrl.endsWith('/') ? siteUrl : `${siteUrl}/`;
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
