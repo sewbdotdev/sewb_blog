@@ -13,7 +13,7 @@ import {
 const client = getClient();
 const page = 1;
 const pageSize = 1000;
-let siteURL = process.env.SITE_URL || 'http://localhost:3000/';
+let siteURL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000/';
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const categories = await client.request<{
         categories: CategoryEntityResponseCollection;
@@ -57,7 +57,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }));
     const fields: ISitemapField[] = [...categoryFields, ...tagFields, ...postFields];
 
-    console.log(fields);
     return getServerSideSitemap(ctx, fields);
 };
 
