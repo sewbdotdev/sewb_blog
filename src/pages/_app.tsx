@@ -39,6 +39,10 @@ function MyApp({ Component, pageProps }: AppProps) {
                                     content: 'text/html; charset=utf-8'
                                 },
                                 {
+                                    httpEquiv: 'content-security-policy',
+                                    content: `frame-ancestors giscus.app 'self';`
+                                },
+                                {
                                     name: 'viewport',
                                     content: 'width=device-width, initial-scale=1'
                                 }
