@@ -17,15 +17,22 @@ import {
 } from '@customTypes/generated/graphql';
 import { getClient } from 'utils/client';
 import { useInView } from 'react-intersection-observer';
+import Helpers from 'utils/helpers';
 
 const DataCyPrefix = 'HomePage';
 
 const Home: NextPage = (props) => {
     const postsData = useInfinitePosts();
-    const { data, status } = useGetAllCategoriesQuery(getClient(), {
-        page: 1,
-        pageSize: 10
-    });
+    const { data, status } = useGetAllCategoriesQuery(
+        getClient(),
+        {
+            page: 1,
+            pageSize: 12
+        },
+        {
+            staleTime: Helpers.getStaleTime('allCategories')
+        }
+    );
 
     const { ref, inView } = useInView();
 
