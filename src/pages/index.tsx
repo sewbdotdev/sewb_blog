@@ -27,7 +27,7 @@ const Home: NextPage = (props) => {
         getClient(),
         {
             page: 1,
-            pageSize: 10
+            pageSize: 12
         },
         {
             staleTime: Helpers.getStaleTime('allCategories')

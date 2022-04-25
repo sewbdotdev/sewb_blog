@@ -35,7 +35,7 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
     const postData = useInfinitePostByPtype(String(slug), String(ptype));
     const variables = {
         page: 1,
-        pageSize: 10
+        pageSize: 12
     };
 
     const tagQuery = useGetAllTagsQuery(getClient(), variables, {
