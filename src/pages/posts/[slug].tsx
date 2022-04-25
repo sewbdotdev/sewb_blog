@@ -31,9 +31,15 @@ const enableComments = Helpers.booleanParser(process.env.NEXT_PUBLIC_ENABLE_COMM
 const PostPage: NextPage = (props) => {
     const router = useRouter();
     // Get QueryClient from the context
-    const { data, status, error } = useGetPostBySlugQuery(getClient(), {
-        slug: String(router.query.slug)
-    });
+    const { data, status, error } = useGetPostBySlugQuery(
+        getClient(),
+        {
+            slug: String(router.query.slug)
+        },
+        {
+            staleTime: Helpers.getStaleTime('posts')
+        }
+    );
 
     const relatedPosts = useGetMinimalPostsByCategoryQuery(
         getClient(),
@@ -58,7 +64,6 @@ const PostPage: NextPage = (props) => {
     const post = data?.posts?.data[0];
 
     const isImagePresent = Boolean(post?.attributes?.featuredImage?.data?.attributes?.url);
-
     const seo = {
         title: String(post?.attributes?.title),
         description: String(post?.attributes?.description),
@@ -138,7 +143,7 @@ const PostPage: NextPage = (props) => {
                                                     ?.url ?? ''
                                             )}
                                             data-cy={`${DataCyPrefix}PostFeatureImage`}
-                                            alt="the featured image of the blog post. "
+                                            alt={`${post.attributes?.featuredImage.data?.attributes?.alternativeText}`}
                                             width={600}
                                             height={665}
                                             priority
@@ -210,7 +215,7 @@ const PostPage: NextPage = (props) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-    const posts = await getAllPosts(1, 100);
+    const posts = await getAllPosts(1, Helpers.getMaximumPostCountForBuild());
     const postPaths = posts.data.map((post) => ({
         params: {
             slug: String(post.attributes?.slug)
@@ -226,7 +231,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (ctx) => {
     const queryClient = new QueryClient();
     const { params } = ctx;
-    await queryClient.prefetchQuery(['getPostBySlug', { slug: params?.slug }], () =>
+    await queryClient.prefetchQuery(['getPostBySlug', { slug: String(params?.slug) }], () =>
         getPostsBSlug(String(params?.slug))
     );
     return {

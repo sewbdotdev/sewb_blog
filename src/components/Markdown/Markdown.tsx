@@ -144,17 +144,7 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                             code: [
                                 ...(defaultSchema?.attributes?.code || []),
                                 // List of all allowed languages:
-                                [
-                                    'className',
-                                    'language-js',
-                                    'language-css',
-                                    'language-md',
-                                    'language-python',
-                                    'language-java',
-                                    'language-go',
-                                    'language-rust',
-                                    'language-ts'
-                                ]
+                                [...Helpers.getSupportedLanguages()]
                             ],
                             sub: [
                                 ...(defaultSchema?.attributes?.sub || []),
