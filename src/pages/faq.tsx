@@ -8,6 +8,7 @@ import { getClient } from 'utils/client';
 import DataWrapper from '@/components/DataWrapper';
 import Markdown from '@/components/Markdown';
 import { NextSeo } from 'next-seo';
+import Helpers from 'utils/helpers';
 
 const DataCyPrefix = 'FAQPage';
 
@@ -17,7 +18,13 @@ const FAQPage: NextPage = (props) => {
         description: `FAQ page of users on SEWB.`
     };
 
-    const { data, status, error } = useGetFaqQuery(getClient());
+    const { data, status, error } = useGetFaqQuery(
+        getClient(),
+        {},
+        {
+            staleTime: Helpers.getStaleTime('faq')
+        }
+    );
     return (
         <Content classNames=" mx-5  md:w-1/2 md:mx-auto">
             <NextSeo {...seo} />

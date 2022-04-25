@@ -8,11 +8,18 @@ import { getClient } from 'utils/client';
 import DataWrapper from '@/components/DataWrapper';
 import Markdown from '@/components/Markdown';
 import { NextSeo } from 'next-seo';
+import Helpers from 'utils/helpers';
 
 const DataCyPrefix = 'OurStoryPage';
 
 const OurStoryPage: NextPage = (props) => {
-    const { data, status, error } = useGetStoryQuery(getClient());
+    const { data, status, error } = useGetStoryQuery(
+        getClient(),
+        {},
+        {
+            staleTime: Helpers.getStaleTime('our-story')
+        }
+    );
     const seo = {
         title: `Our Story Page`,
         description: `Our story page of users on SEWB.`
