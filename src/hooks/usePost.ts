@@ -1,12 +1,12 @@
 import { getClient } from 'utils/client';
 import { useInfiniteQuery, useQuery } from 'react-query';
-import PostQuery from 'gql/queries/posts/posts';
 import { PostAPIResponse } from '@customTypes/post';
 import {
     GetPostsByCategoryDocument,
     GetPostsByTagDocument,
     PostEntityResponseCollection,
-    GetPostBySlugDocument
+    GetPostBySlugDocument,
+    GetAllPostsDocument
 } from '@customTypes/generated/graphql';
 
 const client = getClient();
@@ -45,7 +45,7 @@ const getPostsByTag = async (slug: string, page = 1, pageSize = 10) => {
 
 const getAllPosts = async (page = 1, pageSize = 10): Promise<PostEntityResponseCollection> => {
     try {
-        const response = await client.request(PostQuery.getAllPosts(), {
+        const response = await client.request(GetAllPostsDocument, {
             page,
             pageSize
         });
@@ -75,8 +75,7 @@ const useInfinitePosts = () =>
                     ? lastPage.meta.pagination.page !== lastPage.meta.pagination.pageCount
                         ? lastPage.meta.pagination.page + 1
                         : false
-                    : false,
-            staleTime: 3600000
+                    : false
         }
     );
 const useInfinitePostByPtype = (slug: string, ptype: string) =>

@@ -39,10 +39,13 @@ const CategoryOrTagPage: NextPage<Props> = (props) => {
     };
 
     const tagQuery = useGetAllTagsQuery(getClient(), variables, {
-        enabled: ptype === 'tag'
+        enabled: ptype === 'tag',
+        staleTime: Helpers.getStaleTime('tagPosts')
     });
+
     const categoryQuery = useGetAllCategoriesQuery(getClient(), variables, {
-        enabled: ptype === 'category'
+        enabled: ptype === 'category',
+        staleTime: Helpers.getStaleTime('categoryPosts')
     });
 
     const categoryData = categoryQuery.data?.categories?.data.map((cat) => ({

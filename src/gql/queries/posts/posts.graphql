@@ -66,6 +66,7 @@ query getPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
     posts(
         filters: { category: { slug: { eq: $slug } } }
         pagination: { page: $page, pageSize: $pageSize }
+        sort: ["publishedAt:DESC"]
     ) {
         data {
             id
@@ -205,6 +206,7 @@ query getMinimalPostsByCategory($slug: String!, $page: Int!, $pageSize: Int!) {
     posts(
         filters: { category: { slug: { eq: $slug } } }
         pagination: { page: $page, pageSize: $pageSize }
+        sort: ["publishedAt:DESC"]
     ) {
         data {
             id
@@ -282,6 +284,7 @@ query getPostsByTag($slug: String!, $page: Int!, $pageSize: Int!) {
     posts(
         filters: { tags: { slug: { eq: $slug } } }
         pagination: { page: $page, pageSize: $pageSize }
+        sort: ["publishedAt:DESC"]
     ) {
         data {
             id

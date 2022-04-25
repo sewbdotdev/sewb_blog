@@ -17,6 +17,7 @@ import {
 } from '@customTypes/generated/graphql';
 import { getClient } from 'utils/client';
 import { useInView } from 'react-intersection-observer';
+import Helpers from 'utils/helpers';
 
 const DataCyPrefix = 'HomePage';
 
@@ -29,7 +30,7 @@ const Home: NextPage = (props) => {
             pageSize: 10
         },
         {
-            staleTime: Infinity
+            staleTime: Helpers.getStaleTime('allCategories')
         }
     );
 

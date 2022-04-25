@@ -2867,6 +2867,7 @@ export const GetPostsByCategoryDocument = `
   posts(
     filters: {category: {slug: {eq: $slug}}}
     pagination: {page: $page, pageSize: $pageSize}
+    sort: ["publishedAt:DESC"]
   ) {
     data {
       id
@@ -3043,6 +3044,7 @@ export const GetMinimalPostsByCategoryDocument = `
   posts(
     filters: {category: {slug: {eq: $slug}}}
     pagination: {page: $page, pageSize: $pageSize}
+    sort: ["publishedAt:DESC"]
   ) {
     data {
       id
@@ -3208,6 +3210,7 @@ export const GetPostsByTagDocument = `
   posts(
     filters: {tags: {slug: {eq: $slug}}}
     pagination: {page: $page, pageSize: $pageSize}
+    sort: ["publishedAt:DESC"]
   ) {
     data {
       id

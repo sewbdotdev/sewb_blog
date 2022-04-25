@@ -8,7 +8,8 @@ type getStaleTimeProps =
     | 'our-story'
     | 'allTags'
     | 'categoryPosts'
-    | 'tagPosts';
+    | 'tagPosts'
+    | 'homepagePosts';
 class Helpers {
     static isSSR(): boolean {
         return typeof window === 'undefined';
@@ -108,7 +109,8 @@ class Helpers {
             'our-story': Infinity,
             allTags: Infinity,
             categoryPosts: 7200000,
-            tagPosts: 7200000
+            tagPosts: 7200000,
+            homepagePosts: 3600000
         };
 
         return staleTimes[query];
