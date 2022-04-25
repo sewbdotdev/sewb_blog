@@ -1,6 +1,14 @@
 import cookies from 'next-cookies';
 import { TokenData } from '@customTypes/token';
 
+type getStaleTimeProps =
+    | 'posts'
+    | 'allCategories'
+    | 'faq'
+    | 'our-story'
+    | 'allTags'
+    | 'categoryPosts'
+    | 'tagPosts';
 class Helpers {
     static isSSR(): boolean {
         return typeof window === 'undefined';
@@ -85,6 +93,60 @@ class Helpers {
         }
 
         return false;
+    }
+
+    static getStaleTime(query: getStaleTimeProps) {
+        /*
+            hour - milliseconds
+            24 hours -> 86400000
+            2 hours -> 7200000
+        */
+        const staleTimes = {
+            posts: 86400000,
+            allCategories: Infinity,
+            faq: Infinity,
+            'our-story': Infinity,
+            allTags: Infinity,
+            categoryPosts: 7200000,
+            tagPosts: 7200000
+        };
+
+        return staleTimes[query];
+    }
+
+    static getMaximumPostCountForBuild() {
+        const postCountEnv = process.env.NEXT_PUBLIC_POST_COUNT;
+
+        if (!postCountEnv) {
+            return 1000;
+        }
+
+        return Number(postCountEnv);
+    }
+
+    static getSupportedLanguages() {
+        return [
+            'className',
+            'language-js',
+            'language-css',
+            'language-md',
+            'language-python',
+            'language-java',
+            'language-go',
+            'language-rust',
+            'language-typescript',
+            'language-csharp',
+            'language-django',
+            'language-sql',
+            'language-yaml',
+            'language-shell',
+            'language-markdown',
+            'language-json',
+            'language-javascript',
+            'language-dockerfile',
+            'language-css',
+            'language-cpp'
+        ];
     }
 }
 

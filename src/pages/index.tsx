@@ -22,10 +22,16 @@ const DataCyPrefix = 'HomePage';
 
 const Home: NextPage = (props) => {
     const postsData = useInfinitePosts();
-    const { data, status } = useGetAllCategoriesQuery(getClient(), {
-        page: 1,
-        pageSize: 10
-    });
+    const { data, status } = useGetAllCategoriesQuery(
+        getClient(),
+        {
+            page: 1,
+            pageSize: 10
+        },
+        {
+            staleTime: Infinity
+        }
+    );
 
     const { ref, inView } = useInView();
 
