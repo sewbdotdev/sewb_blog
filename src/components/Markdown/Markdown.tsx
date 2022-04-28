@@ -78,16 +78,15 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                         </a>
                     ),
                 img: ({ node, ...props }) => (
-                    <div
-                        className="relative w-full"
-                        style={{ height: 600 }}
-                        data-cy={`${DataCyPrefix}ImageContainer`}
-                    >
+                    <div className="relative w-full" data-cy={`${DataCyPrefix}ImageContainer`}>
                         <Image
                             src={Helpers.getImageURL(props.src ?? '')}
                             alt={props.alt}
-                            layout="fill"
+                            quality="90"
+                            layout="responsive"
                             priority
+                            width={600}
+                            height={500}
                             className={`${props.className} text-center mx-auto`}
                             data-cy={`${DataCyPrefix}-img`}
                         />

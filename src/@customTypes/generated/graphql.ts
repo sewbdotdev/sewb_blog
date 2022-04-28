@@ -1775,6 +1775,7 @@ export type GetPostBySlugQuery = {
                 __typename?: 'Post';
                 title: string;
                 publishedAt?: any | null;
+                updatedAt?: any | null;
                 slug?: string | null;
                 description: string;
                 readTime?: number | null;
@@ -2789,6 +2790,7 @@ export const GetPostBySlugDocument = `
       attributes {
         title
         publishedAt
+        updatedAt
         slug
         description
         readTime

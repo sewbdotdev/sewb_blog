@@ -133,6 +133,12 @@ const PostPage: NextPage = (props) => {
                                         {post.attributes?.readTime} min read.
                                     </span>
                                 </p>
+                                <p className="text-sm text-gray-500 flex gap-2">
+                                    <CalendarIcon className="h-4 w-4 self-center" />
+                                    <span data-cy={`${DataCyPrefix}PostMetaPublishedAt`}>
+                                        Updated: {dateFormatter(post.attributes?.updatedAt)}
+                                    </span>
+                                </p>
                             </div>
                             {isImagePresent && (
                                 <div className={styles.contentCoverImage}>

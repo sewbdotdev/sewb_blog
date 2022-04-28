@@ -62,7 +62,7 @@ const nextConfig = {
         return config;
     },
     images: {
-        domains: ['localhost', 'res.cloudinary.com']
+        domains: ['localhost', 'res.cloudinary.com', 'media.giphy.com']
     }
 };
 

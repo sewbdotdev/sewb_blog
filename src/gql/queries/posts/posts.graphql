@@ -5,6 +5,7 @@ query getPostBySlug($slug: String!) {
             attributes {
                 title
                 publishedAt
+                updatedAt
                 slug
                 description
                 readTime
