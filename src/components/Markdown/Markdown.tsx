@@ -87,6 +87,7 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                             priority
                             width={600}
                             height={500}
+                            unoptimized={Helpers.shouldImageBeUnoptimized(props.src)}
                             className={`${props.className} text-center mx-auto`}
                             data-cy={`${DataCyPrefix}-img`}
                         />
