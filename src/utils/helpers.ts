@@ -150,6 +150,21 @@ class Helpers {
             'language-cpp'
         ];
     }
+
+    static shouldImageBeUnoptimized(src: string | undefined) {
+        if (!src) {
+            return false;
+        }
+        const listOfExtensionsToNotOptimize = ['.gif', '.apng'];
+
+        for (const extension of listOfExtensionsToNotOptimize) {
+            if (src.includes(extension)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 export default Helpers;
