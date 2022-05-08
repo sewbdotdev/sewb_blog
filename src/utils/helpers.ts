@@ -165,6 +165,31 @@ class Helpers {
 
         return false;
     }
+    static isExternalLink(href: string) {
+        let blogSite = String(process.env.NEXT_PUBLIC_SITE_URL);
+
+        if (href.startsWith('/') || href.startsWith('#')) {
+            return false;
+        }
+        const splittedHref = href.split('/', 3);
+        const splittedBlogSite = blogSite.split('/', 3);
+        const hrefSite = splittedHref[splittedHref.length - 1];
+        blogSite = splittedBlogSite[splittedBlogSite.length - 1];
+        if (blogSite.startsWith(hrefSite)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    static getShareUrl(slug: string) {
+        const blogUrl = String(process.env.NEXT_PUBLIC_SITE_URL);
+
+        let shareUrl = `${blogUrl.endsWith('/') ? blogUrl : blogUrl + '/'}`;
+        shareUrl += slug.startsWith('/') ? slug.replace('/', '') : slug;
+
+        return shareUrl;
+    }
 }
 
 export default Helpers;
