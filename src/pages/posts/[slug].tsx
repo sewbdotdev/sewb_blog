@@ -5,7 +5,7 @@ import styles from '../../styles/Content.module.css';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Author from '@/components/Author';
-import { ClockIcon, CalendarIcon } from '@heroicons/react/solid';
+import { ClockIcon, CalendarIcon, LinkIcon } from '@heroicons/react/solid';
 import Related from '@/components/Related';
 import { getAllPosts, getPostsBSlug } from 'hooks/usePost';
 import { dehydrate, QueryClient } from 'react-query';
@@ -24,7 +24,17 @@ import Helpers from 'utils/helpers';
 import dateFormatter from 'utils/dateFormatter';
 
 import Giscus from '@/components/Comment/Giscus';
-
+import {
+    LinkedinShareButton,
+    TelegramShareButton,
+    TwitterShareButton,
+    TwitterIcon,
+    WhatsappShareButton,
+    WhatsappIcon,
+    TelegramIcon,
+    LinkedinIcon
+} from 'react-share';
+import CopyToClipboard from 'react-copy-to-clipboard';
 const DataCyPrefix = 'PostPage';
 
 const enableComments = Helpers.booleanParser(process.env.NEXT_PUBLIC_ENABLE_COMMENTS);
@@ -64,6 +74,8 @@ const PostPage: NextPage = (props) => {
     const post = data?.posts?.data[0];
 
     const isImagePresent = Boolean(post?.attributes?.featuredImage?.data?.attributes?.url);
+
+    const shareUrl = Helpers.getShareUrl('/posts/' + String(router.query.slug));
     const seo = {
         title: String(post?.attributes?.title),
         description: String(post?.attributes?.description),
@@ -112,6 +124,23 @@ const PostPage: NextPage = (props) => {
                                 >
                                     {post.attributes?.title}
                                 </h2>
+                                <section className="flex my-2">
+                                    <TwitterShareButton url={shareUrl}>
+                                        <TwitterIcon className="rounded-full w-5 h-5 mr-2" />
+                                    </TwitterShareButton>
+                                    <WhatsappShareButton url={shareUrl}>
+                                        <WhatsappIcon className="rounded-full w-5 h-5 mr-2" />
+                                    </WhatsappShareButton>
+                                    <TelegramShareButton url={shareUrl}>
+                                        <TelegramIcon className="rounded-full w-5 h-5 mr-2" />
+                                    </TelegramShareButton>
+                                    <LinkedinShareButton url={shareUrl}>
+                                        <LinkedinIcon className="rounded-full w-5 h-5 mr-2" />
+                                    </LinkedinShareButton>
+                                    <CopyToClipboard text={shareUrl}>
+                                        <LinkIcon className=" w-5 h-5 mr-2 hover:cursor-pointer" />
+                                    </CopyToClipboard>
+                                </section>
                             </div>
 
                             <p data-cy={`${DataCyPrefix}PostContentDescription`}>

@@ -181,6 +181,15 @@ class Helpers {
 
         return true;
     }
+
+    static getShareUrl(slug: string) {
+        const blogUrl = String(process.env.NEXT_PUBLIC_SITE_URL);
+
+        let shareUrl = `${blogUrl.endsWith('/') ? blogUrl : blogUrl + '/'}`;
+        shareUrl += slug.startsWith('/') ? slug.replace('/', '') : slug;
+
+        return shareUrl;
+    }
 }
 
 export default Helpers;
