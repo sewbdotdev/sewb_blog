@@ -59,10 +59,17 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
 
                 sup: ({ node, ...props }) => <sup {...props} />,
                 sub: ({ node, ...props }) => <sub {...props} />,
-                a: ({ node, ...props }) =>
-                    props.href?.startsWith('/') ? (
+                a: ({ node, ...props }) => {
+                    const isExternal = Helpers.isExternalLink(String(props.href));
+                    const additionalProps = { target: isExternal ? '_blank' : '_self' };
+                    return props.href?.startsWith('/') ? (
                         <Link href={props.href}>
-                            <a {...props} className={styles.a} data-cy={`${DataCyPrefix}-a`}>
+                            <a
+                                {...props}
+                                {...additionalProps}
+                                className={styles.a}
+                                data-cy={`${DataCyPrefix}-a`}
+                            >
                                 {props.children}
                             </a>
                         </Link>
@@ -71,12 +78,14 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                             href={props.href}
                             rel="noopener noreferrer"
                             {...props}
+                            {...additionalProps}
                             className={styles.a}
                             data-cy={`${DataCyPrefix}-a`}
                         >
                             {props.children}
                         </a>
-                    ),
+                    );
+                },
                 img: ({ node, ...props }) => (
                     <div className="relative w-full" data-cy={`${DataCyPrefix}ImageContainer`}>
                         <Image

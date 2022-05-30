@@ -98,17 +98,9 @@ const Header: FunctionComponent = (props) => {
                         data-cy={`${DataCyPrefix}ThemeLink`}
                     >
                         {isDark ? (
-                            <SunIcon
-                                className="text-yellow-300 hover:animate-bounce"
-                                height="25"
-                                width="25"
-                            />
+                            <SunIcon className="text-yellow-300" height="25" width="25" />
                         ) : (
-                            <MoonIcon
-                                className="text-gray-900 hover:animate-bounce"
-                                height="25"
-                                width="25"
-                            />
+                            <MoonIcon className="text-gray-900" height="25" width="25" />
                         )}
                     </li>
                 </ul>
