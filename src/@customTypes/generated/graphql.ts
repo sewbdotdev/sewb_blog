@@ -2347,6 +2347,29 @@ export type PostsForSitemapQuery = {
     } | null;
 };
 
+export type UploadFilesQueryVariables = Exact<{
+    url: Scalars['String'];
+}>;
+
+export type UploadFilesQuery = {
+    __typename?: 'Query';
+    uploadFiles?: {
+        __typename?: 'UploadFileEntityResponseCollection';
+        data: Array<{
+            __typename?: 'UploadFileEntity';
+            id?: string | null;
+            attributes?: {
+                __typename?: 'UploadFile';
+                width?: number | null;
+                height?: number | null;
+                name: string;
+                alternativeText?: string | null;
+                caption?: string | null;
+            } | null;
+        }>;
+    } | null;
+};
+
 export const GetAllCategoriesDocument = `
     query getAllCategories($page: Int!, $pageSize: Int!) {
   categories(pagination: {page: $page, pageSize: $pageSize}) {
@@ -3450,6 +3473,38 @@ export const usePostsForSitemapQuery = <TData = PostsForSitemapQuery, TError = u
         fetcher<PostsForSitemapQuery, PostsForSitemapQueryVariables>(
             client,
             PostsForSitemapDocument,
+            variables,
+            headers
+        ),
+        options
+    );
+export const UploadFilesDocument = `
+    query uploadFiles($url: String!) {
+  uploadFiles(filters: {url: {contains: $url}}) {
+    data {
+      id
+      attributes {
+        width
+        height
+        name
+        alternativeText
+        caption
+      }
+    }
+  }
+}
+    `;
+export const useUploadFilesQuery = <TData = UploadFilesQuery, TError = unknown>(
+    client: GraphQLClient,
+    variables: UploadFilesQueryVariables,
+    options?: UseQueryOptions<UploadFilesQuery, TError, TData>,
+    headers?: RequestInit['headers']
+) =>
+    useQuery<UploadFilesQuery, TError, TData>(
+        ['uploadFiles', variables],
+        fetcher<UploadFilesQuery, UploadFilesQueryVariables>(
+            client,
+            UploadFilesDocument,
             variables,
             headers
         ),

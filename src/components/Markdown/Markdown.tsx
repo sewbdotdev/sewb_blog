@@ -20,6 +20,8 @@ import remarkDirective from 'remark-directive';
 import rehypeFormat from 'rehype-format';
 import remarkPluginForKeyTakeaway from 'utils/plugins/remarkPluginForKeyTakeaway';
 import remarkSmartypants from 'remark-smartypants';
+import { useUploadFilesQuery } from '@customTypes/generated/graphql';
+import { getClient } from 'utils/client';
 
 type MarkdownProps = {
     content: string;
@@ -86,22 +88,30 @@ const Markdown: FunctionComponent<MarkdownProps> = (props) => {
                         </a>
                     );
                 },
-                img: ({ node, ...props }) => (
-                    <div className="relative w-full" data-cy={`${DataCyPrefix}ImageContainer`}>
-                        <Image
-                            src={Helpers.getImageURL(props.src ?? '')}
-                            alt={props.alt}
-                            quality="90"
-                            layout="responsive"
-                            priority
-                            width={600}
-                            height={500}
-                            unoptimized={Helpers.shouldImageBeUnoptimized(props.src)}
-                            className={`${props.className} text-center mx-auto`}
-                            data-cy={`${DataCyPrefix}-img`}
-                        />
-                    </div>
-                ),
+                img: ({ node, ...props }) => {
+                    const { status, data } = useUploadFilesQuery(getClient(), {
+                        url: props.src?.split('?')[0] || ''
+                    });
+                    const obj = Helpers.getImageData(status, data, String(props.src), props.alt);
+                    return (
+                        <div className="relative w-full" data-cy={`${DataCyPrefix}ImageContainer`}>
+                            <Image
+                                quality="90"
+                                layout="responsive"
+                                {...obj}
+                                priority
+                                unoptimized={Helpers.shouldImageBeUnoptimized(props.src)}
+                                className={`${props.className} text-center mx-auto`}
+                                data-cy={`${DataCyPrefix}-img`}
+                            />
+                            {obj.caption && (
+                                <div className="text-center">
+                                    <Markdown content={obj.caption} />
+                                </div>
+                            )}
+                        </div>
+                    );
+                },
                 code({ node, inline, className, children, ...props }) {
                     const match = /language-(\w+)/.exec(className || '');
                     const text = String(children).replace(/\n$/, '');

@@ -1,5 +1,7 @@
 import cookies from 'next-cookies';
 import { TokenData } from '@customTypes/token';
+import { UploadFileEntity, UploadFilesQuery } from '@customTypes/generated/graphql';
+import { getClient } from './client';
 
 type getStaleTimeProps =
     | 'posts'
@@ -189,6 +191,34 @@ class Helpers {
         shareUrl += slug.startsWith('/') ? slug.replace('/', '') : slug;
 
         return shareUrl;
+    }
+
+    static getImageData(
+        status: string,
+        data: UploadFilesQuery | undefined,
+        src: string,
+        alt: string | undefined
+    ) {
+        if (status === 'success') {
+            if (data && data.uploadFiles && data.uploadFiles.data?.length > 0) {
+                const response = data.uploadFiles.data[0];
+                return {
+                    src,
+                    width: Number(response.attributes?.width),
+                    height: Number(response.attributes?.height),
+                    alt: String(response.attributes?.alternativeText),
+                    caption: String(response.attributes?.caption)
+                };
+            }
+        }
+
+        return {
+            src,
+            alt,
+            width: 1000,
+            height: 1000,
+            caption: undefined
+        };
     }
 }
 
