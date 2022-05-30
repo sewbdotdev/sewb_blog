@@ -1,0 +1,14 @@
+query uploadFiles($url: String!) {
+    uploadFiles(filters: { url: { contains: $url } }) {
+        data {
+            id
+            attributes {
+                width
+                height
+                name
+                alternativeText
+                caption
+            }
+        }
+    }
+}
